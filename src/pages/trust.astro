@@ -6,14 +6,14 @@ import CTABand from '../components/CTABand.astro';
 
 const protections = [
   { icon: 'graduation', title: 'Mandatory education first', body: 'No investment journey opens until core modules are complete. Comprehension is checked, not assumed.' },
-  { icon: 'doc-check', title: 'Appropriateness testing', body: 'FCA-style testing with documented pass/fail records — and honest “not yet” outcomes.' },
+  { icon: 'doc-check', title: 'Appropriateness testing', body: 'FCA-style testing with documented pass/fail records, and honest “not yet” outcomes.' },
   { icon: 'timer', title: 'Cooling-off periods', body: 'Built into the investment flow, never engineered around with urgency tactics.' },
   { icon: 'sliders', title: 'Max-allocation warnings', body: 'Educational warnings when an intended allocation is outsized for your profile.' },
   { icon: 'gauge', title: 'Concentration alerts', body: 'The dashboard flags when one company or theme starts dominating your portfolio.' },
   { icon: 'pulse', title: 'Loss & illiquidity simulation', body: 'See what failure rates and multi-year lockups mean for your money before committing.' },
   { icon: 'doc', title: 'Plain-English risk summaries', body: 'Every startup carries a readable risk summary. No burying, no boilerplate-only.' },
   { icon: 'search', title: 'Founder claim verification', body: 'Traction and financial claims are cross-checked by the fraud agent and human reviewers.' },
-  { icon: 'spark', title: '“Questions to ask” AI', body: 'Generated due-diligence questions per startup — prompting thought, never replacing it.' },
+  { icon: 'spark', title: '“Questions to ask” AI', body: 'Generated due-diligence questions per startup, prompting thought but never replacing it.' },
   { icon: 'bell', title: 'Post-investment monitoring', body: 'Anomaly detection, dilution tracking and honest failure alerts for as long as you hold.' },
   { icon: 'users', title: 'Vulnerability detection', body: 'Signals of vulnerability route to trained humans, not to a conversion funnel.' },
   { icon: 'eye', title: 'Human oversight of AI', body: 'Every consequential AI output is reviewed, logged and auditable. No black boxes.' },
@@ -30,24 +30,24 @@ const antiPatterns = [
 
 const regs = [
   { icon: 'doc-check', title: 'FCA financial promotion rules', body: 'High-risk investment promotions carry prescribed risk warnings, positive frictions and no inducements to invest.' },
-  { icon: 'scale', title: 'Consumer Duty', body: 'Acting in good faith, avoiding foreseeable harm, enabling good outcomes — the duty our product design starts from.' },
+  { icon: 'scale', title: 'Consumer Duty', body: 'Acting in good faith, avoiding foreseeable harm, enabling good outcomes: the duty our product design starts from.' },
   { icon: 'shield', title: 'High-risk investment rules', body: 'Client categorisation, appropriateness testing, cooling-off periods and marketing restrictions, implemented as product features.' },
   { icon: 'lock', title: 'AML & financial crime', body: 'KYC/AML checks through regulated providers, transaction monitoring, and the fraud agent watching continuously.' },
   { icon: 'building', title: 'Public Offer Platform regime', body: 'The 2026 POP rules make platforms responsible for vetting companies and warning investors. Our architecture assumed that before it was law.' },
-  { icon: 'wallet', title: 'Nominee & custody', body: 'Client holdings via proper nominee/custody arrangements with clear records — boring, correct, non-negotiable.' },
+  { icon: 'wallet', title: 'Nominee & custody', body: 'Client holdings via proper nominee/custody arrangements with clear records: boring, correct, non-negotiable.' },
 ];
 
 const phases = [
   {
     phase: 'Phase 1',
     title: 'Regulated partner / AR model',
-    body: 'Launch through an FCA-authorised partner or as an Appointed Representative — investor demand, founder demand and compliance workflows validated under an authorised umbrella.',
+    body: 'Launch through an FCA-authorised partner or as an Appointed Representative, with investor demand, founder demand and compliance workflows validated under an authorised umbrella.',
     status: 'The launch path',
   },
   {
     phase: 'Phase 2',
     title: 'Direct FCA permissions',
-    body: 'Application for direct authorisation — arranging deals, operating the platform, approving financial promotions — once the model is proven and the track record is real.',
+    body: 'Application for direct authorisation (arranging deals, operating the platform, approving financial promotions) once the model is proven and the track record is real.',
     status: 'In preparation',
   },
   {
@@ -61,12 +61,12 @@ const phases = [
 
 <BaseLayout
   title="Trust & Safety"
-  description="Investor safety isn't an appendix — it's the moat. Twelve protections, an explicit list of dark patterns we refuse to build, and Bundle's FCA-aligned regulatory path."
+  description="Investor safety isn't an appendix. It's the moat. Twelve protections, an explicit list of dark patterns we refuse to build, and Bundle's FCA-aligned regulatory path."
 >
   <PageHero
     eyebrow="Trust & Safety"
     title='Investor safety isn&rsquo;t an appendix. <em class="serif-aside">It&rsquo;s the moat.</em>'
-    lead="Most platforms treat protection as compliance overhead. Bundle treats it as the product: every FCA expectation implemented as a feature, plus protections no rule requires — because disciplined investors are the entire point."
+    lead="Most platforms treat protection as compliance overhead. Bundle treats it as the product: every FCA expectation implemented as a feature, plus protections no rule requires, because disciplined investors are the entire point."
   >
     <Fragment slot="actions">
       <a href="#protections" class="btn btn-primary btn-lg">The twelve protections <span class="arrow">→</span></a>
@@ -133,7 +133,7 @@ const phases = [
         <p class="lead reveal" style="--d:.1s">
           The FCA has spent years pushing high-risk investment platforms toward
           exactly the design Bundle starts from. For us the rulebook isn't a
-          burden — it's a specification.
+          burden. It's a specification.
         </p>
       </div>
       <div class="grid cols-3">
@@ -157,7 +157,7 @@ const phases = [
         <p class="eyebrow reveal">The path to authorisation</p>
         <h2 class="h2 reveal" style="--d:.05s">Earned in phases, not assumed</h2>
         <p class="lead reveal" style="--d:.1s">
-          Each step is a harder regulatory problem than the last — so the sequence
+          Each step is a harder regulatory problem than the last, so the sequence
           is deliberate. We tell you where we are honestly, at every stage.
         </p>
       </div>
@@ -178,7 +178,7 @@ const phases = [
       <p class="small muted reveal" style="margin-top:1.5rem; max-width:56rem">
         Bundle Technologies Ltd is not currently authorised or regulated by the
         Financial Conduct Authority, and no investment services are live. That
-        sentence will change only when it's true — and this page will change with
+        sentence will change only when it's true, and this page will change with
         it.
       </p>
     </div>
@@ -186,7 +186,7 @@ const phases = [
 
   <CTABand
     title="Discipline you can <em class='serif-aside'>verify.</em>"
-    sub="Read the honest pages first — the risk warning, the AI governance design — then decide if we've earned the waitlist spot."
+    sub="Read the honest pages first (the risk warning, the AI governance design), then decide if we've earned the waitlist spot."
     secondaryLabel="Risk warnings"
     secondaryHref="/legal/risk-warning"
   />

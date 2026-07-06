@@ -1,8 +1,8 @@
 ---
 /**
  * Signature component: "How concentrated am I?"
- * Semicircular meter — single colored fill on a light same-family track,
- * end-dot with surface ring, status word + supporting figures.
+ * Semicircular meter: single colored fill on a light same-family track,
+ * pulsing end-dot with surface ring, status word + supporting figures.
  *
  * Static:      <ConcentrationMeter score={78} sub="Largest position 9%" />
  * Interactive: <ConcentrationMeter interactive positions={4} />
@@ -23,7 +23,7 @@ const {
   class: className,
 } = Astro.props;
 
-// Geometry — baseline at y=130, small margin below
+// Geometry: baseline at y=130, small margin below
 const R = 103;
 const CX = 130;
 const CY = 130;
@@ -90,7 +90,14 @@ const largest = (n: number) => Math.min(100, Math.ceil((100 / n) * 1.35));
         stroke-linecap="butt"
         stroke-dasharray={LEN}
         stroke-dashoffset={LEN * (1 - t)}></path>
-      <!-- end dot with surface ring -->
+      <!-- pulsing halo + end dot with surface ring -->
+      <circle
+        class="meter-halo"
+        cx={dotX}
+        cy={dotY}
+        r="8"
+        fill={z.color}
+        opacity="0.3"></circle>
       <circle
         class="meter-dot"
         cx={dotX}
@@ -161,6 +168,33 @@ const largest = (n: number) => Math.min(100, Math.ceil((100 / n) * 1.35));
   .meter-fill,
   .meter-dot {
     transition: stroke 0.25s ease, fill 0.25s ease;
+  }
+
+  .meter-fill {
+    filter: drop-shadow(0 4px 8px rgba(11, 46, 51, 0.22));
+  }
+
+  .meter-halo {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .meter-halo {
+      animation: meter-pulse 2.6s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+    }
+  }
+
+  @keyframes meter-pulse {
+    0% {
+      transform: scale(1);
+      opacity: 0.32;
+    }
+    75%,
+    100% {
+      transform: scale(2.7);
+      opacity: 0;
+    }
   }
 
   .meter-word {
@@ -275,6 +309,7 @@ const largest = (n: number) => Math.min(100, Math.ceil((100 / n) * 1.35));
     const range = root.querySelector<HTMLInputElement>('input[type="range"]');
     const fill = root.querySelector<SVGPathElement>('.meter-fill');
     const dot = root.querySelector<SVGCircleElement>('.meter-dot');
+    const halo = root.querySelector<SVGCircleElement>('.meter-halo');
     const word = root.querySelector<HTMLElement>('.meter-word');
     const sub = root.querySelector<HTMLElement>('.meter-sub');
     if (!range || !fill || !dot || !word || !sub) return;
@@ -285,11 +320,16 @@ const largest = (n: number) => Math.min(100, Math.ceil((100 / n) * 1.35));
       const t = score / 100;
       const z = zone(score);
       const a = Math.PI * (1 - t);
+      const x = String(CX + R * Math.cos(a));
+      const y = String(CY - R * Math.sin(a));
       fill.setAttribute('stroke-dashoffset', String(LEN * (1 - t)));
       fill.setAttribute('stroke', z.color);
-      dot.setAttribute('cx', String(CX + R * Math.cos(a)));
-      dot.setAttribute('cy', String(CY - R * Math.sin(a)));
+      dot.setAttribute('cx', x);
+      dot.setAttribute('cy', y);
       dot.setAttribute('fill', z.color);
+      halo?.setAttribute('cx', x);
+      halo?.setAttribute('cy', y);
+      halo?.setAttribute('fill', z.color);
       word.textContent = z.word;
       word.style.color = z.ink;
       const largest = Math.min(100, Math.ceil((100 / n) * 1.35));

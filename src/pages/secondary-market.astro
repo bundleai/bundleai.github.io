@@ -6,44 +6,44 @@ import FAQ from '../components/FAQ.astro';
 import CTABand from '../components/CTABand.astro';
 
 const windowSteps = [
-  { icon: 'calendar', title: 'Window announced', body: 'A liquidity window for a company is scheduled weeks in advance — with disclosure refreshed so buyers aren’t trading on stale information.' },
+  { icon: 'calendar', title: 'Window announced', body: 'A liquidity window for a company is scheduled weeks in advance, with disclosure refreshed so buyers aren’t trading on stale information.' },
   { icon: 'doc-check', title: 'Orders gathered', body: 'Eligible holders express sell interest; eligible, suitability-checked investors express buy interest, within stated limits.' },
-  { icon: 'scale', title: 'Single-price match', body: 'Orders match in a structured auction at one clearing price — price discovery without the theatre of a live ticker.' },
+  { icon: 'scale', title: 'Single-price match', body: 'Orders match in a structured auction at one clearing price: price discovery without the theatre of a live ticker.' },
   { icon: 'exchange', title: 'Settle & record', body: 'Transfers settle through the nominee structure; positions, cap tables and your portfolio intelligence update automatically.' },
 ];
 
 const faqs = [
   {
     q: 'Does a secondary market make my startup shares liquid?',
-    a: 'No — and be wary of anyone who implies otherwise. A structured window creates <em>possible</em> liquidity at scheduled moments, if there is matching demand at a price you’ll accept. Early-stage shares can remain unsellable for years. Treat any startup investment as locked up for 5–10 years; treat liquidity events as a bonus, not a plan.',
+    a: 'No, and be wary of anyone who implies otherwise. A structured window creates <em>possible</em> liquidity at scheduled moments, if there is matching demand at a price you’ll accept. Early-stage shares can remain unsellable for years. Treat any startup investment as locked up for 5–10 years; treat liquidity events as a bonus, not a plan.',
   },
   {
     q: 'What is PISCES, in one paragraph?',
-    a: 'PISCES (the Private Intermittent Securities and Capital Exchange System) is the UK framework, live since 2026, for regulated intermittent trading of private company shares. Approved venues — the LSE’s Private Securities Market, JP Jenkins, Asset Match — run scheduled auctions or matched trading rather than continuous markets. It makes responsible private-share liquidity a regulated reality rather than a grey area.',
+    a: 'PISCES (the Private Intermittent Securities and Capital Exchange System) is the UK framework, live since 2026, for regulated intermittent trading of private company shares. Approved venues (the LSE’s Private Securities Market, JP Jenkins, Asset Match) run scheduled auctions or matched trading rather than continuous markets. It makes responsible private-share liquidity a regulated reality rather than a grey area.',
   },
   {
     q: 'Why windows rather than continuous trading?',
-    a: 'Because continuous trading of illiquid, information-poor assets mostly produces bad prices and worse behaviour. Scheduled windows concentrate liquidity, allow disclosure to be refreshed beforehand, and remove the day-trading temptation entirely. It’s how the LSE’s own private market and serious operators worldwide approach the problem — and it matches Bundle’s no-urgency design.',
+    a: 'Because continuous trading of illiquid, information-poor assets mostly produces bad prices and worse behaviour. Scheduled windows concentrate liquidity, allow disclosure to be refreshed beforehand, and remove the day-trading temptation entirely. It’s how the LSE’s own private market and serious operators worldwide approach the problem, and it matches Bundle’s no-urgency design.',
   },
   {
     q: 'Will I be able to trade any company on Bundle?',
-    a: 'No. Companies opt in to liquidity windows, eligibility rules apply on both sides, and availability depends on regulatory permissions and venue arrangements. Where a company never runs a window, your realistic exit remains an acquisition, IPO or failure — the risk warning applies in full.',
+    a: 'No. Companies opt in to liquidity windows, eligibility rules apply on both sides, and availability depends on regulatory permissions and venue arrangements. Where a company never runs a window, your realistic exit remains an acquisition, IPO or failure. The risk warning applies in full.',
   },
   {
     q: 'What will it cost?',
-    a: 'Transaction fees for secondary trades are a future revenue line, subject to permissions, and will be published plainly before any window runs. Consistent with everything else here: low, simple, disclosed — no spread games.',
+    a: 'Transaction fees for secondary trades are a future revenue line, subject to permissions, and will be published plainly before any window runs. Consistent with everything else here: low, simple, disclosed, with no spread games.',
   },
 ];
 ---
 
 <BaseLayout
   title="Secondary Market"
-  description="Liquidity, done responsibly: structured, scheduled liquidity windows for private startup shares, designed for the UK's PISCES era — with suitability checks and concentration-impact previews."
+  description="Liquidity, done responsibly: structured, scheduled liquidity windows for private startup shares, designed for the UK's PISCES era, with suitability checks and concentration-impact previews."
 >
   <PageHero
     eyebrow="Secondary Market"
     title='Liquidity, <em class="serif-aside">done responsibly</em>'
-    lead="Private startup shares are illiquid by default — sometimes for a decade. Bundle's secondary market is designed to offer structured, scheduled liquidity windows between eligible investors: real price discovery at calm intervals, never hype-driven day-trading."
+    lead="Private startup shares are illiquid by default, sometimes for a decade. Bundle's secondary market is designed to offer structured, scheduled liquidity windows between eligible investors: real price discovery at calm intervals, never hype-driven day-trading."
   >
     <Fragment slot="actions">
       <a href="/waitlist" class="btn btn-primary btn-lg">Join the waitlist <span class="arrow">→</span></a>
@@ -82,7 +82,7 @@ const faqs = [
         </div>
         <div class="wm-gate">
           <Icon name="shield" size={16} />
-          <span>Suitability check required before orders. Selling this holding would raise your climate concentration to 41% — we'll show you that first.</span>
+          <span>Suitability check required before orders. Selling this holding would raise your climate concentration to 41%, and we'll show you that first.</span>
         </div>
       </div>
     </Fragment>
@@ -98,7 +98,7 @@ const faqs = [
           <p class="lead reveal" style="--d:.1s">
             When you buy startup shares, your money is typically locked in until the
             company is acquired, lists publicly, or fails. That's the honest
-            trade-off behind every early-stage return story — and it's on every
+            trade-off behind every early-stage return story, and it's on every
             Bundle risk summary.
           </p>
           <p class="reveal" style="--d:.14s">
@@ -144,7 +144,7 @@ const faqs = [
         <p class="eyebrow reveal">How windows work</p>
         <h2 class="h2 reveal" style="--d:.05s">Scheduled auctions, not a casino floor</h2>
         <p class="lead reveal" style="--d:.1s">
-          The model regulators built PISCES around — and the one serious venues use:
+          The model regulators built PISCES around, and the one serious venues use:
           intermittent, single-price auctions with disclosure attached.
         </p>
       </div>
@@ -174,7 +174,7 @@ const faqs = [
           <h2 class="h2 reveal" style="--d:.05s">The UK just made responsible private-share trading real</h2>
           <p class="lead reveal" style="--d:.1s">
             Since 2026, the PISCES regime has given private-share trading a regulated
-            home, with approved venues running intermittent auctions — the LSE's
+            home, with approved venues running intermittent auctions. The LSE's
             Private Securities Market opened with an Oxford Science Enterprises
             auction; JP Jenkins reaches earlier-stage companies through ordinary
             brokerage accounts.
@@ -183,13 +183,13 @@ const faqs = [
             Incumbent platforms are racing to add liquidity as a feature. Bundle's
             position is different: <strong>liquidity is only responsible when it's
             paired with suitability.</strong> Nobody else is pairing private-market
-            liquidity with a discipline layer — checking who's buying, what it does
+            liquidity with a discipline layer: checking who's buying, what it does
             to their portfolio, and whether they understand what they're selling.
           </p>
           <ul class="check-list reveal" style="--d:.18s">
             <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Suitability and eligibility gates on both sides of every window</span></li>
             <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Concentration-impact preview before you buy <em>or</em> sell</span></li>
-            <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Refreshed company disclosure before each window — no stale-information trades</span></li>
+            <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Refreshed company disclosure before each window, so no trades happen on stale information</span></li>
             <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>No live tickers, no price push notifications, no day-trading mechanics</span></li>
           </ul>
         </div>
@@ -209,7 +209,7 @@ const faqs = [
           </div>
           <div class="pp-bundle">
             <svg width="16" height="16" viewBox="0 0 32 32" aria-hidden="true"><rect x="2.4" y="15" width="5" height="14" rx="2.5" fill="currentColor" opacity=".8"/><rect x="9.8" y="3" width="5" height="26" rx="2.5" fill="currentColor"/><rect x="17.2" y="11" width="5" height="18" rx="2.5" fill="currentColor" opacity=".8"/><rect x="24.6" y="7" width="5" height="22" rx="2.5" fill="currentColor"/></svg>
-            <span><strong>Bundle's layer:</strong> suitability, education and concentration discipline on top of structured windows — designed to work with the regime, subject to FCA permissions.</span>
+            <span><strong>Bundle's layer:</strong> suitability, education and concentration discipline on top of structured windows. Designed to work with the regime, subject to FCA permissions.</span>
           </div>
         </div>
       </div>
@@ -225,12 +225,12 @@ const faqs = [
           <h3 class="rb-title">Secondary trading is still high-risk. Here's what to understand first.</h3>
           <p class="small">
             Buying private shares second-hand carries the same total-loss and
-            illiquidity risks as primary investing — plus valuation uncertainty
+            illiquidity risks as primary investing, plus valuation uncertainty
             between windows and the possibility that no future window runs. SEIS/EIS
             reliefs generally do <strong>not</strong> apply to secondary purchases.
             Eligibility, suitability checks and cooling-off protections apply before
             any order. This page describes functionality Bundle is designed to offer
-            where permitted, subject to FCA permissions and venue arrangements — it
+            where permitted, subject to FCA permissions and venue arrangements. It
             is not an offer or invitation to trade.
           </p>
           <a href="/legal/risk-warning" class="text-link small">Read the full risk warning <span class="arrow">→</span></a>
@@ -252,7 +252,7 @@ const faqs = [
 
   <CTABand
     title="Liquidity with a <em class='serif-aside'>discipline layer.</em>"
-    sub="Join the waitlist to be first through the door when structured windows open — and learn how private-market liquidity really works in the Academy."
+    sub="Join the waitlist to be first through the door when structured windows open, and learn how private-market liquidity really works in the Academy."
     secondaryLabel="Learn: illiquidity explained"
     secondaryHref="/learn"
   />

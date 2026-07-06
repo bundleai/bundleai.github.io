@@ -68,7 +68,7 @@ const cols = [
     <div class="footer-brand">
       <a href="/" aria-label="Bundle.ai home"><Logo size={26} /></a>
       <p class="tagline">
-        Startup investing, taught like a diversified portfolio — not sold like a
+        Startup investing, taught like a diversified portfolio, not sold like a
         speculative bet.
       </p>
       <p class="made-in">
@@ -104,7 +104,7 @@ const cols = [
       Bundle.ai does not currently arrange, promote or facilitate investments. The
       products and services described on this site are in development and, where
       they constitute regulated activities, will be offered only when the
-      appropriate FCA authorisations — or partnerships with authorised firms — are
+      appropriate FCA authorisations, or partnerships with authorised firms, are
       in place. Nothing on this site is investment advice, a personal
       recommendation, or a financial promotion of any specific investment.
       Investing in startups involves significant risk, including total loss of
@@ -126,9 +126,25 @@ const cols = [
 
 <style>
   .site-footer {
+    position: relative;
     margin-top: auto;
-    background: var(--bg);
+    background: linear-gradient(180deg, var(--bg), #f1f7f8);
     border-top: 1px solid var(--line);
+  }
+
+  .site-footer::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 5%,
+      rgba(13, 126, 138, 0.4) 50%,
+      transparent 95%
+    );
   }
 
   .risk-band {

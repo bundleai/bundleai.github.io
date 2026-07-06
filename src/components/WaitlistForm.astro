@@ -37,8 +37,8 @@ const { compact = false } = Astro.props;
     </div>
   </div>
   <p class="wf-note">
-    No spam, no countdown timers. One considered update a month, and early access
-    in order of sign-up.
+    No spam, no countdown timers. One considered update a month, plus early
+    access in order of sign-up.
   </p>
   <div class="wf-success" hidden>
     <span class="tick" aria-hidden="true">
@@ -48,7 +48,7 @@ const { compact = false } = Astro.props;
       <strong>You're on the list.</strong>
       <p>
         We'll be in touch when early access opens. In the meantime, the
-        <a href="/learn">Academy</a> is free — start with
+        <a href="/learn">Academy</a> is free. Start with
         <a href="/learn/why-diversification-matters">why diversification matters</a>.
       </p>
     </div>
@@ -183,7 +183,7 @@ const { compact = false } = Astro.props;
         list.push({ email: email.value, segment: seg, at: new Date().toISOString() });
         localStorage.setItem('bundle-waitlist', JSON.stringify(list));
       } catch {
-        /* storage unavailable — success state still shows */
+        /* storage unavailable; success state still shows */
       }
       form.querySelector<HTMLElement>('.wf-fields')?.setAttribute('hidden', '');
       form.querySelector<HTMLElement>('.wf-note')?.setAttribute('hidden', '');

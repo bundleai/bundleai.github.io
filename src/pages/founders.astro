@@ -6,54 +6,54 @@ import FAQ from '../components/FAQ.astro';
 import CTABand from '../components/CTABand.astro';
 
 const tools = [
-  { icon: 'doc-check', name: 'Pitch diagnostic', desc: 'Institutional-grade scoring of clarity, traction, model and valuation — with rewrite suggestions.' },
+  { icon: 'doc-check', name: 'Pitch diagnostic', desc: 'Institutional-grade scoring of clarity, traction, model and valuation, with rewrite suggestions.' },
   { icon: 'users', name: 'Investor FAQ generator', desc: 'Anticipates the questions your raise will attract and drafts honest answers for review.' },
   { icon: 'bars', name: 'Financial model review', desc: 'Sanity-checks assumptions, burn, runway and unit economics against stage benchmarks.' },
-  { icon: 'route', name: 'Campaign-readiness checklist', desc: 'Every disclosure, document and data point needed before a raise can open — tracked.' },
-  { icon: 'award', name: 'SEIS/EIS documentation tracker', desc: 'Advance assurance, compliance statements, certificates — deadlines and status in one place.' },
+  { icon: 'route', name: 'Campaign-readiness checklist', desc: 'Every disclosure, document and data point needed before a raise can open, all tracked.' },
+  { icon: 'award', name: 'SEIS/EIS documentation tracker', desc: 'Advance assurance, compliance statements, certificates: deadlines and status in one place.' },
   { icon: 'layers', name: 'Cap-table hygiene checker', desc: 'Flags messy structures, missing paperwork and terms that will scare later investors.' },
-  { icon: 'scale', name: 'Valuation benchmark assistant', desc: 'Positions your ask against comparable UK rounds — before an investor does it for you.' },
+  { icon: 'scale', name: 'Valuation benchmark assistant', desc: 'Positions your ask against comparable UK rounds before an investor does it for you.' },
 ];
 
 const raiseSteps = [
-  { title: 'Run the Pitch Health Check', body: 'Free, fast, and yours to keep — a scored report on how investment-ready your raise actually is.' },
+  { title: 'Run the Pitch Health Check', body: 'Free, fast, and yours to keep: a scored report on how investment-ready your raise actually is.' },
   { title: 'Get raise-ready with the toolset', body: 'Fix what the diagnostic found: disclosures, model, cap table, SEIS/EIS paperwork. AI-assisted, human-reviewed.' },
   { title: 'Diligence & structured listing', body: 'Our risk and fraud agents plus human review produce the structured risk disclosure investors see. No hype, no burying.' },
-  { title: 'Raise from portfolio-aware investors', body: 'Educated investors allocating deliberately across portfolios — fewer tourists, better questions, realistic expectations.' },
+  { title: 'Raise from portfolio-aware investors', body: 'Educated investors allocating deliberately across portfolios: fewer tourists, better questions, realistic expectations.' },
 ];
 
 const faqs = [
   {
     q: 'Why would I raise here instead of Crowdcube or Republic Europe?',
-    a: 'Three reasons founders tell us they want: <strong>cost</strong> — lower headline fees, with AI doing the preparation labour incumbents charge for; <strong>fit</strong> — a platform built for technical, B2B and deeptech companies rather than consumer-brand campaigns; and <strong>investor quality</strong> — portfolio-aware, educated investors who understand timelines and dilution, which means less update fatigue and fewer panicked emails later.',
+    a: 'Three reasons founders tell us they want: <strong>cost</strong>: lower headline fees, with AI doing the preparation labour incumbents charge for; <strong>fit</strong>: a platform built for technical, B2B and deeptech companies rather than consumer-brand campaigns; and <strong>investor quality</strong>: portfolio-aware, educated investors who understand timelines and dilution, which means less update fatigue and fewer panicked emails later.',
   },
   {
     q: 'What kinds of companies are you looking for?',
-    a: 'UK companies raising £100k–£5m at pre-seed, seed or Series A. Our launch focus: AI and automation, B2B SaaS, climate, health, and university spinouts — especially companies with real traction but limited access to the VC club. Consumer businesses with genuine fundamentals are welcome; hype-only campaigns are not.',
+    a: 'UK companies raising £100k–£5m at pre-seed, seed or Series A. Our launch focus: AI and automation, B2B SaaS, climate, health, and university spinouts, especially companies with real traction but limited access to the VC club. Consumer businesses with genuine fundamentals are welcome; hype-only campaigns are not.',
   },
   {
     q: 'What does the diligence process involve?',
-    a: 'A structured assessment across founder quality, traction, market, revenue quality, financial discipline, valuation reasonableness, competitive advantage, legal/cap-table hygiene, and disclosure quality. AI agents do the heavy reading; humans make the listing decision. The output investors see is a structured risk disclosure — we don’t bless deals as "good investments."',
+    a: 'A structured assessment across founder quality, traction, market, revenue quality, financial discipline, valuation reasonableness, competitive advantage, legal/cap-table hygiene, and disclosure quality. AI agents do the heavy reading; humans make the listing decision. The output investors see is a structured risk disclosure. We don’t bless deals as "good investments."',
   },
   {
     q: 'Is the Pitch Health Check really free?',
-    a: 'Yes. It’s how we meet serious founders early — and it’s genuinely useful even if you never raise with us. No obligation, no sales sequence, and your materials aren’t shared anywhere.',
+    a: 'Yes. It’s how we meet serious founders early, and it’s genuinely useful even if you never raise with us. No obligation, no sales sequence, and your materials aren’t shared anywhere.',
   },
   {
     q: 'What about after the raise?',
-    a: 'Structured update templates, investor communication tools, dilution and follow-on notifications handled by the platform — so keeping hundreds of small investors informed takes minutes, not days. Better-informed investors plus structured comms is the antidote to crowdfunding’s update-fatigue problem.',
+    a: 'Structured update templates, investor communication tools, dilution and follow-on notifications handled by the platform, so keeping hundreds of small investors informed takes minutes, not days. Better-informed investors plus structured comms is the antidote to crowdfunding’s update-fatigue problem.',
   },
 ];
 ---
 
 <BaseLayout
   title="For Founders"
-  description="Raise £100k–£5m from informed, portfolio-aware investors — with AI pitch diagnostics, SEIS/EIS tooling and lower fees. Built for technical, B2B, deeptech and spinout founders."
+  description="Raise £100k–£5m from informed, portfolio-aware investors, with AI pitch diagnostics, SEIS/EIS tooling and lower fees. Built for technical, B2B, deeptech and spinout founders."
 >
   <PageHero
     eyebrow="For founders"
     title='Raise from investors who <em class="serif-aside">understand the asset class</em>'
-    lead="Consumer-brand crowdfunding rewards marketing. Bundle is built for the founders it overlooks — technical, B2B, deeptech and university spinouts — with AI-assisted preparation, structured diligence, and investors educated to think in portfolios, not lottery tickets."
+    lead="Consumer-brand crowdfunding rewards marketing. Bundle is built for the founders it overlooks (technical, B2B, deeptech and university spinouts), with AI-assisted preparation, structured diligence, and investors educated to think in portfolios, not lottery tickets."
   >
     <Fragment slot="actions">
       <a href="#health-check" class="btn btn-primary btn-lg">Free AI Pitch Health Check <span class="arrow">→</span></a>
@@ -66,7 +66,7 @@ const faqs = [
     <div class="container">
       <div class="split">
         <div>
-          <p class="eyebrow reveal">The free hook — genuinely free</p>
+          <p class="eyebrow reveal">The free hook, genuinely free</p>
           <h2 class="h2 reveal" style="--d:.05s">The AI Pitch Health Check</h2>
           <p class="lead reveal" style="--d:.1s">
             Upload a deck; get an institutional-quality read in minutes: a scored
@@ -76,9 +76,9 @@ const faqs = [
           </p>
           <ul class="check-list reveal" style="--d:.15s">
             <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Ten-dimension score, from clarity to valuation reasonableness</span></li>
-            <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Likely investor questions — drafted before they're asked</span></li>
+            <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Likely investor questions, drafted before they're asked</span></li>
             <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>SEIS/EIS readiness snapshot</span></li>
-            <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Private by default — your materials are never shared</span></li>
+            <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Private by default: your materials are never shared</span></li>
           </ul>
           <div class="hero-actions-l reveal" style="--d:.2s">
             <a href="/waitlist" class="btn btn-primary">Request early access <span class="arrow">→</span></a>
@@ -118,8 +118,8 @@ const faqs = [
             }
           </div>
           <div class="hc-flags">
-            <p class="hc-flag"><Icon name="alert" size={14} /> Valuation is 2.3× the seed median for UK robotics — justify or expect pushback.</p>
-            <p class="hc-flag"><Icon name="alert" size={14} /> No churn data shown for the pilot cohort — investors will ask.</p>
+            <p class="hc-flag"><Icon name="alert" size={14} /> Valuation is 2.3× the seed median for UK robotics: justify or expect pushback.</p>
+            <p class="hc-flag"><Icon name="alert" size={14} /> No churn data shown for the pilot cohort. Investors will ask.</p>
           </div>
         </div>
       </div>
@@ -133,7 +133,7 @@ const faqs = [
         <p class="eyebrow reveal">The founder toolset</p>
         <h2 class="h2 reveal" style="--d:.05s">Seven tools that replace an expensive month</h2>
         <p class="lead reveal" style="--d:.1s">
-          The preparation work advisers bill for — automated where AI is good at it,
+          The preparation work advisers bill for: automated where AI is good at it,
           reviewed by humans where it isn't.
         </p>
       </div>
@@ -196,7 +196,7 @@ const faqs = [
           <p class="lead reveal" style="--d:.1s">
             Incumbents cluster around 5–7% all-in once fees stack up. Bundle's
             AI-assisted model targets 3–5% success fees with readiness tooling
-            included — because software, not headcount, does the per-campaign
+            included, because software, not headcount, does the per-campaign
             labour.
           </p>
           <div class="hero-actions-l reveal" style="--d:.15s">
@@ -232,7 +232,7 @@ const faqs = [
 
   <CTABand
     title="Serious founders deserve <em class='serif-aside'>serious investors.</em>"
-    sub="Run the free Pitch Health Check when the founder beta opens — join the waitlist and we'll hold your place."
+    sub="Run the free Pitch Health Check when the founder beta opens. Join the waitlist and we'll hold your place."
     primaryLabel="Join as a founder"
     secondaryLabel="Talk to the team"
     secondaryHref="/contact"

@@ -21,7 +21,7 @@ const {
     {
       rows.map((r) => (
         <div class="compare-cell" role="cell">
-          <span class="mark dim" aria-hidden="true">—</span>
+          <span class="mark dim" aria-hidden="true">·</span>
           <span>{r.left}</span>
         </div>
       ))
@@ -95,7 +95,7 @@ const {
 
   .right .compare-head {
     color: #fff;
-    background: var(--teal);
+    background: var(--grad-brand);
   }
 
   .compare-cell {

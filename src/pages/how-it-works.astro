@@ -9,19 +9,19 @@ import ConcentrationMeter from '../components/ConcentrationMeter.astro';
 const faqs = [
   {
     q: 'Do I have to finish the education before I can invest?',
-    a: 'Yes — and that’s deliberate. Core modules and an appropriateness test come before any investment journey. It typically takes under an hour, it’s genuinely useful, and it’s the same discipline professional allocators are trained into. If a platform lets you skip straight to the "invest" button, ask why.',
+    a: 'Yes, and that’s deliberate. Core modules and an appropriateness test come before any investment journey. It typically takes under an hour, it’s genuinely useful, and it’s the same discipline professional allocators are trained into. If a platform lets you skip straight to the "invest" button, ask why.',
   },
   {
     q: 'What happens if I fail the appropriateness test?',
-    a: 'Nothing punitive. The Investor Education Agent identifies what you misunderstood — dilution, illiquidity, failure rates — teaches that specific concept, and lets you retake it after a pause. Pass/fail records are kept, as FCA rules expect. If startup investing remains unsuitable for your circumstances, we’ll say so plainly.',
+    a: 'Nothing punitive. The Investor Education Agent identifies what you misunderstood (dilution, illiquidity, failure rates), teaches that specific concept, and lets you retake it after a pause. Pass/fail records are kept, as FCA rules expect. If startup investing remains unsuitable for your circumstances, we’ll say so plainly.',
   },
   {
     q: 'Do you choose my investments for me?',
-    a: 'No. Frameworks and simulations are educational — they show you how diversified exposure is constructed. You choose every company and every allocation yourself. Bundle never places capital on your behalf and never tells you "you should invest £X in Y."',
+    a: 'No. Frameworks and simulations are educational: they show you how diversified exposure is constructed. You choose every company and every allocation yourself. Bundle never places capital on your behalf and never tells you "you should invest £X in Y."',
   },
   {
     q: 'How much money do I need to start?',
-    a: 'Minimums are designed to be £10–£50 per company. The point isn’t to invest less — it’s to spread the same amount further. £500 concentrated in one startup is a coin flip; £500 across twenty is a portfolio.',
+    a: 'Minimums are designed to be £10–£50 per company. The point isn’t to invest less. It’s to spread the same amount further. £500 concentrated in one startup is a coin flip; £500 across twenty is a portfolio.',
   },
   {
     q: 'Is there a cooling-off period?',
@@ -37,7 +37,7 @@ const faqs = [
   <PageHero
     eyebrow="How it works"
     title='A journey that starts with <em class="serif-aside">you</em>, not with deals'
-    lead="Four stages, in a deliberate order. Most platforms open with a wall of campaigns. Bundle opens with a question — what exposure are you trying to build? — and only gets to investing once you can answer it."
+    lead="Four stages, in a deliberate order. Most platforms open with a wall of campaigns. Bundle opens with a question (what exposure are you trying to build?) and only gets to investing once you can answer it."
   >
     <Fragment slot="actions">
       <a href="/waitlist" class="btn btn-primary btn-lg">Join the waitlist <span class="arrow">→</span></a>
@@ -50,16 +50,16 @@ const faqs = [
     <div class="container">
       <div class="split">
         <div>
-          <p class="eyebrow reveal">Stage 01 — Profile & appropriateness</p>
+          <p class="eyebrow reveal">Stage 01: Profile & appropriateness</p>
           <h2 class="h2 reveal" style="--d:.05s">First, we check this is right for you</h2>
           <p class="lead reveal" style="--d:.1s">
             Age band, income, emergency savings, experience, loss capacity, time
             horizon. Then FCA-style client categorisation and an appropriateness
-            test. It's the industry's least glamorous step — and the one that
+            test. It's the industry's least glamorous step, and the one that
             decides whether everything after it is responsible.
           </p>
           <ul class="check-list reveal" style="--d:.15s">
-            <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Risk profile before portfolio — never the reverse</span></li>
+            <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Risk profile before portfolio, never the reverse</span></li>
             <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Documented pass/fail records, as the FCA expects</span></li>
             <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Vulnerability signals trigger human review, not a sales flow</span></li>
           </ul>
@@ -73,7 +73,7 @@ const faqs = [
             <span class="mock-opt sel"><i></i>It is usually lost entirely</span>
             <span class="mock-opt">I can sell my shares immediately</span>
           </div>
-          <p class="mock-note"><Icon name="check" size={13} /> Correct. Most early-stage startups fail — a portfolio expects this.</p>
+          <p class="mock-note"><Icon name="check" size={13} /> Correct. Most early-stage startups fail. A portfolio expects this.</p>
         </div>
       </div>
     </div>
@@ -86,7 +86,7 @@ const faqs = [
         <div class="mock-card card reveal" aria-hidden="true">
           <span class="badge badge-teal">Module 3 of 7</span>
           <h3 class="mock-lesson">Why diversification matters</h3>
-          <p class="small muted">Venture outcomes follow a power law: a few companies return everything, most return nothing. Professionals don't pick winners — they build exposure to the distribution.</p>
+          <p class="small muted">Venture outcomes follow a power law: a few companies return everything, most return nothing. Professionals don't pick winners. They build exposure to the distribution.</p>
           <div class="mock-bars" aria-hidden="true">
             {
               [8, 5, 3, 2, 2, 1.5, 1, 1, 22].map((v, i) => (
@@ -100,7 +100,7 @@ const faqs = [
           <p class="mock-caption mono">Illustrative power-law: one outlier pays for the portfolio</p>
         </div>
         <div>
-          <p class="eyebrow reveal">Stage 02 — Learn the portfolio logic</p>
+          <p class="eyebrow reveal">Stage 02: Learn the portfolio logic</p>
           <h2 class="h2 reveal" style="--d:.05s">Education as the product, not the disclaimer</h2>
           <p class="lead reveal" style="--d:.1s">
             Short plain-English modules cover the things that actually lose people
@@ -109,7 +109,7 @@ const faqs = [
           </p>
           <p class="reveal" style="--d:.14s">
             The Investor Education Agent adapts to you. Fail a dilution question
-            and it teaches dilution — with worked examples — before you continue.
+            and it teaches dilution, with worked examples, before you continue.
             Nobody gets waved through.
           </p>
         </div>
@@ -122,10 +122,10 @@ const faqs = [
     <div class="container">
       <div class="split">
         <div>
-          <p class="eyebrow reveal">Stage 03 — Build diversified exposure</p>
+          <p class="eyebrow reveal">Stage 03: Build diversified exposure</p>
           <h2 class="h2 reveal" style="--d:.05s">You choose the companies. The discipline is built in.</h2>
           <p class="lead reveal" style="--d:.1s">
-            Explore vetted campaigns through educational frameworks — UK AI &
+            Explore vetted campaigns through educational frameworks: UK AI &
             Automation, Climate Tech, University Spinouts and more. Allocate £10–£50
             per company at your own pace, watching concentration and exposure
             respond as you go.
@@ -133,7 +133,7 @@ const faqs = [
           <ul class="check-list reveal" style="--d:.15s">
             <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Educational maximum-exposure warnings, tuned to your profile</span></li>
             <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Cooling-off period on first investments</span></li>
-            <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Plain-English risk summary on every startup — no exceptions</span></li>
+            <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Plain-English risk summary on every startup, no exceptions</span></li>
           </ul>
         </div>
         <div class="mock-card card reveal" style="--d:.12s" aria-hidden="true">
@@ -177,7 +177,7 @@ const faqs = [
           </div>
           <div class="feed-mini">
             <span class="chip sand"><Icon name="split" size={15} /></span>
-            <div><strong>Dilution notice</strong><span>Nettle Health raised at £8.2m — your stake 0.014% → 0.011%.</span></div>
+            <div><strong>Dilution notice</strong><span>Nettle Health raised at £8.2m: your stake 0.014% → 0.011%.</span></div>
           </div>
           <div class="feed-mini">
             <span class="chip teal"><Icon name="spark" size={15} /></span>
@@ -185,11 +185,11 @@ const faqs = [
           </div>
           <div class="feed-mini">
             <span class="chip red"><Icon name="alert" size={15} /></span>
-            <div><strong>Company dissolved</strong><span>Halcyon Post struck off. Impact −£60 (1.2%) — this is what failure looks like, budgeted for.</span></div>
+            <div><strong>Company dissolved</strong><span>Halcyon Post struck off. Impact −£60 (1.2%). This is what failure looks like, budgeted for.</span></div>
           </div>
         </div>
         <div>
-          <p class="eyebrow reveal">Stage 04 — Monitor with portfolio intelligence</p>
+          <p class="eyebrow reveal">Stage 04: Monitor with portfolio intelligence</p>
           <h2 class="h2 reveal" style="--d:.05s">After you invest, we don't go quiet</h2>
           <p class="lead reveal" style="--d:.1s">
             The post-investment black box is where retail investing breaks down.
@@ -213,8 +213,8 @@ const faqs = [
         <h2 class="h2 reveal" style="--d:.05s">Friction where it protects you.<br />None where it doesn't.</h2>
         <p class="lead mx-auto reveal" style="--d:.1s">
           Every speed bump in the journey exists to slow a decision that deserves
-          slowing. Everything else — admin, paperwork, monitoring — the AI engine
-          quietly removes.
+          slowing. The AI engine quietly removes everything else: admin,
+          paperwork, monitoring.
         </p>
       </div>
       <div class="grid cols-4">
@@ -249,7 +249,7 @@ const faqs = [
 
   <CTABand
     title="Start with the education. <em class='serif-aside'>It's free.</em>"
-    sub="Join the waitlist for early access — and learn the portfolio logic in the Academy while you wait."
+    sub="Join the waitlist for early access, and learn the portfolio logic in the Academy while you wait."
     secondaryLabel="Browse the Academy"
     secondaryHref="/learn"
   />

@@ -11,7 +11,7 @@ interface Props {
 }
 
 const { title, description, ribbon = true } = Astro.props;
-const fullTitle = title.includes('Bundle') ? title : `${title} — Bundle.ai`;
+const fullTitle = title.includes('Bundle') ? title : `${title} · Bundle.ai`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 

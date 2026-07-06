@@ -16,7 +16,7 @@ const {
   primaryHref = '/waitlist',
   secondaryLabel,
   secondaryHref,
-  note = 'Capital at risk. Bundle is education-first and pre-launch — joining the waitlist commits you to nothing.',
+  note = 'Capital at risk. Bundle is education-first and pre-launch. Joining the waitlist commits you to nothing.',
 } = Astro.props;
 ---
 
@@ -68,7 +68,21 @@ const {
     content: "";
     position: absolute;
     inset: 0;
-    background: radial-gradient(55% 70% at 85% 20%, rgba(13, 126, 138, 0.35), transparent 70%);
+    background:
+      radial-gradient(60% 80% at 85% 15%, rgba(20, 158, 175, 0.4), transparent 70%),
+      radial-gradient(45% 65% at 8% 90%, rgba(55, 169, 140, 0.28), transparent 72%);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .cta-band::after {
+      animation: cta-drift 14s ease-in-out infinite alternate;
+    }
+  }
+
+  @keyframes cta-drift {
+    to {
+      transform: translate(-2.5%, 3%) scale(1.06);
+    }
   }
 
   .cta-inner {
@@ -87,6 +101,10 @@ const {
   .cta-inner h2 :global(.serif-aside),
   .cta-inner h2 :global(em) {
     color: #9fd4dc;
+    background: var(--grad-text-light);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
   .cta-sub {

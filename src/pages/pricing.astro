@@ -8,18 +8,18 @@ import CTABand from '../components/CTABand.astro';
 const faqs = [
   {
     q: 'Why can Bundle charge less than incumbents?',
-    a: 'Because the cost incumbents pass on is mostly labour: per-campaign diligence, compliance handling, investor servicing. Bundle’s AI engine does that per-position work at software cost, with humans supervising rather than typing. Lower cost per position is precisely what makes low minimums economical — the fee model and the diversification thesis are the same idea.',
+    a: 'Because the cost incumbents pass on is mostly labour: per-campaign diligence, compliance handling, investor servicing. Bundle’s AI engine does that per-position work at software cost, with humans supervising rather than typing. Lower cost per position is precisely what makes low minimums economical: the fee model and the diversification thesis are the same idea.',
   },
   {
     q: 'Will these numbers change?',
-    a: 'These are design targets, published early on purpose. Final fees will be confirmed — plainly, with worked examples — before any regulated investment service goes live. What won’t change: capped, disclosed, no spread games, no "free" that’s actually payment for order flow.',
+    a: 'These are design targets, published early on purpose. Final fees will be confirmed, plainly and with worked examples, before any regulated investment service goes live. What won’t change: capped, disclosed, no spread games, no "free" that’s actually payment for order flow.',
   },
   {
     q: 'What does the premium investor tier add?',
-    a: 'Deeper analytics: scenario simulation, exposure stress views, richer benchmarks, tax-pack exports. The safety layer — education, risk summaries, concentration alerts, cooling-off — is never premium. Protection isn’t an upsell.',
+    a: 'Deeper analytics: scenario simulation, exposure stress views, richer benchmarks, tax-pack exports. The safety layer (education, risk summaries, concentration alerts, cooling-off) is never premium. Protection isn’t an upsell.',
   },
   {
-    q: 'Are there hidden costs — FX, custody, exit fees?',
+    q: 'Are there hidden costs, such as FX, custody or exit fees?',
     a: 'The design goal is zero surprises: nominee/custody admin is included in the published fees, and any future secondary-market transaction fee will be flat and disclosed before you place an order. If a cost ever exists, it will be on this page first.',
   },
 ];
@@ -33,7 +33,7 @@ const faqs = [
     center
     eyebrow="Pricing"
     title='Low minimums need <em class="serif-aside">low fees</em>. So both are the product.'
-    lead="Platforms that allow small cheques usually punish them with high effective fees. Bundle's AI removes the per-position labour, so we can hold both low — and publish the numbers before we're even live."
+    lead="Platforms that allow small cheques usually punish them with high effective fees. Bundle's AI removes the per-position labour, so we can hold both low, and publish the numbers before we're even live."
   />
 
   <section class="section" data-tabs>
@@ -65,7 +65,7 @@ const faqs = [
           <article class="card price-card featured reveal" style="--d:.07s">
             <p class="pc-name">Investing</p>
             <p class="pc-price">0–1.5% <span class="pc-unit">per investment, capped</span></p>
-            <p class="pc-sub">Charged only when you invest — never for holding</p>
+            <p class="pc-sub">Charged only when you invest, never for holding</p>
             <ul class="check-list small-list">
               {
                 ['£10–£50 minimums per company', 'Nominee custody & admin included', 'SEIS/EIS eligibility surfaced per deal', 'Cooling-off period honoured, always', 'No exit fees on primary holdings'].map((f) => (
@@ -81,7 +81,7 @@ const faqs = [
           <article class="card price-card reveal" style="--d:.14s">
             <p class="pc-name">Premium analytics</p>
             <p class="pc-price">£9<span class="pc-unit">/month</span></p>
-            <p class="pc-sub">Optional depth — protection is never paywalled</p>
+            <p class="pc-sub">Optional depth: protection is never paywalled</p>
             <ul class="check-list small-list">
               {
                 ['Advanced simulation & stress views', 'Richer benchmarks & exposure analytics', 'Tax pack & SEIS/EIS admin support (add-on)', 'Priority support', 'Cancel any time'].map((f) => (
@@ -97,7 +97,7 @@ const faqs = [
         <p class="price-note reveal">
           Design targets, confirmed before launch. Premium tier priced in the
           £5–£15 range; £9 is the working number. Investing remains high-risk
-          whatever it costs — fees are the certain part, returns are not.
+          whatever it costs. Fees are the certain part, returns are not.
         </p>
       </div>
 
@@ -112,7 +112,7 @@ const faqs = [
               <tbody>
                 <tr><td>Application & readiness</td><td class="num">£250 – £1,000</td><td>Diligence + Pitch Health Check depth</td></tr>
                 <tr><td>Campaign setup</td><td class="num">£1,000 – £3,000</td><td>Structured disclosure & page build</td></tr>
-                <tr><td><strong>Success fee</strong></td><td class="num"><strong>3% – 5%</strong></td><td>Of funds raised — only on success</td></tr>
+                <tr><td><strong>Success fee</strong></td><td class="num"><strong>3% – 5%</strong></td><td>Of funds raised, only on success</td></tr>
                 <tr><td>Payment & admin</td><td class="num">1% – 2%</td><td>Processing, KYC/AML, records</td></tr>
                 <tr><td>Nominee / admin</td><td class="num">Annual</td><td>Charged to founder or within success fee</td></tr>
                 <tr><td>Premium pitch support</td><td class="num">£1,000 – £10,000</td><td>Optional, human-led</td></tr>
@@ -120,12 +120,12 @@ const faqs = [
             </table>
           </div>
           <div>
-            <h3 class="h3 reveal">Lower headline fees than incumbents — with preparation included</h3>
+            <h3 class="h3 reveal">Lower headline fees than incumbents, with preparation included</h3>
             <p class="reveal" style="--d:.06s">
               The market norm clusters near 2–2.5% from investors plus ~5% success
               fees and paid extras. Bundle prices below the stack because AI does
-              the preparation labour — diagnostics, FAQ drafting, disclosure
-              structuring — that incumbents either charge for or skip.
+              the preparation labour (diagnostics, FAQ drafting, disclosure
+              structuring) that incumbents either charge for or skip.
             </p>
             <ul class="check-list reveal" style="--d:.12s">
               <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Pitch Health Check free, before any commitment</span></li>
@@ -144,7 +144,7 @@ const faqs = [
           <p class="lead reveal" style="--d:.1s">
             UK equity crowdfunding norms, as published by the platforms themselves
             (indicative, 2025–26): meaningful entry fees and 5% of your profits at
-            exit. Bundle's design puts both low — and adds the discipline layer.
+            exit. Bundle's design puts both low, and adds the discipline layer.
           </p>
         </div>
         <div class="table-wrap reveal">

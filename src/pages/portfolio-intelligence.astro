@@ -5,14 +5,14 @@ import CTABand from '../components/CTABand.astro';
 import DashboardMockup from '../components/DashboardMockup.astro';
 
 const modules = [
-  { icon: 'gauge', title: 'The concentration meter', body: '“How concentrated am I?” answered continuously — with alerts when any position starts to dominate your portfolio.' },
+  { icon: 'gauge', title: 'The concentration meter', body: '“How concentrated am I?” answered continuously, with alerts when any position starts to dominate your portfolio.' },
   { icon: 'pie', title: 'Exposure breakdowns', body: 'Sector, stage and geography donuts and bars, so a “diversified” portfolio can’t quietly become five climate seed rounds.' },
-  { icon: 'pulse', title: 'Portfolio risk score', body: 'A single, explainable band — from the Startup Risk Agent’s company-level scores, aggregated honestly. Always “high-risk asset class” context attached.' },
+  { icon: 'pulse', title: 'Portfolio risk score', body: 'A single, explainable band, built from the Startup Risk Agent’s company-level scores, aggregated honestly. Always “high-risk asset class” context attached.' },
   { icon: 'timer', title: 'Illiquidity timeline', body: 'Expected holding periods per company and portfolio-wide, plus upcoming structured liquidity windows where relevant.' },
-  { icon: 'award', title: 'SEIS/EIS relief tracker', body: 'Which holdings qualify, what certificates are in, what relief you may claim — and reminders that tax treatment depends on your circumstances.' },
+  { icon: 'award', title: 'SEIS/EIS relief tracker', body: 'Which holdings qualify, what certificates are in, what relief you may claim, with reminders that tax treatment depends on your circumstances.' },
   { icon: 'bell', title: 'Alerts that matter', body: 'Follow-on rounds, dilution notices, missed-update flags, and honest failure alerts when a company dissolves. No noise, no spin.' },
-  { icon: 'graduation', title: 'Education progress', body: 'Your Academy track lives next to your portfolio — because the discipline is the product, not a one-time onboarding hoop.' },
-  { icon: 'spark', title: 'AI plain-English summaries', body: 'A monthly readable summary of what actually happened across your portfolio — and “questions to ask” before your next allocation.' },
+  { icon: 'graduation', title: 'Education progress', body: 'Your Academy track lives next to your portfolio, because the discipline is the product, not a one-time onboarding hoop.' },
+  { icon: 'spark', title: 'AI plain-English summaries', body: 'A monthly readable summary of what actually happened across your portfolio, and “questions to ask” before your next allocation.' },
 ];
 
 const lifecycle = [
@@ -25,7 +25,7 @@ const lifecycle = [
 
 <BaseLayout
   title="Portfolio Intelligence"
-  description="The Bundle dashboard: concentration meter, exposure breakdowns, portfolio risk score, SEIS/EIS tracker, dilution alerts and AI plain-English summaries — continuous intelligence for private portfolios."
+  description="The Bundle dashboard: concentration meter, exposure breakdowns, portfolio risk score, SEIS/EIS tracker, dilution alerts and AI plain-English summaries. Continuous intelligence for private portfolios."
 >
   <section class="pi-hero bg-grid">
     <div class="container">
@@ -47,7 +47,7 @@ const lifecycle = [
       </div>
       <div class="reveal" style="--d:.22s">
         <DashboardMockup variant="full" />
-        <p class="mock-caption">Product concept — illustrative portfolio and companies, not a live account or recommendations.</p>
+        <p class="mock-caption">Product concept: illustrative portfolio and companies, not a live account or recommendations.</p>
       </div>
     </div>
   </section>
@@ -82,7 +82,7 @@ const lifecycle = [
           <h2 class="h2 reveal" style="--d:.05s">The AI writes your due-diligence questions.<br />You still do the thinking.</h2>
           <p class="lead reveal" style="--d:.1s">
             For every startup, the engine generates the questions a professional
-            would ask — pulled from the pitch, the financials and the risk
+            would ask, pulled from the pitch, the financials and the risk
             assessment. It never answers "should I invest?" That question is yours.
           </p>
         </div>
@@ -90,7 +90,7 @@ const lifecycle = [
           <div class="q-head">
             <span class="icon-chip"><Icon name="spark" size={19} /></span>
             <div>
-              <span class="q-title">Questions to ask — Voltaic Grid</span>
+              <span class="q-title">Questions to ask: Voltaic Grid</span>
               <span class="q-sub mono">Generated from campaign disclosure · reviewed format</span>
             </div>
           </div>
@@ -113,7 +113,7 @@ const lifecycle = [
         <h2 class="h2 reveal" style="--d:.05s">Intelligence for the whole holding period</h2>
         <p class="lead mx-auto reveal" style="--d:.1s">
           Startup investments live for years. The dashboard is built for that
-          timescale — not for the moment of purchase.
+          timescale, not for the moment of purchase.
         </p>
       </div>
       <div class="lifecycle reveal">
