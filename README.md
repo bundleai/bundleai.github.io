@@ -4,6 +4,9 @@ Production-quality marketing site for **Bundle.ai**, the UK's portfolio-first,
 FCA-conscious startup investing platform. Built with [Astro](https://astro.build)
 as a fully static, component-driven site — light mode, calm, institutional-modern.
 
+**Live:** https://bundleai.github.io — deployed automatically from `main` by
+`.github/workflows/deploy.yml` (GitHub Pages, Actions build).
+
 ## Run it
 
 ```bash
