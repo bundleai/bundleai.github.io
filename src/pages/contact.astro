@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+
+const channels = [
+  {
+    icon: 'users',
+    title: 'Investors',
+    body: 'Questions about the waitlist, early access, or how the platform will work when it launches.',
+    email: 'hello@bundle.ai',
+  },
+  {
+    icon: 'seedling',
+    title: 'Founders raising',
+    body: 'Building a UK startup and want to raise on Bundle at launch? Tell us about the company.',
+    email: 'founders@bundle.ai',
+  },
+  {
+    icon: 'mail',
+    title: 'Press & partnerships',
+    body: 'Interviews, comment on UK retail investing, or ideas for working together.',
+    email: 'press@bundle.ai',
+  },
+];
+---
+
+<BaseLayout
+  title="Contact"
+  description="Contact Bundle — investors, founders raising, and press. Email us and a person replies; no chatbots pretending to be people."
+>
+  <PageHero
+    eyebrow="Contact"
+    title="Talk to a human"
+    lead="No chatbots pretending to be people. Email the right address below and one of the founders replies — usually within two working days."
+  />
+
+  <section class="section">
+    <div class="container">
+      <div class="grid cols-3">
+        {
+          channels.map((c, i) => (
+            <article class="card card-hover contact-card reveal" style={`--d:${i * 0.07}s`}>
+              <span class="icon-chip"><Icon name={c.icon} /></span>
+              <h2 class="h3 contact-title">{c.title}</h2>
+              <p class="small muted">{c.body}</p>
+              <a class="text-link" href={`mailto:${c.email}`}>
+                {c.email} <span class="arrow">→</span>
+              </a>
+            </article>
+          ))
+        }
+      </div>
+
+      <div class="card note-card reveal">
+        <span class="icon-chip"><Icon name="map-pin" /></span>
+        <div>
+          <p class="small">
+            <strong>Registered office.</strong> Bundle Technologies Ltd, London,
+            United Kingdom.
+          </p>
+          <p class="small muted note-sub">
+            Once regulated activity begins, details for complaints and
+            regulatory correspondence will be published on this page.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .contact-title {
+    margin: 1rem 0 0.4rem;
+  }
+
+  .contact-card p {
+    margin-bottom: 0.9rem;
+  }
+
+  .contact-card .text-link {
+    margin-top: auto;
+  }
+
+  .note-card {
+    display: flex;
+    gap: 1.1rem;
+    align-items: flex-start;
+    margin-top: 1.25rem;
+  }
+
+  .note-card p {
+    margin: 0;
+  }
+
+  .note-sub {
+    margin-top: 0.25rem;
+  }
+</style>

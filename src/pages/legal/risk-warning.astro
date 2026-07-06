@@ -1,0 +1,181 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+
+const risks = [
+  {
+    title: 'You could lose everything you invest',
+    body: 'Most early-stage startups fail. When one fails, the money you invested in it is usually lost in full. There is no compensation for a company simply failing — that is the deal, stated plainly.',
+  },
+  {
+    title: 'Your money will be locked up for years',
+    body: 'Startup shares cannot be sold like listed stocks. Expect to hold for five to ten years, possibly longer, possibly forever. Structured liquidity windows may exist in future, but they are opportunities, not promises — no window is guaranteed to run, or to have buyers.',
+  },
+  {
+    title: 'Your stake will usually shrink over time',
+    body: 'Successful startups raise more money, issuing new shares that dilute yours. Owning 0.5% today does not mean owning 0.5% at exit. Dilution can be good news (the company is growing) — but it changes your maths, and you should understand it before investing.',
+  },
+  {
+    title: 'You are unlikely to be protected if things go wrong',
+    body: 'Startup investment losses are generally not covered by the Financial Services Compensation Scheme (FSCS), and the Financial Ombudsman Service is unlikely to help with a company simply failing. Protections that apply to bank deposits do not apply here.',
+  },
+  {
+    title: 'Tax relief is not a safety net',
+    body: 'SEIS and EIS reliefs can meaningfully reduce the net cost of losses — but they depend on your personal circumstances, on the company keeping its qualifying status, and on rules that can change. Relief can be reduced or withdrawn. Never invest for the relief alone.',
+  },
+  {
+    title: 'Diversification reduces one risk — not all of them',
+    body: 'Bundle exists to help you spread capital across many small positions. That addresses concentration risk. It does not make startup investing safe, guarantee any return, or ensure that a diversified portfolio cannot lose money overall. It can.',
+  },
+  {
+    title: 'Secondary purchases carry extra considerations',
+    body: 'Buying private shares second-hand generally earns no SEIS/EIS relief, may happen at prices that later prove too high, and depends on disclosure that is necessarily less complete than a public market’s. The total-loss and illiquidity risks apply in full.',
+  },
+  {
+    title: 'Estimates, valuations and AI outputs can be wrong',
+    body: 'Private-company valuations are estimates, not market prices. Risk scores, projections and AI-generated summaries on Bundle are assistive and can be wrong. Nothing on this platform is investment advice or a recommendation. Decisions — and their outcomes — are yours.',
+  },
+];
+---
+
+<BaseLayout
+  title="Risk warnings"
+  description="The honest page: total-loss risk, illiquidity, dilution, limited FSCS/FOS protection, SEIS/EIS limits, and what diversification does and doesn't do. Read this before anything else on Bundle.ai."
+>
+  <section class="rw-hero">
+    <div class="container narrow">
+      <p class="eyebrow reveal" style="color:#e9c98a">The honest page</p>
+      <h1 class="display reveal" style="--d:.05s">
+        Don't invest unless you're prepared to lose all the money you invest.
+      </h1>
+      <p class="lead reveal" style="--d:.1s">
+        That sentence is the FCA-prescribed warning for high-risk investments.
+        Most platforms show it because they must. We'd show it anyway — because
+        every product decision at Bundle starts from taking it seriously. This
+        page explains, in plain English, exactly what you're risking.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container narrow">
+      <div class="rw-list">
+        {
+          risks.map((r, i) => (
+            <article class="rw-item reveal" style={`--d:${Math.min(i * 0.04, 0.2)}s`}>
+              <span class="rw-num mono">{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <h2 class="rw-title">{r.title}</h2>
+                <p class="rw-body">{r.body}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+
+      <div class="rw-mitigation reveal">
+        <h2 class="h3">What Bundle does about it — and what that's worth</h2>
+        <p>
+          Education before investing, appropriateness testing, cooling-off
+          periods, concentration alerts, plain-English risk summaries, fraud
+          monitoring, and honest failure reporting. These make you a
+          better-informed investor taking clearer-eyed risks.
+          <strong>None of them reduce the underlying risk of the asset
+          class.</strong> A well-run platform can't make a fragile company
+          sturdy — it can only make sure you knew.
+        </p>
+        <p class="small muted">
+          Good rules of thumb used across the industry: keep high-risk
+          investments to a small fraction of your investable assets (the FCA has
+          suggested no more than 10% for most people), build positions slowly,
+          and never invest borrowed money or money you may need back.
+        </p>
+      </div>
+
+      <div class="rw-links reveal">
+        <a class="text-link" href="/learn">Learn the risks properly in the Academy <span class="arrow">→</span></a>
+        <a class="text-link" href="/trust">How our protections work <span class="arrow">→</span></a>
+      </div>
+
+      <p class="small muted reveal" style="margin-top:2.5rem">
+        Bundle Technologies Ltd is pre-launch and
+        not currently authorised by the FCA; no investment services are live.
+        This page describes the risks of the asset class Bundle is being built
+        around, and will be maintained as a first-class part of the product —
+        not a footer link you were never meant to find.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .rw-hero {
+    background: var(--ink);
+    padding: clamp(3.5rem, 8vw, 6rem) 0 clamp(2.75rem, 6vw, 4.5rem);
+  }
+
+  .rw-hero .display {
+    color: #fff;
+    font-size: clamp(2rem, 4.4vw, 3.4rem);
+  }
+
+  .rw-hero .lead {
+    color: #b8cdd1;
+  }
+
+  .rw-list {
+    display: grid;
+    gap: 0;
+  }
+
+  .rw-item {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1.75rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .rw-num {
+    flex: none;
+    font-size: 0.85rem;
+    color: var(--sand-ink);
+    background: var(--sand-tint);
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.2rem;
+  }
+
+  .rw-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .rw-body {
+    margin: 0;
+    color: var(--text);
+    max-width: 60ch;
+  }
+
+  .rw-mitigation {
+    margin-top: 3rem;
+    padding: clamp(1.5rem, 3.5vw, 2.25rem);
+    background: var(--tint);
+    border: 1px solid rgba(13, 126, 138, 0.16);
+    border-radius: var(--r-l);
+  }
+
+  .rw-links {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+  }
+
+  .rw-hero :global(.eyebrow::before) {
+    background: #e9c98a;
+  }
+</style>

@@ -1,0 +1,150 @@
+---
+/**
+ * Two-column philosophy comparison: "them" vs Bundle.ai (highlighted).
+ */
+interface Props {
+  leftTitle?: string;
+  rightTitle?: string;
+  rows: { left: string; right: string }[];
+}
+
+const {
+  leftTitle = 'Traditional platforms',
+  rightTitle = 'Bundle.ai',
+  rows,
+} = Astro.props;
+---
+
+<div class="compare reveal" role="table" aria-label={`${leftTitle} compared with ${rightTitle}`}>
+  <div class="compare-col left" role="rowgroup">
+    <div class="compare-head" role="columnheader">{leftTitle}</div>
+    {
+      rows.map((r) => (
+        <div class="compare-cell" role="cell">
+          <span class="mark dim" aria-hidden="true">—</span>
+          <span>{r.left}</span>
+        </div>
+      ))
+    }
+  </div>
+  <div class="compare-col right" role="rowgroup">
+    <div class="compare-head" role="columnheader">
+      <svg width="18" height="18" viewBox="0 0 32 32" aria-hidden="true">
+        <rect x="2.4" y="15" width="5" height="14" rx="2.5" fill="currentColor" opacity="0.85"></rect>
+        <rect x="9.8" y="3" width="5" height="26" rx="2.5" fill="currentColor"></rect>
+        <rect x="17.2" y="11" width="5" height="18" rx="2.5" fill="currentColor" opacity="0.85"></rect>
+        <rect x="24.6" y="7" width="5" height="22" rx="2.5" fill="currentColor"></rect>
+      </svg>
+      {rightTitle}
+    </div>
+    {
+      rows.map((r) => (
+        <div class="compare-cell" role="cell">
+          <span class="mark tick" aria-hidden="true">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12.5l4.6 4.6L19 7.5" />
+            </svg>
+          </span>
+          <span>{r.right}</span>
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    align-items: start;
+  }
+
+  .compare-col {
+    border-radius: var(--r-m);
+    overflow: hidden;
+  }
+
+  .compare-col.left {
+    background: var(--surface);
+    border: 1px solid var(--line);
+  }
+
+  .compare-col.right {
+    background: var(--surface);
+    border: 1px solid rgba(13, 126, 138, 0.35);
+    box-shadow: var(--shadow-m);
+  }
+
+  .compare-head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 1.4rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.02rem;
+    letter-spacing: -0.01em;
+  }
+
+  .left .compare-head {
+    color: var(--text-2);
+    background: var(--tint-soft);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .right .compare-head {
+    color: #fff;
+    background: var(--teal);
+  }
+
+  .compare-cell {
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-start;
+    padding: 0.95rem 1.4rem;
+    font-size: 0.96rem;
+    line-height: 1.55;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .compare-cell:last-child {
+    border-bottom: 0;
+  }
+
+  .left .compare-cell {
+    color: var(--text-2);
+  }
+
+  .right .compare-cell {
+    color: var(--text);
+  }
+
+  .mark {
+    flex: none;
+    margin-top: 0.14rem;
+  }
+
+  .mark.dim {
+    color: var(--faint);
+    width: 18px;
+    text-align: center;
+  }
+
+  .mark.tick {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--sage-tint);
+    color: var(--sage-ink);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media (max-width: 760px) {
+    .compare {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

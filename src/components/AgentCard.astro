@@ -1,0 +1,78 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  icon: string;
+  name: string;
+  tagline: string;
+  does: string;
+  outputs: string[];
+}
+
+const { icon, name, tagline, does, outputs } = Astro.props;
+---
+
+<article class="card card-hover agent-card reveal">
+  <div class="agent-head">
+    <span class="icon-chip"><Icon name={icon} size={20} /></span>
+    <div>
+      <h3 class="agent-name">{name}</h3>
+      <p class="agent-tag">{tagline}</p>
+    </div>
+  </div>
+  <p class="agent-does">{does}</p>
+  <div class="agent-outputs">
+    <span class="outputs-label mono">Outputs</span>
+    <div class="chip-row">
+      {outputs.map((o) => <span class="badge badge-line">{o}</span>)}
+    </div>
+  </div>
+</article>
+
+<style>
+  .agent-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .agent-head {
+    display: flex;
+    gap: 0.9rem;
+    align-items: center;
+  }
+
+  .agent-name {
+    font-size: 1.08rem;
+    margin: 0;
+  }
+
+  .agent-tag {
+    margin: 0.1rem 0 0;
+    font-size: 0.85rem;
+    color: var(--teal-deep);
+    font-weight: 550;
+  }
+
+  .agent-does {
+    margin: 0;
+    font-size: 0.94rem;
+    line-height: 1.62;
+    color: var(--text);
+  }
+
+  .agent-outputs {
+    margin-top: auto;
+    display: grid;
+    gap: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .outputs-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+</style>

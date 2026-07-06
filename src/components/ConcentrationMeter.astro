@@ -1,0 +1,302 @@
+---
+/**
+ * Signature component: "How concentrated am I?"
+ * Semicircular meter — single colored fill on a light same-family track,
+ * end-dot with surface ring, status word + supporting figures.
+ *
+ * Static:      <ConcentrationMeter score={78} sub="Largest position 9%" />
+ * Interactive: <ConcentrationMeter interactive positions={4} />
+ */
+interface Props {
+  score?: number; // 0–100 diversification score
+  sub?: string;
+  interactive?: boolean;
+  positions?: number;
+  class?: string;
+}
+
+const {
+  score = 72,
+  sub,
+  interactive = false,
+  positions = 4,
+  class: className,
+} = Astro.props;
+
+// Geometry — baseline at y=130, small margin below
+const R = 103;
+const CX = 130;
+const CY = 130;
+const LEN = Math.PI * R;
+
+const posToScore = (n: number) => Math.min(100, Math.round(((n - 1) / 19) * 100));
+const initialScore = interactive ? posToScore(positions) : score;
+const t = Math.max(0, Math.min(1, initialScore / 100));
+
+const zone = (s: number) =>
+  s < 34
+    ? { color: '#c6543d', ink: 'var(--red-ink)', word: 'Concentrated' }
+    : s < 67
+      ? { color: '#e4b363', ink: 'var(--sand-ink)', word: 'Diversifying' }
+      : { color: '#0d7e8a', ink: 'var(--teal-deep)', word: 'Diversified' };
+
+const z = zone(initialScore);
+const angle = Math.PI * (1 - t);
+const dotX = CX + R * Math.cos(angle);
+const dotY = CY - R * Math.sin(angle);
+const largest = (n: number) => Math.min(100, Math.ceil((100 / n) * 1.35));
+---
+
+<div
+  class:list={['meter', className, { interactive }]}
+  data-meter={interactive ? 'demo' : 'static'}
+>
+  <div class="meter-gauge">
+    <svg viewBox="0 0 260 140" role="img" aria-label={`Concentration meter: ${z.word}`}>
+      <!-- track: lighter step of the same family -->
+      <path
+        d={`M ${CX - R} ${CY} A ${R} ${R} 0 0 1 ${CX + R} ${CY}`}
+        fill="none"
+        stroke="var(--chart-track)"
+        stroke-width="15"
+        stroke-linecap="round"></path>
+      <!-- zone boundary ticks (surface gaps in the track) -->
+      {
+        [0.34, 0.67].map((zt) => {
+          const a = Math.PI * (1 - zt);
+          const x1 = CX + (R - 11) * Math.cos(a);
+          const y1 = CY - (R - 11) * Math.sin(a);
+          const x2 = CX + (R + 11) * Math.cos(a);
+          const y2 = CY - (R + 11) * Math.sin(a);
+          return (
+            <line
+              x1={x1}
+              y1={y1}
+              x2={x2}
+              y2={y2}
+              stroke="var(--surface)"
+              stroke-width="2.5"
+            />
+          );
+        })
+      }
+      <!-- fill: butt-cut so short fills stay honest; the dot is the terminus -->
+      <path
+        class="meter-fill"
+        d={`M ${CX - R} ${CY} A ${R} ${R} 0 0 1 ${CX + R} ${CY}`}
+        fill="none"
+        stroke={z.color}
+        stroke-width="15"
+        stroke-linecap="butt"
+        stroke-dasharray={LEN}
+        stroke-dashoffset={LEN * (1 - t)}></path>
+      <!-- end dot with surface ring -->
+      <circle
+        class="meter-dot"
+        cx={dotX}
+        cy={dotY}
+        r="7.5"
+        fill={z.color}
+        stroke="var(--surface)"
+        stroke-width="2.5"></circle>
+    </svg>
+    <span
+      class="meter-word"
+      style={`color:${z.ink}`}
+      aria-live={interactive ? 'polite' : undefined}>{z.word}</span
+    >
+  </div>
+
+  <div class="meter-ends" aria-hidden="true">
+    <span>Concentrated</span>
+    <span>Diversified</span>
+  </div>
+
+  <p class="meter-sub">
+    {
+      interactive
+        ? `${positions} ${positions === 1 ? 'company' : 'companies'} · largest position ~${largest(positions)}%`
+        : sub
+    }
+  </p>
+
+  {
+    interactive && (
+      <div class="meter-controls">
+        <label class="meter-label" for="meter-range">
+          Drag to add companies to a demo portfolio
+        </label>
+        <input
+          id="meter-range"
+          type="range"
+          min="1"
+          max="24"
+          step="1"
+          value={positions}
+          aria-label="Number of companies in demo portfolio"
+        />
+        <div class="meter-scale mono" aria-hidden="true">
+          <span>1 company</span>
+          <span>12</span>
+          <span>24</span>
+        </div>
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .meter {
+    display: grid;
+    justify-items: center;
+    width: 100%;
+  }
+
+  .meter-gauge {
+    position: relative;
+    width: 100%;
+    max-width: 340px;
+  }
+
+  .meter-fill,
+  .meter-dot {
+    transition: stroke 0.25s ease, fill 0.25s ease;
+  }
+
+  .meter-word {
+    position: absolute;
+    left: 50%;
+    bottom: 4%;
+    transform: translateX(-50%);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.45em;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    white-space: nowrap;
+    transition: color 0.25s ease;
+    pointer-events: none;
+  }
+
+  .meter-ends {
+    width: 100%;
+    max-width: 340px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.35em;
+    font-family: var(--font-mono);
+    font-size: 0.62em;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  .meter-sub {
+    margin: 0.5em 0 0;
+    font-size: 0.82em;
+    color: var(--text-2);
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+
+  .meter-controls {
+    width: 100%;
+    max-width: 340px;
+    display: grid;
+    gap: 0.4rem;
+    margin-top: 1.4rem;
+  }
+
+  .meter-label {
+    font-size: 0.85rem;
+    color: var(--text-2);
+    text-align: center;
+    margin-bottom: 0.3rem;
+  }
+
+  .meter-scale {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.68rem;
+    color: var(--faint);
+  }
+
+  input[type='range'] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--chart-track);
+    outline-offset: 6px;
+    cursor: pointer;
+  }
+
+  input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--teal);
+    box-shadow: var(--shadow-s);
+    transition: transform 0.15s ease;
+  }
+
+  input[type='range']::-webkit-slider-thumb:hover {
+    transform: scale(1.08);
+  }
+
+  input[type='range']::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--teal);
+    box-shadow: var(--shadow-s);
+  }
+</style>
+
+<script>
+  const R = 103;
+  const CX = 130;
+  const CY = 130;
+  const LEN = Math.PI * R;
+
+  const zone = (s: number) =>
+    s < 34
+      ? { color: '#c6543d', ink: '#a84631', word: 'Concentrated' }
+      : s < 67
+        ? { color: '#e4b363', ink: '#8a6420', word: 'Diversifying' }
+        : { color: '#0d7e8a', ink: '#0a5e68', word: 'Diversified' };
+
+  document.querySelectorAll<HTMLElement>('[data-meter="demo"]').forEach((root) => {
+    const range = root.querySelector<HTMLInputElement>('input[type="range"]');
+    const fill = root.querySelector<SVGPathElement>('.meter-fill');
+    const dot = root.querySelector<SVGCircleElement>('.meter-dot');
+    const word = root.querySelector<HTMLElement>('.meter-word');
+    const sub = root.querySelector<HTMLElement>('.meter-sub');
+    if (!range || !fill || !dot || !word || !sub) return;
+
+    const render = () => {
+      const n = parseInt(range.value, 10);
+      const score = Math.min(100, Math.round(((n - 1) / 19) * 100));
+      const t = score / 100;
+      const z = zone(score);
+      const a = Math.PI * (1 - t);
+      fill.setAttribute('stroke-dashoffset', String(LEN * (1 - t)));
+      fill.setAttribute('stroke', z.color);
+      dot.setAttribute('cx', String(CX + R * Math.cos(a)));
+      dot.setAttribute('cy', String(CY - R * Math.sin(a)));
+      dot.setAttribute('fill', z.color);
+      word.textContent = z.word;
+      word.style.color = z.ink;
+      const largest = Math.min(100, Math.ceil((100 / n) * 1.35));
+      sub.textContent = `${n} ${n === 1 ? 'company' : 'companies'} · largest position ~${largest}%`;
+    };
+
+    range.addEventListener('input', render);
+    render();
+  });
+</script>

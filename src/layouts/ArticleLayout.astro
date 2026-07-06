@@ -1,0 +1,202 @@
+---
+/**
+ * Reusable template for Academy lessons and Insights articles — built for scale.
+ */
+import BaseLayout from './BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+
+interface Props {
+  kind: 'lesson' | 'article';
+  title: string;
+  description: string;
+  category: string;
+  meta: string; // e.g. "8 min · Level 1 · Core path" or "6 July 2026 · Policy"
+  takeaways?: string[];
+  nextLabel?: string;
+  nextHref?: string;
+}
+
+const {
+  kind,
+  title,
+  description,
+  category,
+  meta,
+  takeaways = [],
+  nextLabel,
+  nextHref,
+} = Astro.props;
+
+const backHref = kind === 'lesson' ? '/learn' : '/blog';
+const backLabel = kind === 'lesson' ? 'Academy' : 'Insights';
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="article-page">
+    <header class="article-head bg-grid">
+      <div class="container narrow">
+        <p class="crumbs reveal">
+          <a href={backHref}>{backLabel}</a>
+          <span aria-hidden="true">/</span>
+          <span>{category}</span>
+        </p>
+        <h1 class="display article-title reveal" style="--d:.05s">{title}</h1>
+        <p class="article-meta mono reveal" style="--d:.1s">{meta}</p>
+      </div>
+    </header>
+
+    <div class="container narrow article-body">
+      {
+        takeaways.length > 0 && (
+          <aside class="takeaways card reveal" aria-label="Key takeaways">
+            <p class="tk-title">
+              <Icon name="target" size={17} /> Key takeaways
+            </p>
+            <ul>
+              {takeaways.map((t) => (
+                <li>{t}</li>
+              ))}
+            </ul>
+          </aside>
+        )
+      }
+
+      <div class="prose mx-auto">
+        <slot />
+      </div>
+
+      {
+        nextLabel && nextHref && (
+          <div class="next-up reveal">
+            <span class="mono next-k">Next {kind === 'lesson' ? 'lesson' : 'read'}</span>
+            <a href={nextHref} class="next-link">
+              {nextLabel} <span class="arrow">→</span>
+            </a>
+          </div>
+        )
+      }
+
+      <div class="article-disclaimer">
+        <Icon name="info" size={15} />
+        <span>
+          Educational content, not investment advice or a recommendation. Startup
+          investing puts your capital at risk and is illiquid; tax treatment
+          depends on individual circumstances and may change.
+        </span>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .article-head {
+    padding: clamp(3rem, 7vw, 5.5rem) 0 clamp(2rem, 4vw, 3rem);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .crumbs {
+    display: flex;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    color: var(--text-2);
+    margin-bottom: 1.25rem;
+  }
+
+  .article-title {
+    font-size: clamp(2.1rem, 4.2vw, 3.4rem);
+    max-width: 20ch;
+  }
+
+  .article-meta {
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--teal-deep);
+  }
+
+  .article-body {
+    padding: clamp(2.5rem, 5vw, 4rem) 1.5rem clamp(3rem, 6vw, 5rem);
+  }
+
+  .takeaways {
+    max-width: 42rem;
+    margin: 0 auto 2.5rem;
+    padding: 1.5rem 1.75rem;
+    background: var(--tint-soft);
+  }
+
+  .tk-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--ink);
+    margin: 0 0 0.75rem;
+  }
+
+  .tk-title svg {
+    color: var(--teal);
+  }
+
+  .takeaways ul {
+    margin: 0;
+    padding-left: 1.2rem;
+    display: grid;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    color: var(--text);
+  }
+
+  .takeaways li::marker {
+    color: var(--teal);
+  }
+
+  .next-up {
+    max-width: 42rem;
+    margin: 3rem auto 0;
+    padding: 1.5rem 1.75rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-m);
+    box-shadow: var(--shadow-s);
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .next-k {
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+
+  .next-link {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.15rem;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+  .next-link:hover {
+    color: var(--teal);
+  }
+
+  .article-disclaimer {
+    max-width: 42rem;
+    margin: 2rem auto 0;
+    display: flex;
+    gap: 0.55rem;
+    align-items: flex-start;
+    font-size: 0.8rem;
+    color: var(--text-2);
+    line-height: 1.6;
+  }
+
+  .article-disclaimer svg {
+    flex: none;
+    margin-top: 0.2rem;
+    color: var(--faint);
+  }
+</style>

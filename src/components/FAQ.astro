@@ -1,0 +1,19 @@
+---
+interface Props {
+  items: { q: string; a: string }[];
+  class?: string;
+}
+
+const { items, class: className } = Astro.props;
+---
+
+<div class:list={['faq', className]}>
+  {
+    items.map((item) => (
+      <details>
+        <summary>{item.q}</summary>
+        <div class="faq-body" set:html={item.a} />
+      </details>
+    ))
+  }
+</div>

@@ -1,0 +1,164 @@
+---
+/**
+ * Allocation donut — part-to-whole, ≤ 6 segments, validated categorical order,
+ * 2px surface gaps between segments, legend always present, text in text tokens.
+ */
+interface Segment {
+  label: string;
+  value: number; // percentage or weight
+}
+
+interface Props {
+  segments: Segment[];
+  centerTitle?: string;
+  centerSub?: string;
+  legend?: boolean;
+  class?: string;
+}
+
+const {
+  segments,
+  centerTitle,
+  centerSub,
+  legend = true,
+  class: className,
+} = Astro.props;
+
+const COLORS = ['#0090a3', '#c08a2e', '#5578c4', '#2e9d80', '#a2609a', '#c97a50'];
+const R = 42;
+const C = 2 * Math.PI * R; // ≈ 263.9
+const GAP = 2.5;
+const total = segments.reduce((s, x) => s + x.value, 0);
+
+let acc = 0;
+const arcs = segments.slice(0, 6).map((seg, i) => {
+  const frac = seg.value / total;
+  const len = Math.max(frac * C - GAP, 0.75);
+  const offset = -(acc * C + GAP / 2);
+  acc += frac;
+  return {
+    ...seg,
+    color: COLORS[i],
+    pct: Math.round(frac * 100),
+    dasharray: `${len} ${C}`,
+    dashoffset: offset,
+  };
+});
+---
+
+<div class:list={['donut', className]}>
+  <div class="donut-chart">
+    <svg viewBox="0 0 110 110" role="img" aria-label={`Allocation: ${arcs.map((a) => `${a.label} ${a.pct}%`).join(', ')}`}>
+      {
+        arcs.map((a) => (
+          <circle
+            cx="55"
+            cy="55"
+            r={R}
+            fill="none"
+            stroke={a.color}
+            stroke-width="13"
+            stroke-dasharray={a.dasharray}
+            stroke-dashoffset={a.dashoffset}
+            transform="rotate(-90 55 55)"
+          />
+        ))
+      }
+    </svg>
+    {
+      (centerTitle || centerSub) && (
+        <div class="donut-center">
+          {centerTitle && <span class="donut-title">{centerTitle}</span>}
+          {centerSub && <span class="donut-sub">{centerSub}</span>}
+        </div>
+      )
+    }
+  </div>
+  {
+    legend && (
+      <ul class="donut-legend">
+        {arcs.map((a) => (
+          <li>
+            <span class="swatch" style={`background:${a.color}`} />
+            <span class="l-label">{a.label}</span>
+            <span class="l-val">{a.pct}%</span>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</div>
+
+<style>
+  .donut {
+    display: flex;
+    align-items: center;
+    gap: 1.25em;
+  }
+
+  .donut-chart {
+    position: relative;
+    flex: none;
+    width: min(44%, 150px);
+  }
+
+  .donut-center {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    text-align: center;
+    gap: 0.1em;
+  }
+
+  .donut-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.25em;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  .donut-sub {
+    font-size: 0.62em;
+    color: var(--text-2);
+  }
+
+  .donut-legend {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.5em;
+    font-size: 0.82em;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .donut-legend li {
+    display: flex;
+    align-items: center;
+    gap: 0.55em;
+  }
+
+  .swatch {
+    flex: none;
+    width: 0.72em;
+    height: 0.72em;
+    border-radius: 3px;
+  }
+
+  .l-label {
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .l-val {
+    margin-left: auto;
+    color: var(--text-2);
+    font-variant-numeric: tabular-nums;
+  }
+</style>

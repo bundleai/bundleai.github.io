@@ -1,0 +1,136 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Logo from '../components/Logo.astro';
+---
+
+<BaseLayout
+  title="Log in"
+  description="Log in to Bundle. We’re pre-launch — accounts open with early access, so join the waitlist for now."
+  ribbon={false}
+>
+  <section class="section login-section">
+    <div class="container">
+      <div class="card login-card reveal">
+        <div class="login-head">
+          <Logo markOnly size={34} />
+          <h1>Log in to Bundle</h1>
+        </div>
+
+        <form class="login-form" id="login-form" novalidate>
+          <div class="field">
+            <label for="login-email">Email</label>
+            <input
+              id="login-email"
+              type="email"
+              name="email"
+              autocomplete="email"
+              placeholder="you@example.com"
+            />
+          </div>
+          <div class="field">
+            <label for="login-password">Password</label>
+            <input
+              id="login-password"
+              type="password"
+              name="password"
+              autocomplete="current-password"
+              placeholder="Your password"
+            />
+          </div>
+          <button type="button" id="login-btn" class="btn btn-primary login-submit">
+            Log in
+          </button>
+          <div class="login-note" id="login-note" aria-live="polite"></div>
+        </form>
+
+        <p class="small muted login-alt">
+          Bundle is pre-launch. Accounts open with early access —
+          <a href="/waitlist">join the waitlist</a> instead.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .login-section {
+    padding-block: clamp(3.5rem, 8vw, 6.5rem);
+  }
+
+  .login-card {
+    max-width: 26rem;
+    margin-inline: auto;
+    padding: 2.4rem 2.1rem;
+  }
+
+  .login-head {
+    display: grid;
+    justify-items: center;
+    gap: 0.9rem;
+    text-align: center;
+    margin-bottom: 1.7rem;
+  }
+
+  .login-head h1 {
+    font-size: 1.45rem;
+    margin: 0;
+  }
+
+  .login-form {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .login-submit {
+    width: 100%;
+    margin-top: 0.35rem;
+  }
+
+  /* Sand-tinted info box, shown once the note has content */
+  .login-note {
+    background: var(--sand-tint);
+    border: 1px solid rgba(138, 100, 32, 0.2);
+    color: var(--sand-ink);
+    border-radius: var(--r-s);
+    padding: 0.8rem 1rem;
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+
+  .login-note :global(a) {
+    color: var(--sand-ink);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-weight: 550;
+  }
+
+  .login-note:empty {
+    display: none;
+  }
+
+  .login-alt {
+    margin: 1.5rem 0 0;
+    text-align: center;
+  }
+</style>
+
+<script>
+  // No auth is live yet — intercept and explain, calmly.
+  const form = document.getElementById('login-form');
+  const btn = document.getElementById('login-btn');
+  const note = document.getElementById('login-note');
+
+  const showNote = () => {
+    if (note && !note.textContent) {
+      note.innerHTML =
+        'Accounts aren’t live yet — you haven’t missed anything. ' +
+        '<a href="/waitlist">Join the waitlist</a> and we’ll invite you in order.';
+    }
+  };
+
+  btn?.addEventListener('click', showNote);
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    showNote();
+  });
+</script>

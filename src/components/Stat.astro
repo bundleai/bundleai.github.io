@@ -1,0 +1,57 @@
+---
+/**
+ * Stat tile with animated counter. Proportional figures (never tabular at display size).
+ */
+interface Props {
+  value: number;
+  decimals?: number;
+  prefix?: string;
+  suffix?: string;
+  label: string;
+  note?: string;
+}
+
+const { value, decimals = 0, prefix = '', suffix = '', label, note } = Astro.props;
+const initial = (0).toLocaleString('en-GB', {
+  minimumFractionDigits: decimals,
+  maximumFractionDigits: decimals,
+});
+---
+
+<div class="stat">
+  <div class="stat-value">
+    {prefix}<span data-count={value} data-decimals={decimals}>{initial}</span>{suffix}
+  </div>
+  <div class="stat-label">{label}</div>
+  {note && <div class="stat-note">{note}</div>}
+</div>
+
+<style>
+  .stat-value {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(2.2rem, 3.6vw, 3.1rem);
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    color: var(--ink);
+  }
+
+  .stat-value :global([data-count]) {
+    font-variant-numeric: normal;
+  }
+
+  .stat-label {
+    margin-top: 0.5rem;
+    font-weight: 570;
+    color: var(--ink);
+    font-size: 0.98rem;
+  }
+
+  .stat-note {
+    margin-top: 0.3rem;
+    font-size: 0.875rem;
+    color: var(--text-2);
+    line-height: 1.55;
+    max-width: 26ch;
+  }
+</style>

@@ -1,0 +1,358 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import AgentCard from '../components/AgentCard.astro';
+import FAQ from '../components/FAQ.astro';
+import CTABand from '../components/CTABand.astro';
+
+const agents = [
+  {
+    icon: 'doc-check',
+    name: 'Founder Pitch Agent',
+    tagline: 'Institutional-quality pitch review, for every raise',
+    does: 'Scores clarity, market size, business model, traction evidence, financial assumptions, competitive positioning, use of funds, risk disclosure, valuation reasonableness and SEIS/EIS readiness.',
+    outputs: ['Pitch score', 'Missing information', 'Likely investor questions', 'Red-flag checklist'],
+  },
+  {
+    icon: 'gauge',
+    name: 'Startup Risk Agent',
+    tagline: 'Every company gets the same hard look',
+    does: 'Assesses stage, sector, revenue quality, burn and runway, customer concentration, founder background, valuation, legal complexity and dilution risk — benchmarked against comparable companies.',
+    outputs: ['Risk band', 'Plain-English explanation', 'Comparable benchmarks'],
+  },
+  {
+    icon: 'pie',
+    name: 'Portfolio Simulation Agent',
+    tagline: 'Rehearse the allocation before it’s real',
+    does: 'Lets you test allocation choices, see concentration and sector/stage exposure change, and receive educational maximum-exposure warnings. It never places capital and never decides for you.',
+    outputs: ['Concentration impact', 'Exposure preview', 'Max-exposure warnings'],
+  },
+  {
+    icon: 'graduation',
+    name: 'Investor Education Agent',
+    tagline: 'A tutor that notices what you got wrong',
+    does: 'Personalises learning from your actual mistakes. Fail a dilution question and it teaches dilution — with worked examples — before you continue. Comprehension is checked, not assumed.',
+    outputs: ['Adaptive lessons', 'Comprehension checks', 'Progress record'],
+  },
+  {
+    icon: 'shield',
+    name: 'Suitability & Vulnerability Agent',
+    tagline: 'The agent that can say “not yet”',
+    does: 'Flags signs of low financial resilience, inconsistent answers, misunderstanding, or outsized intended allocations — and routes them to human or rules-based review. It never makes final compliance decisions alone.',
+    outputs: ['Suitability flags', 'Human-review triggers', 'Audit trail'],
+  },
+  {
+    icon: 'search',
+    name: 'Fraud & Anomaly Detection Agent',
+    tagline: 'Continuous scepticism, at scale',
+    does: 'Monitors dubious founder claims, unverifiable traction, inconsistent financials, unusual investor activity, misleading marketing language, duplicate or fake identities, and adverse media.',
+    outputs: ['Anomaly flags', 'Verification requests', 'Escalation reports'],
+  },
+];
+
+const governance = [
+  { icon: 'eye', title: 'Human-in-the-loop', body: 'AI flags and drafts; humans review and decide. No agent takes a compliance or listing decision alone.' },
+  { icon: 'doc', title: 'Explainable outputs', body: 'Every score arrives with its reasoning in plain English. If we can’t explain it, we don’t ship it.' },
+  { icon: 'lock', title: 'Every decision logged', body: 'AI-assisted assessments are recorded and auditable — by us, and by regulators when asked.' },
+  { icon: 'scale', title: 'Published governance policy', body: 'Our AI governance policy will be public before any regulated activity begins. Accountability in writing.' },
+];
+
+const faqs = [
+  {
+    q: 'Will the AI tell me which startups to invest in?',
+    a: 'No — deliberately. A statement like "you should invest £250 in Startup X" would constitute regulated investment advice, and more importantly it would defeat the purpose: Bundle exists to make you a better decision-maker, not to make the decision for you. The engine informs, teaches, simulates and warns. You decide.',
+  },
+  {
+    q: 'How do I know the AI isn’t a black box?',
+    a: 'Three commitments: every output is explainable in plain English, every assessment is logged and auditable, and consequential decisions are reviewed by humans. We publish the governance policy rather than asking you to trust vibes.',
+  },
+  {
+    q: 'Can founders game the pitch scoring?',
+    a: 'The Pitch Agent scores disclosure quality and internal consistency, cross-checked against filings and benchmarks by the Fraud & Anomaly Agent — and a human reviews every listing decision. Polishing a pitch to be clearer and more honest is not gaming; that’s the intended effect.',
+  },
+  {
+    q: 'What happens when the AI gets something wrong?',
+    a: 'It will, sometimes — which is why no single agent output decides anything material alone. Wrong flags get corrected in review; corrections feed back into evaluation. What we promise is not infallibility but structure: oversight, logging, and honest correction.',
+  },
+];
+---
+
+<BaseLayout
+  title="The Bundle AI Engine"
+  description="Six AI agents for diligence, education, suitability and monitoring — explainable, logged, human-supervised. AI-assisted portfolio intelligence, never a magic stock-picker."
+>
+  <PageHero
+    eyebrow="The Bundle AI Engine"
+    title='Agentic AI that does the <em class="serif-aside">homework</em> — never the choosing'
+    lead="Six specialised agents work in the background: screening startups, scoring risk, personalising education, checking suitability and monitoring portfolios. Positioned honestly: AI-assisted diligence, education and portfolio intelligence — not a magic stock-picker."
+  >
+    <Fragment slot="actions">
+      <a href="#agents" class="btn btn-primary btn-lg">Meet the agents <span class="arrow">→</span></a>
+      <a href="#governance" class="btn btn-ghost btn-lg">AI governance</a>
+    </Fragment>
+  </PageHero>
+
+  <!-- Framing strip -->
+  <section class="section tight">
+    <div class="container">
+      <div class="frame-strip panel-tint reveal">
+        <div class="frame-item">
+          <Icon name="check" size={18} stroke={2.2} />
+          <div><strong>What it is</strong><span>Assistive intelligence: screening, scoring, teaching, simulating, monitoring — with humans supervising.</span></div>
+        </div>
+        <div class="frame-divider" aria-hidden="true"></div>
+        <div class="frame-item">
+          <Icon name="close" size={18} stroke={2.2} />
+          <div><strong>What it is not</strong><span>A recommender. It will never say "you should invest £X in Y" — that's your call, and legally it must be.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Agents -->
+  <section class="section" id="agents">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow reveal">The agents</p>
+        <h2 class="h2 reveal" style="--d:.05s">Six specialists, one discipline</h2>
+        <p class="lead reveal" style="--d:.1s">
+          Each agent has a narrow job, a defined output, and a human on the other
+          side of every consequential call.
+        </p>
+      </div>
+      <div class="grid cols-3">
+        {agents.map((a) => <AgentCard {...a} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Human in the loop diagram -->
+  <section class="section section-tint-full">
+    <div class="container">
+      <div class="section-head center">
+        <p class="eyebrow reveal">How decisions happen</p>
+        <h2 class="h2 reveal" style="--d:.05s">AI proposes. Humans dispose. Logs remember.</h2>
+      </div>
+      <div class="hitl reveal">
+        <div class="hitl-step">
+          <span class="icon-chip"><Icon name="spark" /></span>
+          <h3>Agent flags</h3>
+          <p class="small muted">A pitch scores poorly on valuation reasonableness; the risk band is drafted with its reasoning attached.</p>
+        </div>
+        <span class="hitl-arrow" aria-hidden="true"><Icon name="arrow-right" size={20} /></span>
+        <div class="hitl-step">
+          <span class="icon-chip"><Icon name="eye" /></span>
+          <h3>Human reviews</h3>
+          <p class="small muted">A named reviewer examines the reasoning, can override it, and owns the listing or escalation decision.</p>
+        </div>
+        <span class="hitl-arrow" aria-hidden="true"><Icon name="arrow-right" size={20} /></span>
+        <div class="hitl-step">
+          <span class="icon-chip"><Icon name="lock" /></span>
+          <h3>Decision logged</h3>
+          <p class="small muted">Output, reasoning, reviewer and outcome are recorded — auditable internally and by regulators.</p>
+        </div>
+      </div>
+
+      <div class="audit-card card reveal" style="--d:.1s" aria-hidden="true">
+        <p class="audit-title mono">DECISION LOG · ILLUSTRATIVE</p>
+        <div class="audit-row">
+          <span class="mono audit-time">09:41</span>
+          <span class="badge badge-sand">flag</span>
+          <span>Startup Risk Agent: “Projected revenue ×14 in 18 months — inconsistent with pipeline disclosure. Confidence 0.87.”</span>
+        </div>
+        <div class="audit-row">
+          <span class="mono audit-time">11:06</span>
+          <span class="badge badge-teal">review</span>
+          <span>Reviewer (E. Osei): request re-stated financials from founder; listing paused.</span>
+        </div>
+        <div class="audit-row">
+          <span class="mono audit-time">14:32</span>
+          <span class="badge badge-sage">outcome</span>
+          <span>Founder restated projections; risk summary updated; decision and rationale archived.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Governance -->
+  <section class="section" id="governance">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow reveal">AI governance</p>
+        <h2 class="h2 reveal" style="--d:.05s">Trust is an engineering requirement</h2>
+      </div>
+      <div class="grid cols-4">
+        {
+          governance.map((g, i) => (
+            <article class="card card-hover reveal" style={`--d:${i * 0.06}s`}>
+              <span class="icon-chip"><Icon name={g.icon} /></span>
+              <h3 class="gov-name">{g.title}</h3>
+              <p class="small muted" style="margin-bottom:0">{g.body}</p>
+            </article>
+          ))
+        }
+      </div>
+      <p class="small muted reveal" style="margin-top:1.5rem; max-width:52rem">
+        AI outputs are assistive and educational. They are not investment advice,
+        and they are reviewed under human oversight before anything consequential
+        happens. When AI and rules disagree, rules win; when rules and human
+        judgement disagree, a human — accountable and named — decides.
+      </p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section section-tint-full">
+    <div class="container narrow">
+      <div class="section-head center">
+        <p class="eyebrow reveal">Questions</p>
+        <h2 class="h2 reveal" style="--d:.05s">The questions a sceptic should ask</h2>
+      </div>
+      <FAQ items={faqs} class="reveal" />
+    </div>
+  </section>
+
+  <CTABand
+    title="Intelligence you can audit."
+    sub="Join the waitlist to see the engine at work — starting with the free Academy and pitch tools."
+    secondaryLabel="For Founders: Pitch Health Check"
+    secondaryHref="/founders#health-check"
+  />
+</BaseLayout>
+
+<style>
+  .frame-strip {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 1.5rem;
+    padding: 1.75rem 2rem;
+    align-items: center;
+  }
+
+  .frame-item {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+  }
+
+  .frame-item svg {
+    flex: none;
+    margin-top: 0.2rem;
+  }
+
+  .frame-item:first-child svg { color: var(--sage-ink); }
+  .frame-item:last-child svg { color: var(--red-ink); }
+
+  .frame-item strong {
+    display: block;
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-weight: 600;
+    margin-bottom: 0.15rem;
+  }
+
+  .frame-item span {
+    font-size: 0.92rem;
+    color: var(--text);
+    line-height: 1.55;
+  }
+
+  .frame-divider {
+    width: 1px;
+    height: 100%;
+    min-height: 3rem;
+    background: rgba(13, 126, 138, 0.18);
+  }
+
+  @media (max-width: 800px) {
+    .frame-strip {
+      grid-template-columns: 1fr;
+    }
+
+    .frame-divider {
+      width: 100%;
+      height: 1px;
+      min-height: 0;
+    }
+  }
+
+  .hitl {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    gap: 1.25rem;
+    align-items: start;
+    max-width: 64rem;
+    margin-inline: auto;
+  }
+
+  .hitl-step {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-m);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-s);
+  }
+
+  .hitl-step h3 {
+    font-size: 1.05rem;
+    margin: 0.9rem 0 0.35rem;
+  }
+
+  .hitl-arrow {
+    align-self: center;
+    color: var(--faint);
+  }
+
+  @media (max-width: 800px) {
+    .hitl {
+      grid-template-columns: 1fr;
+    }
+
+    .hitl-arrow {
+      justify-self: center;
+      transform: rotate(90deg);
+    }
+  }
+
+  .audit-card {
+    max-width: 64rem;
+    margin: 2rem auto 0;
+    padding: 1.5rem 1.75rem;
+  }
+
+  .audit-title {
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    color: var(--faint);
+    margin: 0 0 1rem;
+  }
+
+  .audit-row {
+    display: flex;
+    gap: 0.9rem;
+    align-items: baseline;
+    padding: 0.7rem 0;
+    border-top: 1px solid var(--line);
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: var(--text);
+  }
+
+  .audit-time {
+    color: var(--faint);
+    font-size: 0.8rem;
+    flex: none;
+  }
+
+  .audit-row .badge {
+    flex: none;
+  }
+
+  .gov-name {
+    font-size: 1.02rem;
+    margin: 0.95rem 0 0.35rem;
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+</style>

@@ -1,0 +1,229 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Logo from '../components/Logo.astro';
+
+const palette = [
+  { name: 'Ink', hex: '#0B2E33', varName: '--ink' },
+  { name: 'Teal', hex: '#0D7E8A', varName: '--teal' },
+  { name: 'Teal deep', hex: '#0A5E68', varName: '--teal-deep' },
+  { name: 'Teal tint', hex: '#E8F4F6', varName: '--tint', light: true },
+  { name: 'Sage', hex: '#37A98C', varName: '--sage' },
+  { name: 'Sand', hex: '#E4B363', varName: '--sand', light: true },
+  { name: 'Clay red', hex: '#C6543D', varName: '--red' },
+  { name: 'Off-white', hex: '#FBFCFC', varName: '--bg', light: true },
+];
+
+const chart = [
+  { name: 'Chart 1', hex: '#0090A3' },
+  { name: 'Chart 2', hex: '#C08A2E' },
+  { name: 'Chart 3', hex: '#5578C4' },
+  { name: 'Chart 4', hex: '#2E9D80' },
+  { name: 'Chart 5', hex: '#A2609A' },
+  { name: 'Chart 6', hex: '#C97A50' },
+];
+---
+
+<BaseLayout
+  title="Brand"
+  description="The Bundle.ai identity: the four-pill mark, lockups, palette and type — many small pieces, one disciplined whole."
+>
+  <PageHero
+    eyebrow="Brand"
+    title='Many small pieces, <em class="serif-aside">one disciplined whole</em>'
+    lead="The Bundle mark is four positions of varied weight on a shared baseline — an allocation, not a growth chart. Deliberately no up-and-to-the-right arrow: we sell discipline, not dreams."
+  />
+
+  <section class="section">
+    <div class="container">
+      <div class="grid cols-2">
+        <div class="card spec-card reveal">
+          <p class="spec-label mono">Primary lockup</p>
+          <div class="spec-stage">
+            <Logo size={44} />
+          </div>
+        </div>
+        <div class="card spec-card reveal" style="--d:.07s">
+          <p class="spec-label mono">On ink</p>
+          <div class="spec-stage dark">
+            <Logo size={44} tone="white" />
+          </div>
+        </div>
+        <div class="card spec-card reveal" style="--d:.14s">
+          <p class="spec-label mono">Symbol · app icon · favicon</p>
+          <div class="spec-stage row">
+            <img src="/brand/mark.svg" alt="Bundle mark" width="56" height="56" />
+            <img src="/brand/app-icon.svg" alt="Bundle app icon" width="56" height="56" style="border-radius:14px" />
+            <img src="/favicon.svg" alt="Bundle favicon" width="28" height="28" style="border-radius:7px" />
+          </div>
+        </div>
+        <div class="card spec-card reveal" style="--d:.21s">
+          <p class="spec-label mono">Monochrome</p>
+          <div class="spec-stage row mono-stage">
+            <img src="/brand/mark-mono.svg" alt="Monochrome mark" width="56" height="56" class="mono-mark" />
+            <span class="mono-note">Single colour for print, embossing and forced-colour modes — <code>/brand/mark-mono.svg</code></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-head" style="margin-top:4rem">
+        <p class="eyebrow reveal">Colour</p>
+        <h2 class="h2 reveal" style="--d:.05s">Mostly white, ink and teal — colour spent sparingly</h2>
+      </div>
+      <div class="swatch-grid reveal">
+        {
+          palette.map((c) => (
+            <div class="swatch">
+              <span class="sw-chip" style={`background:${c.hex};${c.light ? 'border:1px solid var(--line-2)' : ''}`} />
+              <span class="sw-name">{c.name}</span>
+              <span class="sw-hex mono">{c.hex}</span>
+            </div>
+          ))
+        }
+      </div>
+      <p class="small muted reveal" style="margin:1.25rem 0 0">
+        Data visualisation uses a separate six-hue categorical palette, validated
+        for colour-vision-deficiency separation and ≥3:1 contrast on white —
+        charts never borrow status colours, and status colours never play series.
+      </p>
+      <div class="swatch-grid chart-grid reveal">
+        {
+          chart.map((c) => (
+            <div class="swatch">
+              <span class="sw-chip small" style={`background:${c.hex}`} />
+              <span class="sw-hex mono">{c.hex}</span>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="section-head" style="margin-top:4rem">
+        <p class="eyebrow reveal">Type</p>
+        <h2 class="h2 reveal" style="--d:.05s">Confident headings, humane body, honest numbers</h2>
+      </div>
+      <div class="grid cols-3">
+        <div class="card type-card reveal">
+          <p class="spec-label mono">Display — General Sans</p>
+          <p class="type-demo display" style="font-size:2.2rem">Discipline by design</p>
+        </div>
+        <div class="card type-card reveal" style="--d:.07s">
+          <p class="spec-label mono">Body — Inter</p>
+          <p class="type-demo">Spread small amounts across many startups, with the discipline professional investors rely on.</p>
+        </div>
+        <div class="card type-card reveal" style="--d:.14s">
+          <p class="spec-label mono">Data — IBM Plex Mono</p>
+          <p class="type-demo mono">£4,820 · 23 companies<br />largest position 9%</p>
+        </div>
+      </div>
+
+      <div class="card serif-card reveal" style="margin-top:1.25rem">
+        <p class="spec-label mono">Editorial accent — Source Serif 4 italic</p>
+        <p class="serif-aside" style="font-size:1.6rem; margin:0">
+          “One bet is a gamble. Twenty is a strategy.”
+        </p>
+        <p class="small muted" style="margin:0.75rem 0 0">Used sparingly: pull quotes and single emphasised phrases. Never for UI, never for numbers.</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .spec-card {
+    padding: 1.5rem;
+  }
+
+  .spec-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-2);
+    margin: 0 0 1rem;
+  }
+
+  .spec-stage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 130px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--r-s);
+  }
+
+  .spec-stage.dark {
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+
+  .spec-stage.row {
+    gap: 2rem;
+  }
+
+  .mono-stage {
+    color: var(--ink);
+    padding: 0 1.5rem;
+  }
+
+  .mono-note {
+    font-size: 0.82rem;
+    color: var(--text-2);
+    max-width: 22rem;
+  }
+
+  .swatch-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 1rem;
+  }
+
+  .chart-grid {
+    grid-template-columns: repeat(6, 1fr);
+    max-width: 40rem;
+    margin-top: 1rem;
+  }
+
+  .swatch {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .sw-chip {
+    height: 64px;
+    border-radius: var(--r-s);
+  }
+
+  .sw-chip.small {
+    height: 34px;
+  }
+
+  .sw-name {
+    font-size: 0.82rem;
+    font-weight: 570;
+    color: var(--ink);
+  }
+
+  .sw-hex {
+    font-size: 0.7rem;
+    color: var(--text-2);
+  }
+
+  @media (max-width: 900px) {
+    .swatch-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .chart-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .type-card,
+  .serif-card {
+    padding: 1.5rem;
+  }
+
+  .type-demo {
+    margin: 0;
+    color: var(--ink);
+  }
+</style>

@@ -1,0 +1,154 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+
+const principles = [
+  {
+    icon: 'shield',
+    title: 'Safety is the product',
+    body: 'Investor protection isn’t a compliance checkbox we clear at the end — it’s the thing we’re building. If a feature helps someone invest faster than they understand, it doesn’t ship.',
+  },
+  {
+    icon: 'doc',
+    title: 'Plain English, always',
+    body: 'We write for people meeting words like dilution and illiquidity for the first time. The same standard applies internally: clear memos, honest numbers, no slideware.',
+  },
+  {
+    icon: 'users',
+    title: 'Small team, real ownership',
+    body: 'You’ll work directly with both founders and own whole problems end to end. Early hires get meaningful equity and a genuine say in what Bundle becomes.',
+  },
+];
+
+const roles = [
+  {
+    title: 'Founding Full-Stack Engineer',
+    desc: 'Build the platform end to end — from product surface to data layer — with safety features treated as first-class engineering work.',
+  },
+  {
+    title: 'Compliance & Regulatory Lead',
+    desc: 'Own our FCA authorisation journey and design consumer-protection guardrails alongside the product, not after it.',
+  },
+  {
+    title: 'Founding Designer',
+    desc: 'Give calm, plain-English investing an interface — education flows and data displays that inform rather than nudge.',
+  },
+];
+---
+
+<BaseLayout
+  title="Careers"
+  description="Join the small founding team building Bundle — education-first, portfolio-led startup investing for UK retail investors. Three open roles in London; speculative applications welcome."
+>
+  <PageHero
+    eyebrow="Careers"
+    title="Build the disciplined version of retail investing"
+    lead="We’re a small founding team in London and Oxford, working at the intersection of fintech, AI and investor protection."
+  />
+
+  <!-- How we work -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow reveal">How we work</p>
+        <h2 class="h2 reveal" style="--d:.05s">A few things we hold ourselves to</h2>
+        <p class="lead reveal" style="--d:.1s">
+          Bundle is pre-launch, which means the culture is still being poured.
+          These are the parts that have already set.
+        </p>
+      </div>
+      <div class="grid cols-3">
+        {
+          principles.map((p, i) => (
+            <article class="card card-hover reveal" style={`--d:${i * 0.07}s`}>
+              <span class="icon-chip"><Icon name={p.icon} /></span>
+              <h3 class="h3 principle-title">{p.title}</h3>
+              <p class="small muted">{p.body}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Open roles -->
+  <section class="section section-tint-full">
+    <div class="container narrow">
+      <div class="section-head">
+        <p class="eyebrow reveal">Open roles</p>
+        <h2 class="h2 reveal" style="--d:.05s">Three roles, honestly scoped</h2>
+        <p class="lead reveal" style="--d:.1s">
+          No inflated titles and no fictional teams to lead — just the work that
+          actually needs doing before launch.
+        </p>
+      </div>
+
+      <div class="roles">
+        {
+          roles.map((r, i) => (
+            <article class="card card-hover role-card reveal" style={`--d:${i * 0.07}s`}>
+              <div class="role-top">
+                <h3 class="h3">{r.title}</h3>
+                <span class="role-loc small muted">
+                  <Icon name="map-pin" size={15} /> London / hybrid
+                </span>
+              </div>
+              <p class="small muted role-desc">{r.desc}</p>
+              <a class="text-link" href="mailto:careers@bundle.ai">
+                Introduce yourself <span class="arrow">→</span>
+              </a>
+            </article>
+          ))
+        }
+      </div>
+
+      <p class="small muted spec-note reveal">
+        We’re a company of two today, so this list is short. Speculative
+        applications are welcome — if you think Bundle needs a role we haven’t
+        written down, tell us what you’d own at
+        <a href="mailto:careers@bundle.ai">careers@bundle.ai</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .principle-title {
+    margin-top: 1rem;
+  }
+
+  .roles {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .role-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    flex-wrap: wrap;
+  }
+
+  .role-top h3 {
+    margin: 0;
+  }
+
+  .role-loc {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    white-space: nowrap;
+  }
+
+  .role-desc {
+    margin: 0.5rem 0 0.9rem;
+    max-width: 38rem;
+  }
+
+  .spec-note {
+    margin: 2rem 0 0;
+    max-width: 38rem;
+  }
+</style>

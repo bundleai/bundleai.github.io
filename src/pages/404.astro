@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Page not found"
+  description="This page isn't part of the portfolio."
+  ribbon={false}
+>
+  <section class="section bg-grid nf">
+    <div class="container center">
+      <p class="eyebrow no-rule reveal">404</p>
+      <h1 class="display reveal" style="--d:.05s">
+        This page isn't <em class="serif-aside">part of the portfolio</em>
+      </h1>
+      <p class="lead mx-auto reveal" style="--d:.1s">
+        Whatever you were looking for has been diversified away. Here are the
+        positions we actually hold:
+      </p>
+      <div class="nf-actions reveal" style="--d:.15s">
+        <a href="/" class="btn btn-primary btn-lg">Back to the start <span class="arrow">→</span></a>
+        <a href="/learn" class="btn btn-ghost btn-lg">Browse the Academy</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf {
+    min-height: 55vh;
+    display: grid;
+    align-items: center;
+  }
+
+  .nf-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+  }
+</style>

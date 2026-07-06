@@ -1,0 +1,206 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Hide the slim FCA-style ribbon on non-investment utility pages if needed */
+  ribbon?: boolean;
+}
+
+const { title, description, ribbon = true } = Astro.props;
+const fullTitle = title.includes('Bundle') ? title : `${title} — Bundle.ai`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#fbfcfc" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content="Bundle.ai" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://api.fontshare.com" />
+    <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=general-sans@500,600,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@1,8..60,400..600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    {
+      ribbon && (
+        <div class="risk-ribbon" role="note" aria-label="Risk warning">
+          <p>
+            <strong>Don't invest unless you're prepared to lose all the money you
+            invest.</strong>
+            <span class="ribbon-more">
+              This is a high-risk investment and you are unlikely to be protected
+              if something goes wrong.
+            </span>
+            <a href="/legal/risk-warning">Take 2 mins to learn more</a>
+          </p>
+        </div>
+      )
+    }
+
+    <Nav />
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100dvh;
+      }
+
+      .risk-ribbon {
+        background: var(--ink);
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      .risk-ribbon p {
+        max-width: calc(var(--container) + 3rem);
+        margin: 0 auto;
+        padding: 0.52rem 1.5rem;
+        font-size: 0.8rem;
+        line-height: 1.5;
+        text-align: center;
+        text-wrap: balance;
+      }
+
+      .risk-ribbon strong {
+        color: #fff;
+        font-weight: 600;
+      }
+
+      .risk-ribbon a {
+        color: #9fd4dc;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+        margin-left: 0.35rem;
+        white-space: nowrap;
+      }
+
+      @media (max-width: 720px) {
+        .ribbon-more {
+          display: none;
+        }
+      }
+    </style>
+
+    <script>
+      // Scroll-reveal
+      const revealEls = document.querySelectorAll('.reveal');
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduced) {
+        revealEls.forEach((el) => el.classList.add('in'));
+      } else {
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('in');
+                io.unobserve(entry.target);
+              }
+            });
+          },
+          // Huge top margin: content above the viewport (e.g. after an anchor
+          // jump) is treated as already seen and revealed immediately.
+          { threshold: 0.12, rootMargin: '99999px 0px -6% 0px' }
+        );
+        revealEls.forEach((el) => io.observe(el));
+      }
+
+      // Animated counters: <span data-count="20" data-decimals="0">0</span>
+      const counters = document.querySelectorAll<HTMLElement>('[data-count]');
+      const animate = (el: HTMLElement) => {
+        const target = parseFloat(el.dataset.count || '0');
+        const decimals = parseInt(el.dataset.decimals || '0', 10);
+        const plain = 'plain' in el.dataset;
+        const dur = 1400;
+        const start = performance.now();
+        const fmt = (v: number) =>
+          plain
+            ? String(Math.round(v))
+            : v.toLocaleString('en-GB', {
+                minimumFractionDigits: decimals,
+                maximumFractionDigits: decimals,
+              });
+        const tick = (now: number) => {
+          const t = Math.min(1, (now - start) / dur);
+          const eased = 1 - Math.pow(1 - t, 3);
+          el.textContent = fmt(target * eased);
+          if (t < 1) requestAnimationFrame(tick);
+          else el.textContent = fmt(target);
+        };
+        if (reduced) el.textContent = fmt(target);
+        else requestAnimationFrame(tick);
+      };
+      const cio = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              animate(e.target as HTMLElement);
+              cio.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.5 }
+      );
+      counters.forEach((el) => cio.observe(el));
+
+      // Generic tabs: [data-tabs] > [role=tablist] buttons + panels by aria-controls
+      document.querySelectorAll<HTMLElement>('[data-tabs]').forEach((root) => {
+        const tabs = Array.from(
+          root.querySelectorAll<HTMLButtonElement>('[role="tab"]')
+        );
+        const select = (tab: HTMLButtonElement) => {
+          tabs.forEach((t) => {
+            const selected = t === tab;
+            t.setAttribute('aria-selected', String(selected));
+            t.tabIndex = selected ? 0 : -1;
+            const panel = document.getElementById(
+              t.getAttribute('aria-controls') || ''
+            );
+            if (panel) panel.hidden = !selected;
+          });
+        };
+        tabs.forEach((tab, i) => {
+          tab.addEventListener('click', () => select(tab));
+          tab.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+              const dir = e.key === 'ArrowRight' ? 1 : -1;
+              const next = tabs[(i + dir + tabs.length) % tabs.length];
+              next.focus();
+              select(next);
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

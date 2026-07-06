@@ -1,0 +1,671 @@
+---
+/**
+ * Product mockup of the Bundle portfolio dashboard.
+ * Fully fluid: container-query scaled, so it works as a hero visual or full-width.
+ * variant="hero" trims the lower rows for compact placements.
+ */
+import Icon from './Icon.astro';
+import ConcentrationMeter from './ConcentrationMeter.astro';
+import Donut from './Donut.astro';
+import Bars from './Bars.astro';
+
+interface Props {
+  variant?: 'full' | 'hero';
+  class?: string;
+}
+
+const { variant = 'full', class: className } = Astro.props;
+
+const holdings = [
+  { name: 'Voltaic Grid', sector: 'Climate', stage: 'Seed', amount: '£250', relief: 'SEIS', signal: 'Update today', tone: 'sage' },
+  { name: 'Caldera Robotics', sector: 'Deeptech', stage: 'Series A', amount: '£180', relief: 'EIS', signal: 'Follow-on open', tone: 'sage' },
+  { name: 'Nettle Health', sector: 'Health', stage: 'Seed', amount: '£120', relief: 'SEIS', signal: 'Dilution notice', tone: 'sand' },
+  { name: 'Quill Ledger', sector: 'B2B SaaS', stage: 'Pre-seed', amount: '£90', relief: 'SEIS', signal: 'On track', tone: 'none' },
+  { name: 'Aster Optics', sector: 'Spinout', stage: 'Seed', amount: '£200', relief: 'EIS', signal: 'On track', tone: 'none' },
+];
+
+const feed = [
+  { icon: 'refresh', tone: 'sage', title: 'Follow-on round', body: 'Caldera Robotics opened a Series A extension. You hold £180 (3.7%).' },
+  { icon: 'split', tone: 'sand', title: 'Dilution notice', body: 'Nettle Health raised at £8.2m. Your stake: 0.014% → 0.011%.' },
+  { icon: 'alert', tone: 'red', title: 'Company dissolved', body: 'Halcyon Post has been struck off. Portfolio impact −£60 (1.2%).' },
+  { icon: 'spark', tone: 'teal', title: 'AI portfolio summary', body: 'Your portfolio leans climate (34%). Review sector balance before your next allocation.' },
+];
+---
+
+<div class:list={['dash-frame', className]}>
+  <div class:list={['dash', variant]}>
+    <div class="chrome" aria-hidden="true">
+      <span class="dots"><i></i><i></i><i></i></span>
+      <span class="url">app.bundle.ai/portfolio</span>
+      <span class="chrome-right"></span>
+    </div>
+
+    <div class="dash-body">
+      <aside class="side" aria-hidden="true">
+        <svg class="side-mark" viewBox="0 0 32 32" width="20" height="20">
+          <rect x="2.4" y="15" width="5" height="14" rx="2.5" fill="#0d7e8a"></rect>
+          <rect x="9.8" y="3" width="5" height="26" rx="2.5" fill="#0d7e8a"></rect>
+          <rect x="17.2" y="11" width="5" height="18" rx="2.5" fill="#37a98c"></rect>
+          <rect x="24.6" y="7" width="5" height="22" rx="2.5" fill="#0d7e8a"></rect>
+        </svg>
+        <nav class="side-nav">
+          <span class="s-item active"><Icon name="home" class="i" /> Overview</span>
+          <span class="s-item"><Icon name="pie" class="i" /> Portfolio</span>
+          <span class="s-item"><Icon name="compass" class="i" /> Explore</span>
+          <span class="s-item"><Icon name="graduation" class="i" /> Academy</span>
+          <span class="s-item"><Icon name="activity" class="i" /> Activity</span>
+        </nav>
+        <div class="side-edu">
+          <span class="edu-label">Academy progress</span>
+          <span class="edu-track"><span class="edu-fill"></span></span>
+          <span class="edu-val">8 of 10 modules</span>
+        </div>
+      </aside>
+
+      <div class="main">
+        <div class="topbar" aria-hidden="true">
+          <div>
+            <span class="tb-title">Portfolio overview</span>
+            <span class="tb-sub">Tuesday 6 October · risk profile: Balanced</span>
+          </div>
+          <div class="tb-right">
+            <span class="tb-search"><Icon name="search" class="i" /> Search</span>
+            <span class="tb-bell"><Icon name="bell" class="i" /><i class="ping"></i></span>
+            <span class="tb-avatar">MB</span>
+          </div>
+        </div>
+
+        <div class="kpis">
+          <div class="kpi">
+            <span class="kpi-label">Total invested</span>
+            <span class="kpi-value">£4,820</span>
+            <span class="kpi-delta sage">+£140 this month</span>
+          </div>
+          <div class="kpi">
+            <span class="kpi-label">Companies held</span>
+            <span class="kpi-value">23</span>
+            <span class="kpi-delta">across 6 sectors</span>
+          </div>
+          <div class="kpi">
+            <span class="kpi-label">Portfolio risk score</span>
+            <span class="kpi-value">B</span>
+            <span class="kpi-delta">Balanced · high-risk asset class</span>
+          </div>
+          <div class="kpi">
+            <span class="kpi-label">Est. SEIS/EIS relief</span>
+            <span class="kpi-value">£1,246</span>
+            <span class="kpi-delta sage">18 of 23 eligible</span>
+          </div>
+        </div>
+
+        <div class="mid">
+          <div class="mod">
+            <span class="mod-title">How concentrated am I?</span>
+            <ConcentrationMeter score={78} sub="23 companies · largest position 9%" />
+          </div>
+          <div class="mod">
+            <span class="mod-title">Sector exposure</span>
+            <Donut
+              segments={[
+                { label: 'Climate', value: 34 },
+                { label: 'B2B SaaS', value: 22 },
+                { label: 'Deeptech', value: 18 },
+                { label: 'Health', value: 14 },
+                { label: 'Consumer', value: 12 },
+              ]}
+              centerTitle="23"
+              centerSub="companies"
+            />
+          </div>
+          <div class="mod">
+            <span class="mod-title">Stage mix</span>
+            <Bars
+              mode="ramp"
+              items={[
+                { label: 'Pre-seed', value: 28 },
+                { label: 'Seed', value: 44 },
+                { label: 'Series A', value: 22 },
+                { label: 'Growth', value: 6 },
+              ]}
+            />
+            <div class="illiq">
+              <Icon name="timer" class="i" />
+              <span>Illiquid asset class — expected hold 5–8 yrs · next liquidity window Oct 2026</span>
+            </div>
+          </div>
+        </div>
+
+        {
+          variant === 'full' && (
+            <div class="bottom">
+              <div class="mod holdings">
+                <span class="mod-title">Holdings</span>
+                <div class="h-table" role="presentation">
+                  <div class="h-row h-head">
+                    <span>Company</span>
+                    <span>Stage</span>
+                    <span class="num">Invested</span>
+                    <span>Relief</span>
+                    <span>Signal</span>
+                  </div>
+                  {holdings.map((h) => (
+                    <div class="h-row">
+                      <span class="h-name">
+                        {h.name} <em>{h.sector}</em>
+                      </span>
+                      <span class="h-stage">{h.stage}</span>
+                      <span class="num">{h.amount}</span>
+                      <span>
+                        <i class:list={['relief-badge', h.relief.toLowerCase()]}>{h.relief}</i>
+                      </span>
+                      <span class:list={['h-signal', h.tone]}>
+                        <i class="sig-dot" /> {h.signal}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div class="mod feed">
+                <span class="mod-title">Updates & alerts</span>
+                <div class="feed-list">
+                  {feed.map((f) => (
+                    <div class="feed-item">
+                      <span class:list={['feed-chip', f.tone]}>
+                        <Icon name={f.icon} class="i" />
+                      </span>
+                      <span>
+                        <strong>{f.title}</strong>
+                        <span class="feed-body">{f.body}</span>
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .dash-frame {
+    container-type: inline-size;
+    width: 100%;
+  }
+
+  .dash {
+    font-family: var(--font-body);
+    font-size: clamp(7.4px, 1.5cqw, 13px);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-l);
+    box-shadow: var(--shadow-l);
+    overflow: hidden;
+    color: var(--text);
+    line-height: 1.45;
+  }
+
+  .dash :global(svg.i) {
+    width: 1.15em;
+    height: 1.15em;
+  }
+
+  /* chrome */
+  .chrome {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    padding: 0.9em 1.2em;
+    border-bottom: 1px solid var(--line);
+    background: var(--tint-soft);
+  }
+
+  .dots {
+    display: inline-flex;
+    gap: 0.45em;
+  }
+
+  .dots i {
+    width: 0.75em;
+    height: 0.75em;
+    border-radius: 50%;
+    background: var(--line-2);
+  }
+
+  .url {
+    flex: 1;
+    max-width: 22em;
+    margin-inline: auto;
+    text-align: center;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.3em 1em;
+    font-size: 0.82em;
+    color: var(--text-2);
+    font-family: var(--font-mono);
+  }
+
+  .chrome-right {
+    width: 3.5em;
+  }
+
+  /* body */
+  .dash-body {
+    display: grid;
+    grid-template-columns: 13.5em 1fr;
+  }
+
+  .side {
+    border-right: 1px solid var(--line);
+    padding: 1.4em 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 1.6em;
+    background: var(--bg);
+  }
+
+  .side-mark {
+    width: 1.7em;
+    height: 1.7em;
+    margin-left: 0.5em;
+  }
+
+  .side-nav {
+    display: grid;
+    gap: 0.25em;
+  }
+
+  .s-item {
+    display: flex;
+    align-items: center;
+    gap: 0.7em;
+    padding: 0.55em 0.75em;
+    border-radius: 0.6em;
+    font-size: 0.92em;
+    font-weight: 500;
+    color: var(--text-2);
+  }
+
+  .s-item.active {
+    background: var(--tint);
+    color: var(--teal-deep);
+    font-weight: 600;
+  }
+
+  .side-edu {
+    margin-top: auto;
+    display: grid;
+    gap: 0.45em;
+    padding: 0.9em;
+    background: var(--tint-soft);
+    border: 1px solid var(--line);
+    border-radius: 0.8em;
+  }
+
+  .edu-label {
+    font-size: 0.72em;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .edu-track {
+    height: 0.45em;
+    border-radius: 999px;
+    background: var(--chart-track);
+    overflow: hidden;
+  }
+
+  .edu-fill {
+    display: block;
+    width: 80%;
+    height: 100%;
+    background: var(--sage);
+    border-radius: 0 4px 4px 0;
+  }
+
+  .edu-val {
+    font-size: 0.7em;
+    color: var(--text-2);
+  }
+
+  /* main */
+  .main {
+    padding: 1.5em 1.7em 1.7em;
+    display: grid;
+    gap: 1.3em;
+    background: var(--bg);
+    min-width: 0;
+  }
+
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1em;
+  }
+
+  .tb-title {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.35em;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  .tb-sub {
+    font-size: 0.8em;
+    color: var(--text-2);
+  }
+
+  .tb-right {
+    display: flex;
+    align-items: center;
+    gap: 0.9em;
+  }
+
+  .tb-search {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    border-radius: 999px;
+    padding: 0.45em 1em;
+    font-size: 0.85em;
+    color: var(--faint);
+  }
+
+  .tb-bell {
+    position: relative;
+    color: var(--text-2);
+    display: inline-flex;
+  }
+
+  .ping {
+    position: absolute;
+    top: -0.15em;
+    right: -0.15em;
+    width: 0.55em;
+    height: 0.55em;
+    border-radius: 50%;
+    background: var(--sage);
+    border: 2px solid var(--bg);
+  }
+
+  .tb-avatar {
+    width: 2.2em;
+    height: 2.2em;
+    border-radius: 50%;
+    background: var(--tint);
+    color: var(--teal-deep);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85em;
+    font-weight: 600;
+  }
+
+  /* KPI row */
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.9em;
+  }
+
+  .kpi {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 1em;
+    padding: 1.05em 1.15em;
+    display: grid;
+    gap: 0.2em;
+    box-shadow: var(--shadow-s);
+  }
+
+  .kpi-label {
+    font-size: 0.74em;
+    color: var(--text-2);
+    font-weight: 500;
+  }
+
+  .kpi-value {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.55em;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    line-height: 1.1;
+  }
+
+  .kpi-delta {
+    font-size: 0.72em;
+    color: var(--text-2);
+  }
+
+  .kpi-delta.sage {
+    color: var(--sage-ink);
+    font-weight: 550;
+  }
+
+  /* modules */
+  .mid {
+    display: grid;
+    grid-template-columns: 1.05fr 1.1fr 0.95fr;
+    gap: 0.9em;
+    align-items: stretch;
+  }
+
+  .mod {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 1em;
+    padding: 1.15em 1.25em;
+    box-shadow: var(--shadow-s);
+    display: grid;
+    gap: 0.9em;
+    align-content: start;
+    min-width: 0;
+  }
+
+  .mod-title {
+    font-size: 0.8em;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .mod :global(.meter) {
+    font-size: 0.95em;
+  }
+
+  .mod :global(.meter-ends) {
+    display: none;
+  }
+
+  .mod :global(.donut) {
+    font-size: 0.95em;
+  }
+
+  .illiq {
+    display: flex;
+    gap: 0.6em;
+    align-items: flex-start;
+    padding: 0.65em 0.8em;
+    background: var(--sand-tint);
+    border: 1px solid rgba(138, 100, 32, 0.16);
+    border-radius: 0.7em;
+    font-size: 0.72em;
+    line-height: 1.5;
+    color: var(--sand-ink);
+  }
+
+  .illiq :global(svg.i) {
+    flex: none;
+    margin-top: 0.15em;
+  }
+
+  /* bottom row */
+  .bottom {
+    display: grid;
+    grid-template-columns: 1.55fr 1fr;
+    gap: 0.9em;
+  }
+
+  .h-table {
+    display: grid;
+    font-size: 0.82em;
+  }
+
+  .h-row {
+    display: grid;
+    grid-template-columns: 1.9fr 0.9fr 0.8fr 0.65fr 1.1fr;
+    gap: 0.8em;
+    align-items: center;
+    padding: 0.62em 0.35em;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .h-row:last-child {
+    border-bottom: 0;
+  }
+
+  .h-head {
+    font-size: 0.82em;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--faint);
+    font-family: var(--font-mono);
+    font-weight: 500;
+  }
+
+  .h-name {
+    font-weight: 600;
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .h-name em {
+    display: block;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 0.82em;
+    color: var(--text-2);
+  }
+
+  .h-stage {
+    color: var(--text-2);
+  }
+
+  .num {
+    font-variant-numeric: tabular-nums;
+    color: var(--text);
+  }
+
+  .relief-badge {
+    font-style: normal;
+    font-size: 0.72em;
+    font-weight: 600;
+    padding: 0.2em 0.6em;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+  }
+
+  .relief-badge.seis {
+    background: var(--sage-tint);
+    color: var(--sage-ink);
+  }
+
+  .relief-badge.eis {
+    background: var(--tint);
+    color: var(--teal-deep);
+  }
+
+  .h-signal {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+    font-size: 0.9em;
+    color: var(--text-2);
+    white-space: nowrap;
+  }
+
+  .sig-dot {
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 50%;
+    background: var(--line-2);
+    flex: none;
+  }
+
+  .h-signal.sage .sig-dot { background: var(--sage); }
+  .h-signal.sage { color: var(--sage-ink); }
+  .h-signal.sand .sig-dot { background: var(--sand); }
+  .h-signal.sand { color: var(--sand-ink); }
+
+  /* feed */
+  .feed-list {
+    display: grid;
+    gap: 0.75em;
+  }
+
+  .feed-item {
+    display: flex;
+    gap: 0.75em;
+    align-items: flex-start;
+    font-size: 0.82em;
+    line-height: 1.45;
+  }
+
+  .feed-chip {
+    flex: none;
+    width: 2.1em;
+    height: 2.1em;
+    border-radius: 0.65em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .feed-chip.sage { background: var(--sage-tint); color: var(--sage-ink); }
+  .feed-chip.sand { background: var(--sand-tint); color: var(--sand-ink); }
+  .feed-chip.red  { background: var(--red-tint); color: var(--red-ink); }
+  .feed-chip.teal { background: var(--tint); color: var(--teal-deep); }
+
+  .feed-item strong {
+    display: block;
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .feed-body {
+    color: var(--text-2);
+  }
+
+  /* hero variant: hide sidebar details on very small containers */
+  @container (max-width: 560px) {
+    .dash-body {
+      grid-template-columns: 1fr;
+    }
+
+    .side {
+      display: none;
+    }
+
+    .kpis {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .mid {
+      grid-template-columns: 1fr;
+    }
+
+    .bottom {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

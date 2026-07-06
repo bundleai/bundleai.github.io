@@ -1,0 +1,78 @@
+---
+/**
+ * Placeholder ecosystem row — honest by design: labelled as ecosystems, not endorsements.
+ */
+interface Props {
+  caption?: string;
+  names?: string[];
+  note?: string;
+}
+
+const {
+  caption = 'Sourcing from the ecosystems where serious founders are built',
+  names = [
+    'Oxford',
+    'Cambridge',
+    'Imperial',
+    'UCL',
+    'Warwick',
+    'Edinburgh',
+    'Manchester',
+  ],
+  note = 'University and accelerator names indicate the ecosystems our sourcing focuses on — not endorsements or partnerships.',
+} = Astro.props;
+---
+
+<div class="logo-cloud reveal">
+  <p class="cloud-caption mono">{caption}</p>
+  <ul class="cloud-row">
+    {names.map((n) => <li>{n}</li>)}
+  </ul>
+  <p class="cloud-note">{note}</p>
+</div>
+
+<style>
+  .logo-cloud {
+    text-align: center;
+    display: grid;
+    gap: 1.1rem;
+  }
+
+  .cloud-caption {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-2);
+    margin: 0;
+  }
+
+  .cloud-row {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.9rem 2.6rem;
+  }
+
+  .cloud-row li {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.18rem;
+    letter-spacing: 0.01em;
+    color: var(--faint);
+    transition: color 0.2s ease;
+  }
+
+  .cloud-row li:hover {
+    color: var(--text-2);
+  }
+
+  .cloud-note {
+    margin: 0 auto;
+    font-size: 0.76rem;
+    color: var(--faint);
+    max-width: 40rem;
+  }
+</style>

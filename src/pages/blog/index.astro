@@ -1,0 +1,213 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import CTABand from '../../components/CTABand.astro';
+
+const posts = [
+  {
+    href: '/blog/what-pisces-changes',
+    tag: 'Policy',
+    title: 'What PISCES actually changes for retail investors',
+    excerpt: 'The UK just gave private-share trading a regulated home. Here’s what structured liquidity windows can do, what they can’t, and why the discipline layer matters more than ever.',
+    date: '6 July 2026',
+    featured: true,
+    live: true,
+  },
+  {
+    tag: 'Behaviour',
+    title: 'One bet is a gamble. Twenty is a strategy.',
+    excerpt: 'The behavioural gap between retail and professional startup investors, quantified — and what closing it would be worth.',
+    date: 'Coming soon',
+  },
+  {
+    tag: 'Market',
+    title: 'Crowdfunding shrank. Private investing didn’t.',
+    excerpt: 'Deals fell from 569 to 297 while UK small-business equity held at £10.8bn. What the divergence tells us about the deal-led model.',
+    date: 'Coming soon',
+  },
+  {
+    tag: 'Tax',
+    title: 'SEIS/EIS: the relief is real, the mythology isn’t',
+    excerpt: 'What loss relief actually does to your downside maths — and the five ways investors accidentally void it.',
+    date: 'Coming soon',
+  },
+  {
+    tag: 'AI',
+    title: 'Explainable diligence: how our agents show their work',
+    excerpt: 'Inside the audit-log architecture that makes AI-assisted screening reviewable by humans and regulators.',
+    date: 'Coming soon',
+  },
+  {
+    tag: 'Founders',
+    title: 'Why technical founders skip crowdfunding — and shouldn’t have to',
+    excerpt: 'B2B, deeptech and spinout companies raise everywhere except retail platforms. The reasons are fixable.',
+    date: 'Coming soon',
+  },
+];
+
+const featured = posts[0];
+const rest = posts.slice(1);
+---
+
+<BaseLayout
+  title="Insights"
+  description="Research and writing from the Bundle team on private markets, investor behaviour, UK regulation, SEIS/EIS and AI-assisted diligence."
+>
+  <PageHero
+    eyebrow="Insights"
+    title='Research on the <em class="serif-aside">disciplined</em> side of private markets'
+    lead="Long-form writing on investor behaviour, UK regulation, and the mechanics of startup portfolios. No hot takes, no trade ideas — sources cited, risks stated."
+  />
+
+  <section class="section">
+    <div class="container">
+      <a href={featured.href} class="featured-post card card-hover reveal">
+        <div class="fp-body">
+          <div class="fp-tags">
+            <span class="badge badge-teal">{featured.tag}</span>
+            <span class="badge badge-sage">Featured</span>
+          </div>
+          <h2 class="fp-title">{featured.title}</h2>
+          <p class="muted">{featured.excerpt}</p>
+          <span class="fp-meta mono">{featured.date} · 9 min read</span>
+        </div>
+        <div class="fp-visual" aria-hidden="true">
+          <div class="fp-window">
+            <span class="mono fp-w-label">LIQUIDITY WINDOW</span>
+            <span class="fp-w-title">Structured auction</span>
+            <div class="fp-w-bars">
+              <span style="width:38%;background:var(--c2)"></span>
+              <span style="width:61%;background:var(--c1)"></span>
+            </div>
+            <span class="fp-w-note">single clearing price · refreshed disclosure</span>
+          </div>
+        </div>
+      </a>
+
+      <div class="grid cols-3" style="margin-top:1.5rem">
+        {
+          rest.map((p, i) => (
+            <article class="card post-card reveal" style={`--d:${(i % 3) * 0.07}s`}>
+              <span class="badge badge-line">{p.tag}</span>
+              <h3 class="post-title">{p.title}</h3>
+              <p class="small muted post-ex">{p.excerpt}</p>
+              <span class="fp-meta mono">{p.date}</span>
+            </article>
+          ))
+        }
+      </div>
+
+      <p class="small muted reveal" style="margin-top:1.5rem">
+        We publish when there's something worth saying — roughly monthly. The
+        waitlist email includes each new piece; nothing else does.
+      </p>
+    </div>
+  </section>
+
+  <CTABand
+    title="Considered writing, <em class='serif-aside'>monthly-ish.</em>"
+    sub="Join the waitlist for new research — one email a month, no drip campaigns."
+  />
+</BaseLayout>
+
+<style>
+  .featured-post {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 2rem;
+    padding: clamp(1.75rem, 4vw, 2.75rem);
+    align-items: center;
+  }
+
+  .fp-tags {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .fp-title {
+    font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+    color: var(--ink);
+    margin-bottom: 0.6rem;
+  }
+
+  .fp-meta {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  .fp-visual {
+    display: grid;
+  }
+
+  .fp-window {
+    background: var(--tint-soft);
+    border: 1px solid var(--line);
+    border-radius: var(--r-m);
+    padding: 1.5rem;
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .fp-w-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.16em;
+    color: var(--teal-deep);
+  }
+
+  .fp-w-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.3rem;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+
+  .fp-w-bars {
+    display: grid;
+    gap: 0.45rem;
+    margin: 0.5rem 0;
+  }
+
+  .fp-w-bars span {
+    display: block;
+    height: 10px;
+    border-radius: 0 4px 4px 0;
+    background: var(--chart-track);
+  }
+
+  .fp-w-note {
+    font-size: 0.78rem;
+    color: var(--text-2);
+  }
+
+  .post-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    opacity: 0.92;
+  }
+
+  .post-title {
+    font-size: 1.12rem;
+    margin: 0.9rem 0 0.4rem;
+    color: var(--ink);
+  }
+
+  .post-ex {
+    margin-bottom: 1rem;
+  }
+
+  .post-card .fp-meta {
+    margin-top: auto;
+  }
+
+  @media (max-width: 860px) {
+    .featured-post {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,226 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import Icon from '../../components/Icon.astro';
+import CTABand from '../../components/CTABand.astro';
+
+const lessons = [
+  {
+    href: '/learn/why-diversification-matters',
+    icon: 'pie',
+    title: 'Why diversification matters',
+    desc: 'Power laws, failure rates, and why professionals build portfolios instead of picking winners.',
+    meta: '8 min · Level 1',
+    live: true,
+    category: 'Core path',
+  },
+  {
+    icon: 'pulse',
+    title: 'Why startups fail',
+    desc: 'The honest base rates — and what “most startups fail” should change about your behaviour.',
+    meta: '7 min · Level 1',
+    category: 'Core path',
+  },
+  {
+    icon: 'split',
+    title: 'What dilution means for you',
+    desc: 'Your 0.5% won’t stay 0.5%. How later rounds shrink your slice — and when that’s good news.',
+    meta: '9 min · Level 2',
+    category: 'Core path',
+  },
+  {
+    icon: 'timer',
+    title: 'Illiquidity: the decade-long deal',
+    desc: 'Why you can’t sell startup shares like stocks, what PISCES windows change, and what they don’t.',
+    meta: '6 min · Level 1',
+    category: 'Core path',
+  },
+  {
+    icon: 'award',
+    title: 'SEIS & EIS, without the mythology',
+    desc: 'What the reliefs actually do, what they never protect you from, and the paperwork that matters.',
+    meta: '10 min · Level 2',
+    category: 'Tax & structure',
+  },
+  {
+    icon: 'clock',
+    title: 'Realistic exit timelines',
+    desc: 'Acquisitions, IPOs, failures and zombies: when private investments actually return money.',
+    meta: '7 min · Level 2',
+    category: 'Core path',
+  },
+  {
+    icon: 'sliders',
+    title: 'How to build a startup portfolio',
+    desc: 'Position sizing, sector spread, stage balance and pacing — the craft, end to end.',
+    meta: '12 min · Level 3',
+    category: 'Portfolio craft',
+  },
+  {
+    icon: 'search',
+    title: 'Reading a pitch like a sceptic',
+    desc: 'Traction theatre, TAM fiction and valuation tells — the questions that cut through.',
+    meta: '11 min · Level 3',
+    category: 'Portfolio craft',
+  },
+];
+---
+
+<BaseLayout
+  title="Academy"
+  description="Free, plain-English lessons on startup portfolio investing: diversification, failure rates, dilution, illiquidity, SEIS/EIS and portfolio craft. Education is the front door at Bundle."
+>
+  <PageHero
+    eyebrow="The Academy"
+    title='Learn startup investing <em class="serif-aside">before</em> you risk a pound'
+    lead="Free, plain-English, and honest about the failure rates. The Academy is Bundle's front door: most people arrive to learn, and the discipline follows. No sign-up needed to read."
+  >
+    <Fragment slot="actions">
+      <a href="/learn/why-diversification-matters" class="btn btn-primary btn-lg">Start lesson one <span class="arrow">→</span></a>
+      <a href="/waitlist" class="btn btn-ghost btn-lg">Join the waitlist</a>
+    </Fragment>
+  </PageHero>
+
+  <section class="section">
+    <div class="container">
+      <div class="path-strip panel-tint reveal">
+        <div class="ps-item">
+          <span class="mono ps-k">The core path</span>
+          <span class="ps-v">6 lessons · ~45 minutes</span>
+        </div>
+        <div class="ps-progress" aria-hidden="true">
+          {
+            [true, false, false, false, false, false].map((done) => (
+              <span class:list={['ps-dot', { done }]} />
+            ))
+          }
+        </div>
+        <span class="ps-note">Completing the core path counts toward the appropriateness journey when investing opens.</span>
+      </div>
+
+      <div class="grid cols-4" style="margin-top:2rem">
+        {
+          lessons.map((l, i) =>
+            l.live ? (
+              <a href={l.href} class="card card-hover lesson-card reveal" style={`--d:${(i % 4) * 0.06}s`}>
+                <div class="lc-top">
+                  <span class="icon-chip"><Icon name={l.icon} size={19} /></span>
+                  <span class="badge badge-teal">{l.category}</span>
+                </div>
+                <h3 class="lc-name">{l.title}</h3>
+                <p class="small muted lc-desc">{l.desc}</p>
+                <span class="lc-meta mono">{l.meta}</span>
+              </a>
+            ) : (
+              <div class="card lesson-card soon reveal" style={`--d:${(i % 4) * 0.06}s`}>
+                <div class="lc-top">
+                  <span class="icon-chip"><Icon name={l.icon} size={19} /></span>
+                  <span class="badge badge-line">Coming soon</span>
+                </div>
+                <h3 class="lc-name">{l.title}</h3>
+                <p class="small muted lc-desc">{l.desc}</p>
+                <span class="lc-meta mono">{l.meta}</span>
+              </div>
+            )
+          )
+        }
+      </div>
+
+      <p class="small muted reveal" style="margin-top:1.5rem; max-width:52rem">
+        The full Academy — with adaptive lessons from the Investor Education Agent,
+        comprehension checks and progress tracking — opens with early access.
+        Lessons published here stay free, forever.
+      </p>
+    </div>
+  </section>
+
+  <CTABand
+    title="Education is the front door. <em class='serif-aside'>Walk in.</em>"
+    sub="Join the waitlist and the Academy's adaptive version — the one that notices what you got wrong — is yours at launch."
+  />
+</BaseLayout>
+
+<style>
+  .path-strip {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 1.4rem 1.75rem;
+    flex-wrap: wrap;
+  }
+
+  .ps-k {
+    display: block;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--teal-deep);
+  }
+
+  .ps-v {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 1.05rem;
+  }
+
+  .ps-progress {
+    display: flex;
+    gap: 0.45rem;
+  }
+
+  .ps-dot {
+    width: 26px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--chart-track);
+  }
+
+  .ps-dot.done {
+    background: var(--sage);
+  }
+
+  .ps-note {
+    margin-left: auto;
+    font-size: 0.8rem;
+    color: var(--text-2);
+    max-width: 26rem;
+  }
+
+  .lesson-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+  }
+
+  .lesson-card.soon {
+    opacity: 0.72;
+  }
+
+  .lc-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .lc-name {
+    font-size: 1.05rem;
+    margin: 1rem 0 0.35rem;
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  .lc-desc {
+    margin-bottom: 1rem;
+  }
+
+  .lc-meta {
+    margin-top: auto;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+</style>

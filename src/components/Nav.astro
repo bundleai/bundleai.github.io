@@ -1,0 +1,454 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+
+const menus = [
+  {
+    label: 'Platform',
+    items: [
+      {
+        href: '/how-it-works',
+        icon: 'route',
+        title: 'How it works',
+        desc: 'The portfolio-first journey, step by step',
+      },
+      {
+        href: '/portfolio-intelligence',
+        icon: 'gauge',
+        title: 'Portfolio Intelligence',
+        desc: 'Your dashboard, concentration meter and alerts',
+      },
+      {
+        href: '/ai-engine',
+        icon: 'spark',
+        title: 'The Bundle AI Engine',
+        desc: 'Six agents for diligence, education and monitoring',
+      },
+      {
+        href: '/trust',
+        icon: 'shield',
+        title: 'Trust & Safety',
+        desc: 'Guardrails, FCA context, and what we refuse to build',
+      },
+    ],
+  },
+  {
+    label: 'Invest',
+    items: [
+      {
+        href: '/investors',
+        icon: 'pie',
+        title: 'For Investors',
+        desc: 'Build diversified exposure from £10 per company',
+      },
+      {
+        href: '/secondary-market',
+        icon: 'exchange',
+        title: 'Secondary Market',
+        desc: 'Structured liquidity windows, built for the PISCES era',
+      },
+      {
+        href: '/spvs-and-funds',
+        icon: 'layers',
+        title: 'SPVs & Pre-IPO Funds',
+        desc: 'Pooled access and one-click diversified baskets',
+      },
+    ],
+  },
+  {
+    label: 'Learn',
+    items: [
+      {
+        href: '/learn',
+        icon: 'graduation',
+        title: 'Academy',
+        desc: 'Free lessons on building a startup portfolio',
+      },
+      {
+        href: '/blog',
+        icon: 'doc',
+        title: 'Insights',
+        desc: 'Research and writing from the Bundle team',
+      },
+      {
+        href: '/legal/risk-warning',
+        icon: 'alert',
+        title: 'Risk warnings',
+        desc: 'The honest page. Read it before anything else',
+      },
+    ],
+  },
+];
+---
+
+<header class="site-header" id="site-header">
+  <div class="container nav-row">
+    <a href="/" class="brand" aria-label="Bundle.ai home">
+      <Logo size={27} />
+    </a>
+
+    <nav class="primary-nav" aria-label="Primary">
+      {
+        menus.map((menu) => (
+          <div class="nav-item has-menu">
+            <button
+              type="button"
+              class="nav-link"
+              aria-expanded="false"
+              aria-haspopup="true"
+            >
+              {menu.label}
+              <Icon name="chevron-down" size={13} stroke={2} class="chev" />
+            </button>
+            <div class="menu-panel" role="menu">
+              {menu.items.map((item) => (
+                <a href={item.href} class="menu-link" role="menuitem">
+                  <span class="icon-chip">
+                    <Icon name={item.icon} size={19} />
+                  </span>
+                  <span>
+                    <span class="menu-title">{item.title}</span>
+                    <span class="menu-desc">{item.desc}</span>
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+        ))
+      }
+      <a class="nav-link" href="/founders">For Founders</a>
+      <a class="nav-link" href="/pricing">Pricing</a>
+      <a class="nav-link" href="/about">About</a>
+    </nav>
+
+    <div class="nav-actions">
+      <a href="/login" class="btn btn-ghost btn-sm">Log in</a>
+      <a href="/waitlist" class="btn btn-primary btn-sm">Join the waitlist</a>
+      <button
+        type="button"
+        class="burger"
+        id="nav-burger"
+        aria-expanded="false"
+        aria-controls="mobile-panel"
+        aria-label="Open menu"
+      >
+        <Icon name="menu" size={22} stroke={1.8} />
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-panel" id="mobile-panel" hidden>
+    <div class="container">
+      {
+        menus.map((menu) => (
+          <details class="m-group">
+            <summary>{menu.label}</summary>
+            <div class="m-links">
+              {menu.items.map((item) => (
+                <a href={item.href}>{item.title}</a>
+              ))}
+            </div>
+          </details>
+        ))
+      }
+      <a class="m-solo" href="/founders">For Founders</a>
+      <a class="m-solo" href="/pricing">Pricing</a>
+      <a class="m-solo" href="/about">About</a>
+      <div class="m-ctas">
+        <a href="/login" class="btn btn-ghost">Log in</a>
+        <a href="/waitlist" class="btn btn-primary">Join the waitlist</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(251, 252, 252, 0.86);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .site-header.scrolled {
+    border-bottom-color: var(--line);
+    box-shadow: 0 4px 18px rgba(11, 46, 51, 0.04);
+  }
+
+  .nav-row {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    height: var(--nav-h);
+  }
+
+  .brand {
+    flex: none;
+    display: inline-flex;
+  }
+
+  .primary-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-left: 0.4rem;
+  }
+
+  .nav-item {
+    position: relative;
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.32rem;
+    padding: 0.5rem 0.78rem;
+    border: 0;
+    background: none;
+    border-radius: var(--r-pill);
+    font-size: 0.945rem;
+    font-weight: 520;
+    color: var(--text);
+    cursor: pointer;
+    transition: color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .nav-link:hover {
+    color: var(--ink);
+    background: rgba(13, 126, 138, 0.06);
+  }
+
+  .chev {
+    color: var(--faint);
+    transition: transform 0.2s ease;
+    margin-top: 1px;
+  }
+
+  .menu-panel {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: -0.5rem;
+    min-width: 340px;
+    padding: 0.6rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-m);
+    box-shadow: var(--shadow-l);
+    display: grid;
+    gap: 0.15rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(6px);
+    transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+  }
+
+  .nav-item.open .menu-panel,
+  .nav-item:hover .menu-panel,
+  .nav-item:focus-within .menu-panel {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+
+  .nav-item.open .chev,
+  .nav-item:hover .chev {
+    transform: rotate(180deg);
+  }
+
+  .menu-link {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+    padding: 0.7rem 0.75rem;
+    border-radius: var(--r-s);
+    transition: background-color 0.14s ease;
+  }
+
+  .menu-link:hover {
+    background: var(--tint-soft);
+  }
+
+  .menu-link .icon-chip {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+  }
+
+  .menu-title {
+    display: block;
+    font-weight: 590;
+    font-size: 0.945rem;
+    color: var(--ink);
+    line-height: 1.35;
+  }
+
+  .menu-desc {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--text-2);
+    line-height: 1.45;
+    margin-top: 0.1rem;
+  }
+
+  .nav-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .burger {
+    display: none;
+    border: 0;
+    background: none;
+    color: var(--ink);
+    padding: 0.45rem;
+    border-radius: var(--r-s);
+    cursor: pointer;
+  }
+
+  /* Mobile */
+  .mobile-panel {
+    display: none;
+    border-top: 1px solid var(--line);
+    background: var(--bg);
+    max-height: calc(100dvh - var(--nav-h));
+    overflow-y: auto;
+    padding-block: 0.75rem 1.5rem;
+  }
+
+  .m-group summary {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.9rem 0.25rem;
+    font-weight: 570;
+    color: var(--ink);
+    cursor: pointer;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .m-group summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .m-group summary::after {
+    content: "";
+    width: 9px;
+    height: 9px;
+    border-right: 1.6px solid var(--faint);
+    border-bottom: 1.6px solid var(--faint);
+    transform: rotate(45deg);
+    transition: transform 0.2s ease;
+  }
+
+  .m-group[open] summary::after {
+    transform: rotate(225deg);
+  }
+
+  .m-links {
+    display: grid;
+    padding: 0.5rem 0 0.75rem;
+  }
+
+  .m-links a {
+    padding: 0.55rem 0.85rem;
+    color: var(--text);
+    font-size: 0.975rem;
+    border-radius: var(--r-s);
+  }
+
+  .m-links a:hover {
+    background: var(--tint-soft);
+    color: var(--ink);
+  }
+
+  .m-solo {
+    display: block;
+    padding: 0.9rem 0.25rem;
+    font-weight: 570;
+    color: var(--ink);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .m-ctas {
+    display: grid;
+    gap: 0.6rem;
+    margin-top: 1.25rem;
+  }
+
+  @media (max-width: 1080px) {
+    .primary-nav {
+      display: none;
+    }
+
+    .nav-actions .btn-ghost {
+      display: none;
+    }
+
+    .burger {
+      display: inline-flex;
+    }
+
+    .mobile-panel:not([hidden]) {
+      display: block;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .nav-actions .btn-primary {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const header = document.getElementById('site-header');
+  const onScroll = () => header?.classList.toggle('scrolled', window.scrollY > 8);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Dropdown click-toggle (touch + keyboard); hover handled in CSS
+  const items = Array.from(document.querySelectorAll('.nav-item.has-menu'));
+  const closeAll = (except?: Element) =>
+    items.forEach((i) => {
+      if (i !== except) {
+        i.classList.remove('open');
+        i.querySelector('button')?.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+  items.forEach((item) => {
+    const btn = item.querySelector('button');
+    btn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const open = item.classList.toggle('open');
+      btn.setAttribute('aria-expanded', String(open));
+      closeAll(item);
+    });
+  });
+
+  document.addEventListener('click', () => closeAll());
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeAll();
+  });
+
+  // Mobile panel
+  const burger = document.getElementById('nav-burger');
+  const panel = document.getElementById('mobile-panel');
+  burger?.addEventListener('click', () => {
+    const isOpen = !panel?.hasAttribute('hidden');
+    if (isOpen) {
+      panel?.setAttribute('hidden', '');
+      burger.setAttribute('aria-expanded', 'false');
+    } else {
+      panel?.removeAttribute('hidden');
+      burger.setAttribute('aria-expanded', 'true');
+    }
+  });
+</script>

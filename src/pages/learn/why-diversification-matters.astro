@@ -1,0 +1,250 @@
+---
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+---
+
+<ArticleLayout
+  kind="lesson"
+  title="Why diversification matters"
+  description="Venture outcomes follow a power law: most startups fail, a few return everything. Lesson one in the Bundle Academy core path — why professionals build portfolios instead of picking winners."
+  category="Core path"
+  meta="Lesson 01 · 8 min · Level 1"
+  takeaways={[
+    'Most early-stage startups fail — this is normal, not a scandal.',
+    'Returns follow a power law: a small number of companies produce almost all the gains.',
+    'You cannot reliably predict which company will be the outlier — neither can professionals.',
+    'Diversification is how professionals buy exposure to the outliers without betting on naming them.',
+    'Diversification reduces concentration risk. It does not remove the risk of losing money.',
+  ]}
+  nextLabel="Why startups fail"
+  nextHref="/learn"
+>
+  <p>
+    Here is the uncomfortable arithmetic every professional startup investor
+    accepts before breakfast: <strong>most of the companies they back will
+    fail.</strong> Not "underperform" — fail. The money invested in them is
+    usually lost entirely.
+  </p>
+  <p>
+    This isn't because professionals are bad at picking. It's the structure of
+    the asset class. Early-stage companies are experiments, and most experiments
+    don't work. UK data has told the same story for decades: the majority of
+    startups don't return their investors' capital.
+  </p>
+
+  <h2>The power law, in one picture</h2>
+  <p>
+    If startup returns were like a coin flip — some win a bit, some lose a bit —
+    concentration would merely be risky. But they aren't. Startup returns follow
+    a <strong>power law</strong>: outcomes are wildly unequal, and a tiny number
+    of companies produce almost all the money.
+  </p>
+  <div class="callout" role="img" aria-label="Illustrative portfolio of ten startups: six return nothing, three return roughly their capital, one returns twenty times">
+    <p style="margin:0 0 0.75rem"><strong>An illustrative ten-company portfolio:</strong></p>
+    <div class="pl-chart">
+      {
+        [0, 0, 0, 0, 0, 0, 1, 1, 1.5, 20].map((v, i) => (
+          <div class="pl-col">
+            <div class="pl-bar-zone">
+              <span
+                class="pl-bar"
+                style={`height:${Math.max(v * 4.4, 3)}px;background:${v >= 20 ? 'var(--c1)' : v > 0 ? 'var(--chart-deemph)' : 'var(--red-tint)'};${v === 0 ? 'border:1px dashed var(--red);opacity:.7' : ''}`}
+              />
+            </div>
+            <span class="pl-x mono">{v === 0 ? '0×' : `${v}×`}</span>
+          </div>
+        ))
+      }
+    </div>
+    <p style="margin:0.75rem 0 0;font-size:0.85rem" class="muted">
+      Six fail. Three roughly return their money. One returns 20×. The portfolio
+      as a whole more than doubles — <em>because of one company nobody could have
+      named in advance.</em> Illustrative numbers, not a forecast.
+    </p>
+  </div>
+  <p>
+    Now run the thought experiment the other way. Suppose you'd invested in just
+    one of those ten companies. There's a 60% chance you lost everything, a 30%
+    chance you got roughly your money back, and a 10% chance you hit the
+    outlier. Same companies, same information — completely different experience,
+    purely because of <em>how the capital was spread</em>.
+  </p>
+
+  <h2>"But I'll just pick the good one"</h2>
+  <p>
+    Everyone believes this, briefly. Here's the professional consensus you're up
+    against: venture capitalists — with proprietary data rooms, reference calls,
+    board seats and decades of pattern-matching — still cannot reliably name the
+    outlier in advance. Their answer isn't better picking. It's
+    <strong>portfolio construction</strong>: back enough credible companies that
+    the power law works <em>for</em> you instead of against you.
+  </p>
+  <blockquote>
+    Diversification is not a hedge against being wrong. It's the honest
+    admission that in this asset class, everyone is wrong most of the time —
+    and a strategy that's built to survive it.
+  </blockquote>
+  <p>
+    This is the single biggest behavioural difference between professionals and
+    retail investors in private markets. Retail platforms sell single-company
+    stories: a brand you love, a founder you relate to. Professionals allocate
+    across twenty or more positions, expect the failures, and size every cheque
+    so no single failure matters.
+  </p>
+
+  <h2>What this means for you, practically</h2>
+  <ul>
+    <li>
+      <strong>Think in portfolios, not picks.</strong> Before asking "is this
+      startup good?", ask "what does my overall exposure look like?"
+    </li>
+    <li>
+      <strong>Size positions so failure is survivable.</strong> If losing a
+      position entirely would genuinely hurt, it's too big. This is why Bundle's
+      minimums are £10–£50 — spreading matters more than the amount.
+    </li>
+    <li>
+      <strong>Spread across sectors and stages, not just companies.</strong>
+      Twenty seed-stage climate startups is one bet wearing twenty costumes.
+    </li>
+    <li>
+      <strong>Expect failures — plural.</strong> When one arrives, it isn't the
+      strategy breaking. It's the strategy's assumption arriving on schedule.
+    </li>
+  </ul>
+
+  <div class="callout warn">
+    <strong>The honest limit:</strong> diversification reduces concentration
+    risk — the risk of one failure taking everything. It does <em>not</em> make
+    startup investing safe. A diversified startup portfolio can still lose
+    money, and every position in it is illiquid for years. Never invest money
+    you may need back.
+  </div>
+
+  <h2>Check your understanding</h2>
+  <p>Two questions — the adaptive Academy uses these to decide what to teach you next.</p>
+
+  <div class="quiz" data-quiz>
+    <fieldset class="quiz-q">
+      <legend>1. In a typical early-stage portfolio, where do most of the returns come from?</legend>
+      <label><input type="radio" name="q1" value="a" /> <span>Steady modest gains across most companies</span></label>
+      <label><input type="radio" name="q1" value="b" data-correct /> <span>A small number of outlier companies</span></label>
+      <label><input type="radio" name="q1" value="c" /> <span>Dividends paid by the profitable ones</span></label>
+      <p class="quiz-fb" hidden></p>
+    </fieldset>
+    <fieldset class="quiz-q">
+      <legend>2. Diversification means a startup portfolio can't lose money overall.</legend>
+      <label><input type="radio" name="q2" value="a" /> <span>True — that's the point of spreading</span></label>
+      <label><input type="radio" name="q2" value="b" data-correct /> <span>False — it reduces concentration risk, not the risk of loss</span></label>
+      <p class="quiz-fb" hidden></p>
+    </fieldset>
+  </div>
+</ArticleLayout>
+
+<style>
+  .pl-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+  }
+
+  .pl-col {
+    flex: 1;
+    display: grid;
+    gap: 0.35rem;
+    justify-items: center;
+  }
+
+  .pl-bar-zone {
+    display: flex;
+    align-items: flex-end;
+    height: 96px;
+  }
+
+  .pl-bar {
+    width: 100%;
+    min-width: 14px;
+    max-width: 24px;
+    border-radius: 4px 4px 0 0;
+    display: block;
+  }
+
+  .pl-x {
+    font-size: 0.66rem;
+    color: var(--text-2);
+  }
+
+  .quiz {
+    display: grid;
+    gap: 1.25rem;
+    margin: 1.5rem 0 0;
+  }
+
+  .quiz-q {
+    border: 1px solid var(--line);
+    border-radius: var(--r-m);
+    padding: 1.25rem 1.5rem;
+    background: var(--surface);
+    box-shadow: var(--shadow-s);
+  }
+
+  .quiz-q legend {
+    font-weight: 600;
+    color: var(--ink);
+    padding: 0 0.4rem;
+  }
+
+  .quiz-q label {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+    padding: 0.5rem 0.4rem;
+    border-radius: var(--r-s);
+    cursor: pointer;
+    font-size: 0.98rem;
+  }
+
+  .quiz-q label:hover {
+    background: var(--tint-soft);
+  }
+
+  .quiz-q input {
+    margin-top: 0.3rem;
+    accent-color: var(--teal);
+  }
+
+  .quiz-fb {
+    margin: 0.6rem 0 0;
+    padding: 0.7rem 0.9rem;
+    border-radius: var(--r-s);
+    font-size: 0.9rem;
+    font-weight: 550;
+  }
+
+  .quiz-fb.ok {
+    background: var(--sage-tint);
+    color: var(--sage-ink);
+  }
+
+  .quiz-fb.no {
+    background: var(--sand-tint);
+    color: var(--sand-ink);
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-quiz] .quiz-q').forEach((q) => {
+    const fb = q.querySelector<HTMLElement>('.quiz-fb');
+    q.querySelectorAll<HTMLInputElement>('input[type="radio"]').forEach((input) => {
+      input.addEventListener('change', () => {
+        if (!fb) return;
+        const correct = input.hasAttribute('data-correct');
+        fb.hidden = false;
+        fb.classList.toggle('ok', correct);
+        fb.classList.toggle('no', !correct);
+        fb.textContent = correct
+          ? 'Correct. In the live Academy, you’d move straight on.'
+          : 'Not quite — reread the section above. In the live Academy, the Education Agent would teach this concept again with new examples before you continue.';
+      });
+    });
+  });
+</script>

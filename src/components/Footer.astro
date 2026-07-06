@@ -1,0 +1,257 @@
+---
+import Logo from './Logo.astro';
+
+const year = 2026;
+
+const cols = [
+  {
+    title: 'Platform',
+    links: [
+      { href: '/how-it-works', label: 'How it works' },
+      { href: '/portfolio-intelligence', label: 'Portfolio Intelligence' },
+      { href: '/ai-engine', label: 'The AI Engine' },
+      { href: '/trust', label: 'Trust & Safety' },
+      { href: '/pricing', label: 'Pricing' },
+    ],
+  },
+  {
+    title: 'Invest',
+    links: [
+      { href: '/investors', label: 'For Investors' },
+      { href: '/secondary-market', label: 'Secondary Market' },
+      { href: '/spvs-and-funds', label: 'SPVs & Pre-IPO Funds' },
+      { href: '/waitlist', label: 'Join the waitlist' },
+    ],
+  },
+  {
+    title: 'Founders',
+    links: [
+      { href: '/founders', label: 'For Founders' },
+      { href: '/founders#health-check', label: 'AI Pitch Health Check' },
+      { href: '/founders#apply', label: 'Apply to raise' },
+    ],
+  },
+  {
+    title: 'Learn',
+    links: [
+      { href: '/learn', label: 'Academy' },
+      { href: '/blog', label: 'Insights' },
+      { href: '/legal/risk-warning', label: 'Risk warnings' },
+      { href: '/brand', label: 'Brand' },
+    ],
+  },
+  {
+    title: 'Company',
+    links: [
+      { href: '/about', label: 'About' },
+      { href: '/careers', label: 'Careers' },
+      { href: '/contact', label: 'Contact' },
+      { href: '/login', label: 'Log in' },
+    ],
+  },
+];
+---
+
+<footer class="site-footer">
+  <div class="risk-band" role="note" aria-label="Risk warning">
+    <div class="container">
+      <p>
+        <strong>Don't invest unless you're prepared to lose all the money you
+        invest.</strong> This is a high-risk investment and you are unlikely to be
+        protected if something goes wrong.
+        <a href="/legal/risk-warning">Take 2 minutes to learn more</a>.
+      </p>
+    </div>
+  </div>
+
+  <div class="container footer-main">
+    <div class="footer-brand">
+      <a href="/" aria-label="Bundle.ai home"><Logo size={26} /></a>
+      <p class="tagline">
+        Startup investing, taught like a diversified portfolio — not sold like a
+        speculative bet.
+      </p>
+      <p class="made-in">
+        Designed and built in the United Kingdom.<br />
+        <a href="https://www.linkedin.com" rel="noopener">LinkedIn</a> ·
+        <a href="https://x.com" rel="noopener">X</a> ·
+        <a href="mailto:hello@bundle.ai">hello@bundle.ai</a>
+      </p>
+    </div>
+
+    <nav class="footer-cols" aria-label="Footer">
+      {
+        cols.map((col) => (
+          <div class="footer-col">
+            <h3>{col.title}</h3>
+            <ul>
+              {col.links.map((l) => (
+                <li>
+                  <a href={l.href}>{l.label}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </nav>
+  </div>
+
+  <div class="container footer-legal">
+    <hr class="hr" />
+    <p class="legal-copy">
+      Bundle Technologies Ltd ("Bundle.ai") is a pre-launch technology company.
+      Bundle.ai does not currently arrange, promote or facilitate investments. The
+      products and services described on this site are in development and, where
+      they constitute regulated activities, will be offered only when the
+      appropriate FCA authorisations — or partnerships with authorised firms — are
+      in place. Nothing on this site is investment advice, a personal
+      recommendation, or a financial promotion of any specific investment.
+      Investing in startups involves significant risk, including total loss of
+      capital and illiquidity. Tax treatment (including SEIS/EIS relief) depends on
+      individual circumstances and may change. AI outputs on this platform are
+      assistive and educational; they are reviewed under human oversight and are
+      never a substitute for your own judgement.
+    </p>
+    <div class="legal-row">
+      <span>© {year} Bundle Technologies Ltd. All rights reserved.</span>
+      <span class="legal-links">
+        <a href="/legal/risk-warning">Risk warnings</a>
+        <a href="/legal/privacy">Privacy</a>
+        <a href="/legal/terms">Terms</a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: auto;
+    background: var(--bg);
+    border-top: 1px solid var(--line);
+  }
+
+  .risk-band {
+    background: var(--sand-tint);
+    border-bottom: 1px solid rgba(138, 100, 32, 0.16);
+  }
+
+  .risk-band p {
+    margin: 0;
+    padding: 0.85rem 0;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: var(--ink);
+  }
+
+  .risk-band a {
+    color: var(--sand-ink);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-weight: 550;
+  }
+
+  .footer-main {
+    display: grid;
+    grid-template-columns: 1.15fr 2.85fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    padding-block: clamp(2.75rem, 5vw, 4rem) 2rem;
+  }
+
+  .tagline {
+    margin-top: 1.1rem;
+    font-size: 0.92rem;
+    color: var(--text-2);
+    max-width: 24rem;
+  }
+
+  .made-in {
+    font-size: 0.85rem;
+    color: var(--text-2);
+    line-height: 1.9;
+  }
+
+  .footer-cols {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.25rem;
+  }
+
+  .footer-col h3 {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--text-2);
+    margin-bottom: 0.9rem;
+  }
+
+  .footer-col ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .footer-col a {
+    color: var(--text);
+    font-size: 0.92rem;
+  }
+
+  .footer-col a:hover {
+    color: var(--teal);
+  }
+
+  .footer-legal {
+    padding-bottom: 2.25rem;
+  }
+
+  .legal-copy {
+    padding-top: 1.75rem;
+    font-size: 0.8rem;
+    line-height: 1.65;
+    color: var(--text-2);
+    max-width: 68rem;
+  }
+
+  .legal-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-size: 0.82rem;
+    color: var(--text-2);
+  }
+
+  .legal-links {
+    display: inline-flex;
+    gap: 1.25rem;
+  }
+
+  .legal-links a {
+    color: var(--text-2);
+  }
+
+  .legal-links a:hover {
+    color: var(--teal);
+  }
+
+  @media (max-width: 1024px) {
+    .footer-main {
+      grid-template-columns: 1fr;
+    }
+
+    .footer-cols {
+      grid-template-columns: repeat(3, 1fr);
+      row-gap: 2rem;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .footer-cols {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,108 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import WaitlistForm from '../components/WaitlistForm.astro';
+
+const steps = [
+  { title: 'You join the list', body: 'Investor or founder — order of sign-up is the queue. No referral games, no queue-jumping mechanics.' },
+  { title: 'We send one email a month', body: 'Progress, new Academy lessons, new research. Written by the founders, not a drip campaign.' },
+  { title: 'Early access opens in waves', body: 'The Academy and founder tools first; investing follows when the regulated structure is live.' },
+];
+---
+
+<BaseLayout
+  title="Join the waitlist"
+  description="Early access to Bundle.ai — the UK's portfolio-first startup investing platform. One considered email a month; access in order of sign-up."
+>
+  <section class="section bg-grid wl-section">
+    <div class="container">
+      <div class="split">
+        <div>
+          <p class="eyebrow reveal">Early access</p>
+          <h1 class="display reveal" style="--d:.05s">
+            Get in before the door opens — <em class="serif-aside">calmly</em>
+          </h1>
+          <p class="lead reveal" style="--d:.1s">
+            Bundle is pre-launch. The waitlist is exactly what it says: a list, in
+            order, with honest monthly updates. No countdown clock. No "spots
+            remaining." Those tactics aren't how we ask for your attention — or
+            your money.
+          </p>
+          <div class="wl-steps reveal" style="--d:.15s">
+            {
+              steps.map((s, i) => (
+                <div class="wl-step">
+                  <span class="step-num">{i + 1}</span>
+                  <div>
+                    <h3 class="wl-step-t">{s.title}</h3>
+                    <p class="small muted" style="margin:0">{s.body}</p>
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+        <div class="card wl-card reveal" style="--d:.12s">
+          <h2 class="h3" style="margin-bottom:0.3rem">Join the waitlist</h2>
+          <p class="small muted">Tell us which side of the marketplace you're on.</p>
+          <WaitlistForm />
+          <hr class="hr" style="margin:1.5rem 0" />
+          <ul class="wl-promises">
+            <li><Icon name="check" size={14} stroke={2.4} /> Free Academy access while you wait</li>
+            <li><Icon name="check" size={14} stroke={2.4} /> One email a month — unsubscribe anytime</li>
+            <li><Icon name="check" size={14} stroke={2.4} /> Your email is never sold or shared</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .wl-section {
+    min-height: 60vh;
+  }
+
+  .wl-steps {
+    display: grid;
+    gap: 1.25rem;
+    margin-top: 2.25rem;
+  }
+
+  .wl-step {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .wl-step-t {
+    font-size: 1.05rem;
+    margin: 0.15rem 0 0.25rem;
+  }
+
+  .wl-card {
+    padding: clamp(1.75rem, 3.5vw, 2.5rem);
+    align-self: start;
+  }
+
+  .wl-promises {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+    font-size: 0.9rem;
+    color: var(--text);
+  }
+
+  .wl-promises li {
+    display: flex;
+    gap: 0.55rem;
+    align-items: center;
+  }
+
+  .wl-promises svg {
+    color: var(--sage-ink);
+    flex: none;
+  }
+</style>

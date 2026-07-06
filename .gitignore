@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+npm-debug.log*
+
+# Private business documents — never publish
+*.docx
+
+# Local tooling state
+.claude/

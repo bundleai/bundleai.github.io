@@ -1,0 +1,261 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import CTABand from '../components/CTABand.astro';
+import DashboardMockup from '../components/DashboardMockup.astro';
+
+const modules = [
+  { icon: 'gauge', title: 'The concentration meter', body: '“How concentrated am I?” answered continuously — with alerts when any position starts to dominate your portfolio.' },
+  { icon: 'pie', title: 'Exposure breakdowns', body: 'Sector, stage and geography donuts and bars, so a “diversified” portfolio can’t quietly become five climate seed rounds.' },
+  { icon: 'pulse', title: 'Portfolio risk score', body: 'A single, explainable band — from the Startup Risk Agent’s company-level scores, aggregated honestly. Always “high-risk asset class” context attached.' },
+  { icon: 'timer', title: 'Illiquidity timeline', body: 'Expected holding periods per company and portfolio-wide, plus upcoming structured liquidity windows where relevant.' },
+  { icon: 'award', title: 'SEIS/EIS relief tracker', body: 'Which holdings qualify, what certificates are in, what relief you may claim — and reminders that tax treatment depends on your circumstances.' },
+  { icon: 'bell', title: 'Alerts that matter', body: 'Follow-on rounds, dilution notices, missed-update flags, and honest failure alerts when a company dissolves. No noise, no spin.' },
+  { icon: 'graduation', title: 'Education progress', body: 'Your Academy track lives next to your portfolio — because the discipline is the product, not a one-time onboarding hoop.' },
+  { icon: 'spark', title: 'AI plain-English summaries', body: 'A monthly readable summary of what actually happened across your portfolio — and “questions to ask” before your next allocation.' },
+];
+
+const lifecycle = [
+  { label: 'Invest', body: 'Position recorded, risk summary archived, cooling-off honoured' },
+  { label: 'Months 1–12', body: 'Structured updates, anomaly monitoring, education continues' },
+  { label: 'Years 1–5', body: 'Follow-ons, dilution events, concentration re-checks as values shift' },
+  { label: 'Years 5–10', body: 'Exits, failures reported honestly, liquidity windows where permitted' },
+];
+---
+
+<BaseLayout
+  title="Portfolio Intelligence"
+  description="The Bundle dashboard: concentration meter, exposure breakdowns, portfolio risk score, SEIS/EIS tracker, dilution alerts and AI plain-English summaries — continuous intelligence for private portfolios."
+>
+  <section class="pi-hero bg-grid">
+    <div class="container">
+      <div class="section-head center" style="margin-bottom:2.5rem">
+        <p class="eyebrow no-rule reveal">Portfolio Intelligence</p>
+        <h1 class="display reveal" style="--d:.06s">
+          Public-market clarity,<br />
+          <em class="serif-aside">private-market honesty</em>
+        </h1>
+        <p class="lead mx-auto reveal" style="--d:.12s">
+          Public investors get earnings, alerts and analytics. Private investors get
+          occasional emails. Bundle closes that gap with a dashboard that keeps
+          working long after you've invested.
+        </p>
+        <div class="hero-actions-c reveal" style="--d:.18s">
+          <a href="/waitlist" class="btn btn-primary btn-lg">Join the waitlist <span class="arrow">→</span></a>
+          <a href="/ai-engine" class="btn btn-ghost btn-lg">The engine behind it</a>
+        </div>
+      </div>
+      <div class="reveal" style="--d:.22s">
+        <DashboardMockup variant="full" />
+        <p class="mock-caption">Product concept — illustrative portfolio and companies, not a live account or recommendations.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modules -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow reveal">What's on it</p>
+        <h2 class="h2 reveal" style="--d:.05s">Eight modules, one honest picture</h2>
+      </div>
+      <div class="grid cols-4">
+        {
+          modules.map((m, i) => (
+            <article class="card card-hover reveal" style={`--d:${(i % 4) * 0.06}s`}>
+              <span class="icon-chip"><Icon name={m.icon} size={19} /></span>
+              <h3 class="mod-name">{m.title}</h3>
+              <p class="small muted" style="margin-bottom:0">{m.body}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Questions to ask -->
+  <section class="section section-tint-full">
+    <div class="container">
+      <div class="split">
+        <div>
+          <p class="eyebrow reveal">Before you invest</p>
+          <h2 class="h2 reveal" style="--d:.05s">The AI writes your due-diligence questions.<br />You still do the thinking.</h2>
+          <p class="lead reveal" style="--d:.1s">
+            For every startup, the engine generates the questions a professional
+            would ask — pulled from the pitch, the financials and the risk
+            assessment. It never answers "should I invest?" That question is yours.
+          </p>
+        </div>
+        <div class="card q-card reveal" style="--d:.12s" aria-hidden="true">
+          <div class="q-head">
+            <span class="icon-chip"><Icon name="spark" size={19} /></span>
+            <div>
+              <span class="q-title">Questions to ask — Voltaic Grid</span>
+              <span class="q-sub mono">Generated from campaign disclosure · reviewed format</span>
+            </div>
+          </div>
+          <ol class="q-list">
+            <li>Revenue is 80% from two utility pilots. What happens if either doesn't convert to a contract?</li>
+            <li>The £9m pre-money valuation is 2.3× the sector median for this stage. What justifies the premium?</li>
+            <li>Runway is 11 months at current burn. Is this raise sized to reach the next milestone, or to reach the next raise?</li>
+            <li>Founders hold 58% post-round. How does the option pool affect future dilution?</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lifecycle -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head center">
+        <p class="eyebrow reveal">The long game</p>
+        <h2 class="h2 reveal" style="--d:.05s">Intelligence for the whole holding period</h2>
+        <p class="lead mx-auto reveal" style="--d:.1s">
+          Startup investments live for years. The dashboard is built for that
+          timescale — not for the moment of purchase.
+        </p>
+      </div>
+      <div class="lifecycle reveal">
+        {
+          lifecycle.map((l, i) => (
+            <div class="lc-step">
+              <span class="lc-dot" style={`background:${['#85b9c3', '#4a9aa7', '#0d7e8a', '#094f58'][i]}`}></span>
+              <span class="lc-label">{l.label}</span>
+              <span class="lc-body">{l.body}</span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CTABand
+    title="See your whole portfolio. <em class='serif-aside'>Honestly.</em>"
+    sub="Join the waitlist for early access to the dashboard no UK retail platform offers."
+  />
+</BaseLayout>
+
+<style>
+  .pi-hero {
+    padding-block: clamp(3.5rem, 8vw, 6rem) clamp(3rem, 7vw, 5.5rem);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .hero-actions-c {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1.75rem;
+  }
+
+  .mock-caption {
+    margin-top: 0.9rem;
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--faint);
+  }
+
+  .mod-name {
+    font-size: 1.02rem;
+    margin: 0.95rem 0 0.35rem;
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+
+  .q-card {
+    padding: 1.75rem;
+  }
+
+  .q-head {
+    display: flex;
+    gap: 0.9rem;
+    align-items: center;
+    margin-bottom: 1.1rem;
+  }
+
+  .q-title {
+    display: block;
+    font-weight: 600;
+    color: var(--ink);
+    font-family: var(--font-display);
+  }
+
+  .q-sub {
+    font-size: 0.7rem;
+    color: var(--faint);
+  }
+
+  .q-list {
+    margin: 0;
+    padding-left: 1.25rem;
+    display: grid;
+    gap: 0.75rem;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: var(--text);
+  }
+
+  .q-list li::marker {
+    color: var(--teal);
+    font-weight: 600;
+  }
+
+  .lifecycle {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+    position: relative;
+    padding-top: 0.5rem;
+  }
+
+  .lifecycle::before {
+    content: "";
+    position: absolute;
+    top: 0.9rem;
+    left: 2%;
+    right: 2%;
+    height: 2px;
+    background: var(--line-2);
+  }
+
+  .lc-step {
+    display: grid;
+    gap: 0.35rem;
+    position: relative;
+  }
+
+  .lc-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2.5px solid var(--surface);
+    box-shadow: 0 0 0 1px var(--line-2);
+    margin-bottom: 0.5rem;
+  }
+
+  .lc-label {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 1.02rem;
+  }
+
+  .lc-body {
+    font-size: 0.875rem;
+    color: var(--text-2);
+    line-height: 1.55;
+    max-width: 24ch;
+  }
+
+  @media (max-width: 860px) {
+    .lifecycle {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .lifecycle::before {
+      display: none;
+    }
+  }
+</style>

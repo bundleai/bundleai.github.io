@@ -1,0 +1,84 @@
+---
+/**
+ * Horizontal exposure bars. mode="single" = one series, slot-1 hue.
+ * mode="ramp" = ordered categories (stage/tier) on the validated ordinal teal ramp.
+ */
+interface Item {
+  label: string;
+  value: number;
+  display?: string;
+}
+
+interface Props {
+  items: Item[];
+  mode?: 'single' | 'ramp';
+  class?: string;
+}
+
+const { items, mode = 'single', class: className } = Astro.props;
+const RAMP = ['#85b9c3', '#4a9aa7', '#0d7e8a', '#094f58'];
+const max = Math.max(...items.map((i) => i.value));
+---
+
+<div class:list={['bars', className]}>
+  {
+    items.map((item, i) => (
+      <div class="bar-row">
+        <span class="bar-label">{item.label}</span>
+        <span class="bar-track">
+          <span
+            class="bar-fill"
+            style={`width:${(item.value / max) * 100}%;background:${
+              mode === 'ramp' ? RAMP[Math.min(i, RAMP.length - 1)] : '#0090a3'
+            }`}
+          />
+        </span>
+        <span class="bar-val">{item.display ?? `${item.value}%`}</span>
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .bars {
+    display: grid;
+    gap: 0.72em;
+    font-size: 0.85em;
+  }
+
+  .bar-row {
+    display: grid;
+    grid-template-columns: minmax(5.4em, auto) 1fr minmax(2.6em, auto);
+    align-items: center;
+    gap: 0.75em;
+  }
+
+  .bar-label {
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .bar-track {
+    height: 0.72em;
+    max-height: 12px;
+    background: var(--chart-track);
+    border-radius: 999px;
+    overflow: hidden;
+    display: block;
+  }
+
+  .bar-fill {
+    display: block;
+    height: 100%;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .bar-val {
+    color: var(--text-2);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    white-space: nowrap;
+  }
+</style>

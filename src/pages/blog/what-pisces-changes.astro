@@ -1,0 +1,132 @@
+---
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+---
+
+<ArticleLayout
+  kind="article"
+  title="What PISCES actually changes for retail investors"
+  description="The UK's PISCES regime gives private-share trading a regulated home with intermittent auctions. What structured liquidity windows can do, what they can't, and why suitability still decides everything."
+  category="Policy"
+  meta="6 July 2026 · 9 min · By the Bundle team"
+  nextLabel="The Academy: illiquidity, explained properly"
+  nextHref="/learn"
+>
+  <p>
+    For as long as retail investors have been able to buy startup shares, the
+    exit question has had an awkward answer: <em>you probably can't sell until
+    the company sells.</em> Private shares had no regulated place to trade —
+    liquidity was a patchwork of one-off platform events, broker-matched blocks
+    and luck.
+  </p>
+  <p>
+    That changed with <strong>PISCES</strong> — the Private Intermittent
+    Securities and Capital Exchange System — the UK framework for regulated
+    trading of private company shares. By spring 2026, three routes were
+    approved: the London Stock Exchange's Private Securities Market, which
+    opened with an Oxford Science Enterprises auction; JP Jenkins, which reaches
+    earlier-stage companies through ordinary brokerage accounts with CREST
+    settlement; and Asset Match's periodic auction model.
+  </p>
+
+  <h2>The design insight: intermittent, not continuous</h2>
+  <p>
+    The most important word in PISCES is <em>intermittent</em>. These are not
+    stock exchanges for startups. Trading happens in scheduled windows —
+    auctions at intervals a company chooses — rather than continuously.
+  </p>
+  <p>
+    That design is a quiet piece of investor protection. Continuous markets in
+    illiquid, information-poor assets mostly manufacture bad prices and worse
+    behaviour: thin order books, stale valuations, day-trading impulses applied
+    to assets that reprice on quarterly board updates. Concentrating liquidity
+    into windows — with company disclosure refreshed beforehand — gives price
+    discovery a fighting chance and removes the casino mechanics entirely.
+  </p>
+  <blockquote>
+    A liquidity window is a scheduled opportunity, not a promise. The honest
+    framing is "you may be able to sell, sometimes" — never "your shares are
+    now liquid."
+  </blockquote>
+
+  <h2>What windows genuinely change</h2>
+  <ul>
+    <li>
+      <strong>Employees and early investors get a lawful, orderly route to
+      partial liquidity</strong> — the use case the LSE's first auctions were
+      built around.
+    </li>
+    <li>
+      <strong>Price discovery improves.</strong> A cleared auction price,
+      however imperfect, beats a number from the last funding round two years
+      ago.
+    </li>
+    <li>
+      <strong>Platforms can plan around liquidity</strong> — scheduled windows
+      make holding-period conversations honest: "the next window is October,"
+      not "someday, maybe."
+    </li>
+  </ul>
+
+  <h2>What they don't change</h2>
+  <ul>
+    <li>
+      <strong>Demand is not guaranteed.</strong> A window with no buyers clears
+      nothing. Early-stage shares may see no window at all — companies opt in,
+      and many won't.
+    </li>
+    <li>
+      <strong>The risk profile of the asset.</strong> A startup share bought in
+      a window can still go to zero on Tuesday. Total-loss risk survives
+      regulation intact.
+    </li>
+    <li>
+      <strong>Tax reliefs don't follow.</strong> SEIS/EIS reliefs attach to
+      qualifying <em>new</em> shares; buying second-hand in a window generally
+      earns none of them — a detail that materially changes the downside maths
+      versus primary investing.
+    </li>
+  </ul>
+
+  <h2>The missing layer: who should be trading?</h2>
+  <p>
+    Here is what strikes us most about the PISCES era so far. Every serious
+    player is racing to add <em>access</em> to liquidity — venues, partnerships,
+    retail gateways. Almost nobody is asking the suitability question:
+    <strong>should this particular investor be making this particular
+    trade?</strong>
+  </p>
+  <p>
+    Selling a position changes a portfolio just as buying does. A retail
+    investor selling their one winner in a liquidity window may be turning a
+    diversified portfolio back into a concentrated one — locking in the
+    survivorship and keeping the risk. A buyer picking up secondary shares at a
+    premium, with no relief eligibility, may be taking primary-market risk at
+    worse economics without noticing.
+  </p>
+  <p>
+    That's the gap Bundle's <a href="/secondary-market">secondary market
+    design</a> exists to fill: structured windows <em>plus</em> a discipline
+    layer — suitability checks on both sides, a concentration-impact preview
+    before any order, and refreshed plain-English disclosure as standard. As far
+    as we can tell, nobody else in the UK is pairing private-market liquidity
+    with suitability. We think that pairing is the whole point.
+  </p>
+
+  <h2>What to do with this, today</h2>
+  <p>
+    If you hold private shares: find out whether your platform or company plans
+    PISCES participation, and treat any window as optional, not owed. If you're
+    building a portfolio: keep assuming 5–10 year holds — windows are a bonus
+    scenario in your planning, never the base case. And if a platform's
+    marketing implies startup shares are now "tradable like stocks," close the
+    tab.
+  </p>
+
+  <div class="callout">
+    <strong>Sources & further reading:</strong> FCA policy statements PS25/9 and
+    PS25/10 (public offers and admissions regime); LSEG announcements on the
+    Private Securities Market's first auctions; JP Jenkins venue documentation.
+    This article is commentary and education, not advice, and describes Bundle
+    functionality that remains subject to FCA permissions.
+  </div>
+</ArticleLayout>
