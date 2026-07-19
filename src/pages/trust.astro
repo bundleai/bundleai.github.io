@@ -4,56 +4,39 @@ import PageHero from '../components/PageHero.astro';
 import Icon from '../components/Icon.astro';
 import CTABand from '../components/CTABand.astro';
 
+const principles = [
+  { icon: 'scale', title: 'Neutral ranking, always', body: 'Screener and search results order by the filters you set — price, deadline, sector — never by what a venue pays us. If sponsored placement ever exists, it will be labelled unmistakably.' },
+  { icon: 'coins', title: 'No markups, no spreads', body: 'You pay the venue’s price and the venue’s fees. Bundle’s referral revenue comes out of the venue’s take, and a deal with no referral programme is displayed identically to one with.' },
+  { icon: 'clock', title: 'Honest data freshness', body: 'Private-market data goes stale. Every listing carries a last-checked timestamp and links to its source, so you always know what you’re looking at and how old it is.' },
+  { icon: 'eye', title: 'Human oversight of AI', body: 'The agents that scan, summarise and flag deals are reviewed by humans on anything consequential, and every output is logged and auditable.' },
+  { icon: 'doc', title: 'Risk on the surface', body: 'Risk warnings sit on every page, not behind a link. Deal summaries state what could go wrong before what could go right.' },
+  { icon: 'ban', title: 'No manufactured urgency', body: 'Deadlines shown on Bundle are the venue’s real deadlines. We add no countdown theatre, no “only £12k left!” bars, no confetti, no streaks.' },
+];
+
 const protections = [
-  { icon: 'graduation', title: 'Mandatory education first', body: 'No investment journey opens until core modules are complete. Comprehension is checked, not assumed.' },
-  { icon: 'doc-check', title: 'Appropriateness testing', body: 'FCA-style testing with documented pass/fail records, and honest “not yet” outcomes.' },
-  { icon: 'timer', title: 'Cooling-off periods', body: 'Built into the investment flow, never engineered around with urgency tactics.' },
-  { icon: 'sliders', title: 'Max-allocation warnings', body: 'Educational warnings when an intended allocation is outsized for your profile.' },
-  { icon: 'gauge', title: 'Concentration alerts', body: 'The dashboard flags when one company or theme starts dominating your portfolio.' },
-  { icon: 'pulse', title: 'Loss & illiquidity simulation', body: 'See what failure rates and multi-year lockups mean for your money before committing.' },
-  { icon: 'doc', title: 'Plain-English risk summaries', body: 'Every startup carries a readable risk summary. No burying, no boilerplate-only.' },
-  { icon: 'search', title: 'Founder claim verification', body: 'Traction and financial claims are cross-checked by the fraud agent and human reviewers.' },
-  { icon: 'spark', title: '“Questions to ask” AI', body: 'Generated due-diligence questions per startup, prompting thought but never replacing it.' },
-  { icon: 'bell', title: 'Post-investment monitoring', body: 'Anomaly detection, dilution tracking and honest failure alerts for as long as you hold.' },
-  { icon: 'users', title: 'Vulnerability detection', body: 'Signals of vulnerability route to trained humans, not to a conversion funnel.' },
-  { icon: 'eye', title: 'Human oversight of AI', body: 'Every consequential AI output is reviewed, logged and auditable. No black boxes.' },
-];
-
-const antiPatterns = [
-  { label: 'Trending startup rankings', why: 'Popularity is not diligence' },
-  { label: 'Countdown timers', why: 'Deadlines are for campaigns, not judgement' },
-  { label: '“Only £12k left!” pressure bars', why: 'Scarcity theatre manufactures FOMO' },
-  { label: 'Confetti on investment', why: 'Committing risk capital is not a slot machine' },
-  { label: 'Push-notification hype', why: 'Your attention is not our inventory' },
-  { label: 'Leaderboards & streaks', why: 'Investing is not a game to win daily' },
-];
-
-const regs = [
-  { icon: 'doc-check', title: 'FCA financial promotion rules', body: 'High-risk investment promotions carry prescribed risk warnings, positive frictions and no inducements to invest.' },
-  { icon: 'scale', title: 'Consumer Duty', body: 'Acting in good faith, avoiding foreseeable harm, enabling good outcomes: the duty our product design starts from.' },
-  { icon: 'shield', title: 'High-risk investment rules', body: 'Client categorisation, appropriateness testing, cooling-off periods and marketing restrictions, implemented as product features.' },
-  { icon: 'lock', title: 'AML & financial crime', body: 'KYC/AML checks through regulated providers, transaction monitoring, and the fraud agent watching continuously.' },
-  { icon: 'building', title: 'Public Offer Platform regime', body: 'The 2026 POP rules make platforms responsible for vetting companies and warning investors. Our architecture assumed that before it was law.' },
-  { icon: 'wallet', title: 'Nominee & custody', body: 'Client holdings via proper nominee/custody arrangements with clear records: boring, correct, non-negotiable.' },
+  { icon: 'shield', title: 'The venue’s regulatory permissions', body: 'Crowdfunding platforms and secondary marketplaces operate under their own authorisations (FCA in the UK, SEC/FINRA in the US). Your money moves under their rules, not ours.' },
+  { icon: 'wallet', title: 'The venue’s custody arrangements', body: 'Shares and client money are held by the venue’s nominee and custody structures. Bundle holds neither, ever.' },
+  { icon: 'timer', title: 'The venue’s investor protections', body: 'Appropriateness tests, cooling-off periods and eligibility checks are run by the venue at the point of investment — as regulation intends.' },
+  { icon: 'alert', title: 'What no one can protect you from', body: 'Company failure, illiquidity and dilution. They’re inherent to the asset class on every venue, and no aggregator changes that.' },
 ];
 
 const phases = [
   {
     phase: 'Phase 1',
-    title: 'Regulated partner / AR model',
-    body: 'Launch through an FCA-authorised partner or as an Appointed Representative, with investor demand, founder demand and compliance workflows validated under an authorised umbrella.',
+    title: 'Pure aggregation',
+    body: 'Discovery, comparison, watchlists and portfolio tracking — activities that don’t require FCA authorisation, run with financial-promotion rules in mind and legal counsel on speed dial.',
     status: 'The launch path',
   },
   {
     phase: 'Phase 2',
-    title: 'Direct FCA permissions',
-    body: 'Application for direct authorisation (arranging deals, operating the platform, approving financial promotions) once the model is proven and the track record is real.',
+    title: 'Authorised distribution',
+    body: 'Where deeper routing — pre-filled orders, promoting specific deals — constitutes regulated activity, it ships only under FCA permissions or a partnership with an authorised firm.',
     status: 'In preparation',
   },
   {
     phase: 'Phase 3',
-    title: 'POP readiness',
-    body: 'Public Offer Platform permission to support larger offers above the relevant thresholds, enabling broader retail distribution with the same discipline layer.',
+    title: 'Embedded execution',
+    body: 'Venue API integrations that complete the trade without leaving Bundle, under whichever permissions that requires. The screen stays neutral; the plumbing gets shorter.',
     status: 'The destination',
   },
 ];
@@ -61,32 +44,32 @@ const phases = [
 
 <BaseLayout
   title="Trust & Safety"
-  description="Investor safety isn't an appendix. It's the moat. Twelve protections, an explicit list of dark patterns we refuse to build, and Bundle's FCA-aligned regulatory path."
+  description="How Bundle keeps the tape honest: neutral ranking, no markups, timestamped data, human oversight of AI, and a clear line on where regulatory protection actually comes from."
 >
   <PageHero
     eyebrow="Trust & Safety"
-    title='Investor safety isn&rsquo;t an appendix. <em class="serif-aside">It&rsquo;s the moat.</em>'
-    lead="Most platforms treat protection as compliance overhead. Bundle treats it as the product: every FCA expectation implemented as a feature, plus protections no rule requires, because disciplined investors are the entire point."
+    title='An aggregator is only useful if you can <em class="serif-aside">trust the screen.</em>'
+    lead="Skyscanner works because nobody suspects the results are rigged. Bundle holds itself to the same bar: neutral ranking, no markups, honest data and risk kept on the surface."
   >
     <Fragment slot="actions">
-      <a href="#protections" class="btn btn-primary btn-lg">The twelve protections <span class="arrow">→</span></a>
+      <a href="#principles" class="btn btn-primary btn-lg">The house rules <span class="arrow">→</span></a>
       <a href="/legal/risk-warning" class="btn btn-ghost btn-lg">Read the risk warning</a>
     </Fragment>
   </PageHero>
 
-  <!-- Protections -->
-  <section class="section" id="protections">
+  <!-- Principles -->
+  <section class="section" id="principles">
     <div class="container">
       <div class="section-head">
-        <p class="eyebrow reveal">Safety as features</p>
-        <h2 class="h2 reveal" style="--d:.05s">Twelve protections, shipped as product</h2>
+        <p class="eyebrow reveal">House rules</p>
+        <h2 class="h2 reveal" style="--d:.05s">Six rules the screen never breaks</h2>
       </div>
-      <div class="grid cols-4">
+      <div class="grid cols-3">
         {
-          protections.map((p, i) => (
-            <article class="card card-hover reveal" style={`--d:${(i % 4) * 0.05}s`}>
-              <span class="icon-chip"><Icon name={p.icon} size={19} /></span>
-              <h3 class="prot-name">{p.title}</h3>
+          principles.map((p, i) => (
+            <article class="card card-hover reveal" style={`--d:${(i % 3) * 0.07}s`}>
+              <span class="icon-chip"><Icon name={p.icon} /></span>
+              <h3 class="h3" style="margin-top:1.1rem">{p.title}</h3>
               <p class="small muted" style="margin-bottom:0">{p.body}</p>
             </article>
           ))
@@ -95,177 +78,80 @@ const phases = [
     </div>
   </section>
 
-  <!-- Anti-patterns -->
-  <section class="section section-ink bg-wash">
+  <!-- Where protection comes from -->
+  <section class="section section-ink grain">
     <div class="container">
       <div class="section-head">
-        <p class="eyebrow reveal" style="color:#7fc6cf">What you won't find here</p>
-        <h2 class="h2 reveal" style="--d:.05s">The features we refuse to build</h2>
-        <p class="lead reveal" style="--d:.1s; color:#b8cdd1">
-          Every one of these raises conversion. Every one of these makes investors
-          worse. The refusal is the brand.
+        <p class="eyebrow reveal">The honest map</p>
+        <h2 class="h2 reveal" style="--d:.05s">Where your protection actually comes from</h2>
+        <p class="lead reveal" style="--d:.1s">
+          Because you invest on the listing venue, the regulatory protections
+          are the venue's. Knowing exactly whose rules cover you is itself a
+          protection — so we spell it out.
         </p>
       </div>
-      <div class="grid cols-3">
+      <div class="grid cols-2">
         {
-          antiPatterns.map((a, i) => (
-            <div class="anti-card reveal" style={`--d:${(i % 3) * 0.07}s`}>
-              <span class="anti-x" aria-hidden="true">
-                <Icon name="close" size={15} stroke={2.4} />
-              </span>
+          protections.map((p, i) => (
+            <article class="prot-card reveal" style={`--d:${i * 0.06}s`}>
+              <span class="icon-chip"><Icon name={p.icon} size={19} /></span>
               <div>
-                <span class="anti-label">{a.label}</span>
-                <span class="anti-why">{a.why}</span>
+                <h3 class="prot-title">{p.title}</h3>
+                <p class="small" style="margin:0;color:#a9bcc7">{p.body}</p>
               </div>
-            </div>
+            </article>
           ))
         }
       </div>
     </div>
   </section>
 
-  <!-- Regulatory framing -->
+  <!-- Regulatory path -->
   <section class="section">
     <div class="container">
       <div class="section-head">
-        <p class="eyebrow reveal">The regulatory frame</p>
-        <h2 class="h2 reveal" style="--d:.05s">Rules we'd have chosen anyway</h2>
-        <p class="lead reveal" style="--d:.1s">
-          The FCA has spent years pushing high-risk investment platforms toward
-          exactly the design Bundle starts from. For us the rulebook isn't a
-          burden. It's a specification.
-        </p>
+        <p class="eyebrow reveal">Regulatory path</p>
+        <h2 class="h2 reveal" style="--d:.05s">Built to grow into regulation, not around it</h2>
       </div>
       <div class="grid cols-3">
         {
-          regs.map((r, i) => (
-            <article class="card card-hover reveal" style={`--d:${(i % 3) * 0.07}s`}>
-              <span class="icon-chip"><Icon name={r.icon} size={19} /></span>
-              <h3 class="prot-name">{r.title}</h3>
-              <p class="small muted" style="margin-bottom:0">{r.body}</p>
+          phases.map((ph, i) => (
+            <article class="card card-hover reveal" style={`--d:${i * 0.07}s`}>
+              <span class="badge badge-teal mono">{ph.phase}</span>
+              <h3 class="h3" style="margin-top:0.9rem">{ph.title}</h3>
+              <p class="small muted">{ph.body}</p>
+              <span class="badge badge-line">{ph.status}</span>
             </article>
           ))
         }
       </div>
-    </div>
-  </section>
-
-  <!-- Phased path -->
-  <section class="section section-tint-full">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow reveal">The path to authorisation</p>
-        <h2 class="h2 reveal" style="--d:.05s">Earned in phases, not assumed</h2>
-        <p class="lead reveal" style="--d:.1s">
-          Each step is a harder regulatory problem than the last, so the sequence
-          is deliberate. We tell you where we are honestly, at every stage.
-        </p>
-      </div>
-      <div class="phase-grid">
-        {
-          phases.map((p, i) => (
-            <div class="phase-card card reveal" style={`--d:${i * 0.08}s`}>
-              <div class="phase-top">
-                <span class="mono phase-num">{p.phase}</span>
-                <span class="badge badge-teal">{p.status}</span>
-              </div>
-              <h3 class="h3">{p.title}</h3>
-              <p class="small muted" style="margin-bottom:0">{p.body}</p>
-            </div>
-          ))
-        }
-      </div>
-      <p class="small muted reveal" style="margin-top:1.5rem; max-width:56rem">
-        Bundle Technologies Ltd is not currently authorised or regulated by the
-        Financial Conduct Authority, and no investment services are live. That
-        sentence will change only when it's true, and this page will change with
-        it.
-      </p>
     </div>
   </section>
 
   <CTABand
-    title="Discipline you can <em class='serif-aside'>verify.</em>"
-    sub="Read the honest pages first (the risk warning, the AI governance design), then decide if we've earned the waitlist spot."
-    secondaryLabel="Risk warnings"
-    secondaryHref="/legal/risk-warning"
+    title="Neutrality is <em>the product.</em>"
+    sub="If you ever catch the screen bending, tell us — that's the whole company on the line."
+    primaryLabel="Get early access"
+    primaryHref="/waitlist"
+    secondaryLabel="Contact us"
+    secondaryHref="/contact"
   />
 </BaseLayout>
 
 <style>
-  .prot-name {
-    font-size: 1.02rem;
-    margin: 0.95rem 0 0.35rem;
-    font-family: var(--font-display);
-    letter-spacing: -0.01em;
-  }
-
-  .anti-card {
+  .prot-card {
     display: flex;
-    gap: 0.9rem;
+    gap: 1rem;
     align-items: flex-start;
-    padding: 1.25rem 1.4rem;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 1.4rem;
+    border: 1px solid var(--line-2);
     border-radius: var(--r-m);
+    background: rgba(255, 255, 255, 0.015);
   }
 
-  .anti-x {
-    flex: none;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background: rgba(198, 84, 61, 0.22);
-    color: #eda28f;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 0.1rem;
-  }
-
-  .anti-label {
-    display: block;
-    font-weight: 600;
+  .prot-title {
+    margin: 0 0 0.35rem;
     color: #fff;
-    font-family: var(--font-display);
-    letter-spacing: -0.01em;
-    text-decoration: line-through;
-    text-decoration-color: rgba(237, 162, 143, 0.65);
-    text-decoration-thickness: 1.5px;
-  }
-
-  .anti-why {
-    font-size: 0.85rem;
-    color: #a9c2c6;
-  }
-
-  .phase-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.25rem;
-  }
-
-  .phase-card {
-    padding: 1.75rem;
-  }
-
-  .phase-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-  }
-
-  .phase-num {
-    font-size: 0.78rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--text-2);
-  }
-
-  @media (max-width: 900px) {
-    .phase-grid {
-      grid-template-columns: 1fr;
-    }
+    font-size: 1.05rem;
   }
 </style>
