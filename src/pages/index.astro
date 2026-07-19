@@ -379,6 +379,27 @@ const edges = [
     outline: none;
   }
 
+  @media (max-width: 560px) {
+    .hero-search {
+      flex-wrap: wrap;
+      padding: 0.55rem;
+    }
+
+    .hero-search input {
+      flex: 1 1 100%;
+      order: -1;
+      padding: 0.35rem 0.2rem;
+    }
+
+    .hero-search :global(svg) {
+      display: none;
+    }
+
+    .hero-search .btn {
+      flex: 1;
+    }
+  }
+
   .hero-stats {
     list-style: none;
     display: flex;
