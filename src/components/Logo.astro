@@ -7,8 +7,8 @@ interface Props {
 }
 
 const { size = 26, tone = 'default', markOnly = false } = Astro.props;
-const ink = tone === 'white' ? '#ffffff' : '#0d7e8a';
-const alt = tone === 'white' ? 'rgba(255,255,255,.72)' : '#37a98c';
+const ink = tone === 'white' ? '#ffffff' : '#1fd2c0';
+const alt = tone === 'white' ? 'rgba(255,255,255,.72)' : '#16c784';
 ---
 
 <span class:list={['logo', tone]} style={`--logo-size:${size}px`}>

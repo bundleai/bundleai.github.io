@@ -24,7 +24,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="theme-color" content="#fbfcfc" />
+    <meta name="theme-color" content="#070b12" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
@@ -78,8 +78,9 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       }
 
       .risk-ribbon {
-        background: var(--ink);
-        color: rgba(255, 255, 255, 0.85);
+        background: #0b1220;
+        border-bottom: 1px solid var(--line);
+        color: var(--text-2);
       }
 
       .risk-ribbon p {
@@ -93,12 +94,12 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       }
 
       .risk-ribbon strong {
-        color: #fff;
+        color: var(--ink);
         font-weight: 600;
       }
 
       .risk-ribbon a {
-        color: #9fd4dc;
+        color: var(--teal);
         text-decoration: underline;
         text-underline-offset: 2px;
         margin-left: 0.35rem;
