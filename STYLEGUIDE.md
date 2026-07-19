@@ -1,26 +1,31 @@
-# Bundle.ai design system — component styleguide
+# Bundle design system — component styleguide
 
+Dark trading-terminal theme (July 2026 pivot: Bundle is an aggregator of
+crowdfunding, secondary and pre-IPO deals across third-party venues).
 Everything themeable lives in `src/styles/global.css` as CSS custom properties.
-A public visual summary lives at `/brand`.
+A public visual summary lives at `/brand`. Deal/venue demo data lives in
+`src/data/deals.ts` (illustrative only — never present as live quotes).
 
 ## Tokens
 
 | Group | Tokens |
 |---|---|
-| Surfaces | `--bg` #FBFCFC · `--surface` #FFF · `--tint` #E8F4F6 · `--tint-soft` #F2F8F9 |
-| Ink & text | `--ink` #0B2E33 · `--text` #3A4A4D · `--text-2` #5C6F73 · `--faint` #8FA1A4 |
-| Hairlines | `--line` #E3EAEB · `--line-2` #D2DEE0 |
-| Brand | `--teal` #0D7E8A · `--teal-deep` #0A5E68 · `--teal-soft` #BFDFE4 |
-| Status (reserved) | sage `--sage/-ink/-tint` · sand `--sand/-ink/-tint` · red `--red/-ink/-tint` |
-| Charts (validated) | categorical `--c1..--c6` · ordinal ramp `--ramp1..--ramp4` · `--chart-track` · `--chart-deemph` |
-| Shape | `--r-s` 10px · `--r-m` 16px · `--r-l` 22px · `--r-pill` |
+| Surfaces | `--bg` #070B12 · `--surface` #0D131D · `--tint` #121A28 · `--tint-soft` #0B111A |
+| Ink & text | `--ink` #EEF4F8 (near-white) · `--text` #A9B6C2 · `--text-2` #7D8B99 · `--faint` #55636F |
+| Hairlines | `--line` #1A2432 · `--line-2` #273549 |
+| Brand | `--teal` #1FD2C0 · `--teal-deep` #6CE8DA (hover = brighter) · `--teal-soft` #0F3F42 |
+| Market direction | `--up` #16C784 / `--up-tint` · `--down` #F6465D / `--down-tint` — price movement only, never decor |
+| Status (reserved) | sage `--sage/-ink/-tint` · sand `--sand/-ink/-tint` · red `--red/-ink/-tint` (tints are translucent) |
+| Charts | categorical `--c1..--c6` (brightened for dark) · ordinal ramp `--ramp1..--ramp4` · `--chart-track` · `--chart-deemph` |
+| Shape | `--r-s` 8px · `--r-m` 12px · `--r-l` 16px · `--r-pill` (buttons are 10px, not pill) |
 | Depth | `--shadow-s/m/l` (layered, low-opacity) |
 | Type | `--font-display` General Sans · `--font-body` Inter · `--font-mono` IBM Plex Mono · `--font-serif` Source Serif 4 (italic accents only) |
 
 **Status colours are reserved** for meaning (good / caution / failure) and always
 ship with a label or icon — never as chart series. Chart series use `--c1..c6`
-in fixed order (validated for colour-blind adjacency and ≥3:1 contrast on
-white); ordered scales (stage, tiers) use the teal ramp.
+in fixed order (same hue order as the old light palette, brightened for
+dark surfaces); ordered scales (stage, tiers) use the teal ramp. `--up`/`--down`
+belong to prices and deltas exclusively.
 
 ## Utility classes (global.css)
 
@@ -28,7 +33,10 @@ white); ordered scales (stage, tiers) use the teal ramp.
   `.section-ink`), `.split` (+`.wide-left/right`), `.grid .cols-2/3/4`
 - Type: `.display`, `.h2`, `.h3`, `.lead`, `.eyebrow` (+`.no-rule`),
   `.serif-aside`, `.muted`, `.small`, `.mono`, `.tabular`, `.center`
-- Surfaces: `.card` (+`.card-hover`), `.panel-tint`, `.bg-grid`, `.bg-wash`
+- Surfaces: `.card` (+`.card-hover`), `.panel`, `.panel-tint`, `.bg-grid`, `.bg-wash`
+- Market: `.up`/`.down` (price colour), `.px` (mono tabular price), `.live-dot`
+  (pulsing green), `.src-chip` (venue chip), `.prog > span` (funding bar),
+  `.badge-up`/`.badge-down`
 - Buttons: `.btn` + `.btn-primary` / `.btn-ghost` / `.btn-ink`, sizes
   `.btn-lg` / `.btn-sm`, `.text-link` (arrow span: `<span class="arrow">→</span>`)
 - Bits: `.badge` (+ `-teal/-sage/-sand/-red/-ink/-line`), `.icon-chip`
@@ -53,7 +61,7 @@ white); ordered scales (stage, tiers) use the teal ramp.
 | `ComparisonTable` | them-vs-Bundle | `rows [{left,right}]`, titles |
 | `AgentCard` | AI agent card | `icon/name/tagline/does/outputs[]` |
 | `FAQ` | accordion | `items [{q, a-as-HTML}]` |
-| `CTABand` | ink CTA panel | `title` (HTML ok — serif ems auto-tint light), `sub`, labels/hrefs, `note` |
+| `CTABand` | dark glow CTA panel | `title` (HTML ok — serif ems auto-tint light), `sub`, labels/hrefs, `note` |
 | `LogoCloud` | ecosystem names row | `caption/names/note` (honesty note built in) |
 | `WaitlistForm` | email capture | `compact` — stores locally, shows success state |
 
@@ -81,3 +89,13 @@ white); ordered scales (stage, tiers) use the teal ramp.
   permissions".
 - Keep the risk ribbon + footer band; investment-adjacent pages get an inline
   risk note too.
+
+## Aggregator components
+
+| Component | Use | Key props |
+|---|---|---|
+| `Ticker` | scrolling market tape (top of market pages) | — reads `src/data/deals.ts` |
+| `DealCard` | deal card with price/progress + venue chip | `deal` (Deal), `class`, `style` |
+
+`/deals` is the client-side filterable screener (search + type/venue/sector
+filters; seeds from `?q=` and `?type=`; rows anchor by deal id for `#deep-links`).

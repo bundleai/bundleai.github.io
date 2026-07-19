@@ -5,14 +5,14 @@ import WaitlistForm from '../components/WaitlistForm.astro';
 
 const steps = [
   { title: 'You join the list', body: 'Investor or founder, order of sign-up is the queue. No referral games, no queue-jumping mechanics.' },
-  { title: 'We send one email a month', body: 'Progress, new Academy lessons, new research. Written by the founders, not a drip campaign.' },
-  { title: 'Early access opens in waves', body: 'The Academy and founder tools first; investing follows when the regulated structure is live.' },
+  { title: 'We send one email a month', body: 'New venues on the tape, new screener features, new research. Written by the founders, not a drip campaign.' },
+  { title: 'The terminal opens in waves', body: 'Screener, watchlists and alerts first; deeper venue integrations follow as coverage and permissions grow.' },
 ];
 ---
 
 <BaseLayout
-  title="Join the waitlist"
-  description="Early access to Bundle.ai, the UK's portfolio-first startup investing platform. One considered email a month; access in order of sign-up."
+  title="Get early access"
+  description="Early access to Bundle — the aggregator for equity crowdfunding, secondaries and pre-IPO deals. One considered email a month; access in order of sign-up."
 >
   <section class="section bg-grid wl-section">
     <div class="container">
@@ -20,13 +20,13 @@ const steps = [
         <div>
           <p class="eyebrow reveal">Early access</p>
           <h1 class="display reveal" style="--d:.05s">
-            Get in before the door opens, <em class="serif-aside">calmly</em>
+            The whole market, <em class="serif-aside">on your screen first.</em>
           </h1>
           <p class="lead reveal" style="--d:.1s">
-            Bundle is pre-launch. The waitlist is exactly what it says: a list, in
-            order, with honest monthly updates. No countdown clock. No "spots
-            remaining." Those tactics aren't how we ask for your attention, or
-            your money.
+            Bundle is pre-launch. The waitlist is exactly what it says: a list,
+            in order, with honest monthly updates. No countdown clock, no
+            "spots remaining" — the terminal will be worth the wait without the
+            theatre.
           </p>
           <div class="wl-steps reveal" style="--d:.15s">
             {
@@ -48,7 +48,7 @@ const steps = [
           <WaitlistForm />
           <hr class="hr" style="margin:1.5rem 0" />
           <ul class="wl-promises">
-            <li><Icon name="check" size={14} stroke={2.4} /> Free Academy access while you wait</li>
+            <li><Icon name="check" size={14} stroke={2.4} /> Free Academy and screener demo while you wait</li>
             <li><Icon name="check" size={14} stroke={2.4} /> One email a month, unsubscribe anytime</li>
             <li><Icon name="check" size={14} stroke={2.4} /> Your email is never sold or shared</li>
           </ul>

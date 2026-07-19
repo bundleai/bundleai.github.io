@@ -4,23 +4,23 @@ import PageHero from '../components/PageHero.astro';
 import Logo from '../components/Logo.astro';
 
 const palette = [
-  { name: 'Ink', hex: '#0B2E33', varName: '--ink' },
-  { name: 'Teal', hex: '#0D7E8A', varName: '--teal' },
-  { name: 'Teal deep', hex: '#0A5E68', varName: '--teal-deep' },
-  { name: 'Teal tint', hex: '#E8F4F6', varName: '--tint', light: true },
-  { name: 'Sage', hex: '#37A98C', varName: '--sage' },
-  { name: 'Sand', hex: '#E4B363', varName: '--sand', light: true },
-  { name: 'Clay red', hex: '#C6543D', varName: '--red' },
-  { name: 'Off-white', hex: '#FBFCFC', varName: '--bg', light: true },
+  { name: 'Terminal navy', hex: '#070B12', varName: '--bg' },
+  { name: 'Panel', hex: '#0D131D', varName: '--surface' },
+  { name: 'Signal teal', hex: '#1FD2C0', varName: '--teal', light: true },
+  { name: 'Market up', hex: '#16C784', varName: '--up', light: true },
+  { name: 'Market down', hex: '#F6465D', varName: '--down' },
+  { name: 'Sand', hex: '#E8B451', varName: '--sand', light: true },
+  { name: 'Ink (text)', hex: '#EEF4F8', varName: '--ink', light: true },
+  { name: 'Body grey', hex: '#A9B6C2', varName: '--text', light: true },
 ];
 
 const chart = [
-  { name: 'Chart 1', hex: '#0090A3' },
-  { name: 'Chart 2', hex: '#C08A2E' },
-  { name: 'Chart 3', hex: '#5578C4' },
-  { name: 'Chart 4', hex: '#2E9D80' },
-  { name: 'Chart 5', hex: '#A2609A' },
-  { name: 'Chart 6', hex: '#C97A50' },
+  { name: 'Chart 1', hex: '#27BFD4' },
+  { name: 'Chart 2', hex: '#DFA63F' },
+  { name: 'Chart 3', hex: '#7F9FE6' },
+  { name: 'Chart 4', hex: '#3FC79A' },
+  { name: 'Chart 5', hex: '#C583BB' },
+  { name: 'Chart 6', hex: '#E2906A' },
 ];
 ---
 
@@ -31,7 +31,7 @@ const chart = [
   <PageHero
     eyebrow="Brand"
     title='Many small pieces, <em class="serif-aside">one disciplined whole</em>'
-    lead="The Bundle mark is four positions of varied weight on a shared baseline, an allocation, not a growth chart. Deliberately no up-and-to-the-right arrow: we sell discipline, not dreams."
+    lead="The Bundle mark is four positions of varied weight on a shared baseline, an allocation on a shared baseline. It now lives on a terminal-dark canvas: market energy, honestly earned."
   />
 
   <section class="section">
@@ -68,7 +68,7 @@ const chart = [
 
       <div class="section-head" style="margin-top:4rem">
         <p class="eyebrow reveal">Colour</p>
-        <h2 class="h2 reveal" style="--d:.05s">Mostly white, ink and teal, colour spent sparingly</h2>
+        <h2 class="h2 reveal" style="--d:.05s">Dark canvas, signal teal, direction colours reserved for prices</h2>
       </div>
       <div class="swatch-grid reveal">
         {
