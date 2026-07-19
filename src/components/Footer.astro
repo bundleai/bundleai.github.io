@@ -5,6 +5,16 @@ const year = 2026;
 
 const cols = [
   {
+    title: 'Markets',
+    links: [
+      { href: '/deals', label: 'Deal screener' },
+      { href: '/deals?type=crowdfunding', label: 'Crowdfunding' },
+      { href: '/deals?type=secondary', label: 'Secondaries' },
+      { href: '/deals?type=pre-ipo', label: 'Pre-IPO' },
+      { href: '/waitlist', label: 'Get early access' },
+    ],
+  },
+  {
     title: 'Platform',
     links: [
       { href: '/how-it-works', label: 'How it works' },
@@ -12,15 +22,6 @@ const cols = [
       { href: '/ai-engine', label: 'The AI Engine' },
       { href: '/trust', label: 'Trust & Safety' },
       { href: '/pricing', label: 'Pricing' },
-    ],
-  },
-  {
-    title: 'Invest',
-    links: [
-      { href: '/investors', label: 'For Investors' },
-      { href: '/secondary-market', label: 'Secondary Market' },
-      { href: '/spvs-and-funds', label: 'SPVs & Pre-IPO Funds' },
-      { href: '/waitlist', label: 'Join the waitlist' },
     ],
   },
   {
@@ -68,8 +69,8 @@ const cols = [
     <div class="footer-brand">
       <a href="/" aria-label="Bundle.ai home"><Logo size={26} /></a>
       <p class="tagline">
-        Startup investing, taught like a diversified portfolio, not sold like a
-        speculative bet.
+        Every private-market deal — crowdfunding, secondaries and pre-IPO — on
+        one screen. Compare across venues, then invest where the deal lives.
       </p>
       <p class="made-in">
         Designed and built in the United Kingdom.<br />
@@ -101,17 +102,21 @@ const cols = [
     <hr class="hr" />
     <p class="legal-copy">
       Bundle Technologies Ltd ("Bundle.ai") is a pre-launch technology company.
-      Bundle.ai does not currently arrange, promote or facilitate investments. The
-      products and services described on this site are in development and, where
-      they constitute regulated activities, will be offered only when the
-      appropriate FCA authorisations, or partnerships with authorised firms, are
-      in place. Nothing on this site is investment advice, a personal
-      recommendation, or a financial promotion of any specific investment.
-      Investing in startups involves significant risk, including total loss of
-      capital and illiquidity. Tax treatment (including SEIS/EIS relief) depends on
-      individual circumstances and may change. AI outputs on this platform are
-      assistive and educational; they are reviewed under human oversight and are
-      never a substitute for your own judgement.
+      Bundle.ai is an aggregator: it surfaces and compares opportunities listed
+      on third-party venues and, at launch, will route you to those venues to
+      invest. Bundle does not hold client money or client assets, does not
+      execute trades, and does not currently arrange, promote or facilitate
+      investments. Deals, prices and statistics shown on this site are
+      illustrative demonstration data, not live quotes or offers. Where future
+      services constitute regulated activities, they will be offered only when
+      the appropriate FCA authorisations, or partnerships with authorised firms,
+      are in place. Venue names appear to identify where opportunities of each
+      kind are listed and do not imply partnership or endorsement. Nothing on
+      this site is investment advice, a personal recommendation, or a financial
+      promotion of any specific investment. Investing in startups and private
+      companies involves significant risk, including total loss of capital and
+      illiquidity. Tax treatment depends on individual circumstances and may
+      change.
     </p>
     <div class="legal-row">
       <span>© {year} Bundle Technologies Ltd. All rights reserved.</span>

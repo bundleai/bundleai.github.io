@@ -4,54 +4,60 @@ import Icon from './Icon.astro';
 
 const menus = [
   {
+    label: 'Markets',
+    items: [
+      {
+        href: '/deals',
+        icon: 'activity',
+        title: 'Deal screener',
+        desc: 'Every live deal, across every venue, one table',
+      },
+      {
+        href: '/deals?type=crowdfunding',
+        icon: 'seedling',
+        title: 'Crowdfunding',
+        desc: 'Live rounds on Crowdcube, Republic Europe, Wefunder…',
+      },
+      {
+        href: '/deals?type=secondary',
+        icon: 'exchange',
+        title: 'Secondaries',
+        desc: 'Blocks listed on Forge, Hiive, Nasdaq Private Market',
+      },
+      {
+        href: '/deals?type=pre-ipo',
+        icon: 'bars',
+        title: 'Pre-IPO',
+        desc: 'Late-stage names before they hit public markets',
+      },
+    ],
+  },
+  {
     label: 'Platform',
     items: [
       {
         href: '/how-it-works',
         icon: 'route',
         title: 'How it works',
-        desc: 'The portfolio-first journey, step by step',
+        desc: 'Discover, compare, execute — in one flow',
       },
       {
         href: '/portfolio-intelligence',
         icon: 'gauge',
         title: 'Portfolio Intelligence',
-        desc: 'Your dashboard, concentration meter and alerts',
+        desc: 'One P&L across every venue you invest on',
       },
       {
         href: '/ai-engine',
         icon: 'spark',
         title: 'The Bundle AI Engine',
-        desc: 'Six agents for diligence, education and monitoring',
+        desc: 'The agents that scan and score the whole market',
       },
       {
         href: '/trust',
         icon: 'shield',
         title: 'Trust & Safety',
-        desc: 'Guardrails, FCA context, and what we refuse to build',
-      },
-    ],
-  },
-  {
-    label: 'Invest',
-    items: [
-      {
-        href: '/investors',
-        icon: 'pie',
-        title: 'For Investors',
-        desc: 'Build diversified exposure from £10 per company',
-      },
-      {
-        href: '/secondary-market',
-        icon: 'exchange',
-        title: 'Secondary Market',
-        desc: 'Structured liquidity windows, built for the PISCES era',
-      },
-      {
-        href: '/spvs-and-funds',
-        icon: 'layers',
-        title: 'SPVs & Pre-IPO Funds',
-        desc: 'Pooled access and one-click diversified baskets',
+        desc: 'How we keep the terminal honest',
       },
     ],
   },
@@ -62,7 +68,7 @@ const menus = [
         href: '/learn',
         icon: 'graduation',
         title: 'Academy',
-        desc: 'Free lessons on building a startup portfolio',
+        desc: 'Free lessons on private-market investing',
       },
       {
         href: '/blog',
@@ -123,7 +129,7 @@ const menus = [
 
     <div class="nav-actions">
       <a href="/login" class="btn btn-ghost btn-sm">Log in</a>
-      <a href="/waitlist" class="btn btn-primary btn-sm">Join the waitlist</a>
+      <a href="/deals" class="btn btn-primary btn-sm">Start trading</a>
       <button
         type="button"
         class="burger"
@@ -156,7 +162,7 @@ const menus = [
       <a class="m-solo" href="/about">About</a>
       <div class="m-ctas">
         <a href="/login" class="btn btn-ghost">Log in</a>
-        <a href="/waitlist" class="btn btn-primary">Join the waitlist</a>
+        <a href="/deals" class="btn btn-primary">Start trading</a>
       </div>
     </div>
   </div>

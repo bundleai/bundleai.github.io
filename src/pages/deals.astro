@@ -1,0 +1,440 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import Ticker from '../components/Ticker.astro';
+import { deals, platforms, fmtPrice, fmtChange, platformName } from '../data/deals';
+
+const sectors = [...new Set(deals.map((d) => d.sector))].sort();
+const usedVenues = [...new Set(deals.map((d) => d.platform))];
+const venueOptions = platforms.filter((p) => usedVenues.includes(p.id));
+
+const typeTabs = [
+  { id: 'all', label: 'All' },
+  { id: 'crowdfunding', label: 'Crowdfunding' },
+  { id: 'secondary', label: 'Secondaries' },
+  { id: 'pre-ipo', label: 'Pre-IPO' },
+];
+
+const typeLabel = (t: string) =>
+  t === 'crowdfunding' ? 'Crowdfunding' : t === 'pre-ipo' ? 'Pre-IPO' : 'Secondary';
+---
+
+<BaseLayout
+  title="Deal Screener"
+  description="Screen every aggregated private-market deal — crowdfunding rounds, secondary blocks and pre-IPO offers — by sector, venue, price and minimum ticket."
+>
+  <Ticker />
+
+  <section class="screener section tight">
+    <div class="container">
+      <header class="scr-head">
+        <div>
+          <h1 class="h2">Deal screener</h1>
+          <p class="muted small scr-sub">
+            <span class="live-dot"></span>
+            <span id="scr-count">{deals.length}</span> deals aggregated across
+            {venueOptions.length} venues
+          </p>
+        </div>
+        <a href="/waitlist" class="btn btn-primary">Get full access <span class="arrow">→</span></a>
+      </header>
+
+      <div class="scr-filters panel" id="scr-filters">
+        <div class="scr-search">
+          <Icon name="search" size={17} />
+          <input
+            type="search"
+            id="scr-q"
+            placeholder="Company, sector or venue…"
+            aria-label="Search deals"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="scr-types" role="group" aria-label="Market type">
+          {
+            typeTabs.map((t, i) => (
+              <button type="button" data-type={t.id} class:list={[{ active: i === 0 }]}>
+                {t.label}
+              </button>
+            ))
+          }
+        </div>
+
+        <select id="scr-venue" aria-label="Venue">
+          <option value="">All venues</option>
+          {venueOptions.map((p) => <option value={p.id}>{p.name}</option>)}
+        </select>
+
+        <select id="scr-sector" aria-label="Sector">
+          <option value="">All sectors</option>
+          {sectors.map((s) => <option value={s}>{s}</option>)}
+        </select>
+      </div>
+
+      <div class="table-wrap scr-table">
+        <table class="table" id="scr-body-table">
+          <thead>
+            <tr>
+              <th>Company</th>
+              <th>Venue</th>
+              <th>Type</th>
+              <th class="num">Price</th>
+              <th class="num">Move / Closes</th>
+              <th class="num">Round / Valuation</th>
+              <th class="num">Min</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              deals.map((d) => (
+                <tr
+                  id={d.id}
+                  class="scr-row"
+                  data-name={`${d.name} ${d.code}`.toLowerCase()}
+                  data-sector={d.sector}
+                  data-venue={d.platform}
+                  data-venue-name={platformName(d.platform).toLowerCase()}
+                  data-type={d.type}
+                >
+                  <td>
+                    <span class="co">
+                      <span class="co-avatar" style={`--h: var(--${d.hue})`}>
+                        {d.name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2)}
+                      </span>
+                      <span class="co-id">
+                        <span class="co-name">{d.name}</span>
+                        <span class="co-sector">{d.sector}</span>
+                      </span>
+                    </span>
+                  </td>
+                  <td><span class="src-chip">{platformName(d.platform)}</span></td>
+                  <td><span class="type-cell">{typeLabel(d.type)}</span></td>
+                  <td class="num strong">{fmtPrice(d)}</td>
+                  <td class="num">
+                    {d.change !== 0 ? (
+                      <span class:list={['px', d.change > 0 ? 'up' : 'down']}>{fmtChange(d)}</span>
+                    ) : d.closes ? (
+                      <span class="closes">{d.closes}</span>
+                    ) : (
+                      <span class="flat">—</span>
+                    )}
+                  </td>
+                  <td class="num">
+                    {d.progress != null ? (
+                      <span class="round-cell">
+                        <span class="prog"><span style={`width:${Math.min(d.progress, 100)}%`} /></span>
+                        <span class="round-label">{d.progress}% of {d.target}</span>
+                      </span>
+                    ) : (
+                      d.valuation
+                    )}
+                  </td>
+                  <td class="num">{d.minTicket}</td>
+                  <td class="num">
+                    <a href="/waitlist" class="btn btn-ghost btn-sm trade-btn">Trade</a>
+                  </td>
+                </tr>
+              ))
+            }
+            <tr id="scr-empty" hidden>
+              <td colspan="8" class="empty-cell">
+                No deals match those filters — clear one and rescan.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="scr-note small muted">
+        Illustrative deals and prices for demonstration — not live quotes, offers
+        or financial promotions. At launch, "Trade" routes you to the venue that
+        lists the deal; Bundle never holds your money.
+        <a href="/legal/risk-warning">Capital at risk.</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .screener {
+    min-height: 70vh;
+  }
+
+  .scr-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.4rem;
+  }
+
+  .scr-head h1 {
+    margin-bottom: 0.25rem;
+  }
+
+  .scr-sub {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+  }
+
+  #scr-count {
+    font-family: var(--font-mono);
+    color: var(--teal);
+  }
+
+  /* Filter bar */
+  .scr-filters {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+    padding: 0.7rem;
+    margin-bottom: 1.1rem;
+  }
+
+  .scr-search {
+    flex: 1 1 15rem;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.5rem 0.85rem;
+    background: #0a101a;
+    border: 1px solid var(--line-2);
+    border-radius: 9px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .scr-search:focus-within {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(31, 210, 192, 0.14);
+  }
+
+  .scr-search svg {
+    color: var(--faint);
+    flex: none;
+  }
+
+  .scr-search input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: none;
+    color: var(--ink);
+    font: inherit;
+    font-size: 0.94rem;
+  }
+
+  .scr-search input:focus {
+    outline: none;
+  }
+
+  .scr-search input::placeholder {
+    color: var(--faint);
+  }
+
+  .scr-types {
+    display: flex;
+    gap: 0.25rem;
+    background: #0a101a;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    padding: 0.22rem;
+  }
+
+  .scr-types button {
+    border: 0;
+    background: none;
+    color: var(--text-2);
+    font-size: 0.84rem;
+    font-weight: 550;
+    padding: 0.34rem 0.75rem;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .scr-types button.active {
+    background: var(--tint);
+    color: var(--ink);
+  }
+
+  .scr-filters select {
+    padding: 0.52rem 0.75rem;
+    background: #0a101a;
+    border: 1px solid var(--line-2);
+    border-radius: 9px;
+    color: var(--text);
+    font: inherit;
+    font-size: 0.88rem;
+    cursor: pointer;
+  }
+
+  .scr-filters select:focus {
+    outline: none;
+    border-color: var(--teal);
+  }
+
+  /* Table cells */
+  .co {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+
+  .co-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--h);
+    background: color-mix(in srgb, var(--h) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--h) 28%, transparent);
+    flex: none;
+  }
+
+  .co-id {
+    display: grid;
+    line-height: 1.3;
+  }
+
+  .co-name {
+    font-weight: 590;
+    color: var(--ink);
+    font-size: 0.94rem;
+    white-space: nowrap;
+  }
+
+  .co-sector {
+    font-size: 0.74rem;
+    color: var(--text-2);
+  }
+
+  .type-cell {
+    font-size: 0.82rem;
+    color: var(--text-2);
+    white-space: nowrap;
+  }
+
+  td.strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .closes {
+    font-size: 0.8rem;
+    color: var(--sand-ink);
+    white-space: nowrap;
+  }
+
+  .flat {
+    color: var(--faint);
+  }
+
+  .round-cell {
+    display: grid;
+    gap: 0.3rem;
+    min-width: 7.5rem;
+  }
+
+  .round-label {
+    font-size: 0.7rem;
+    color: var(--text-2);
+    text-align: left;
+  }
+
+  .trade-btn {
+    padding: 0.34rem 0.85rem;
+    font-size: 0.82rem;
+  }
+
+  .trade-btn:hover {
+    background: var(--up-tint);
+    border-color: rgba(22, 199, 132, 0.5);
+    color: var(--up);
+  }
+
+  .empty-cell {
+    text-align: center;
+    color: var(--text-2);
+    padding-block: 2.25rem;
+  }
+
+  .scr-note {
+    margin-top: 0.9rem;
+    max-width: 56rem;
+  }
+
+  /* Highlight a row arrived at via #anchor */
+  .scr-row:target {
+    background: rgba(31, 210, 192, 0.07);
+  }
+
+  .scr-row:target td {
+    border-bottom-color: rgba(31, 210, 192, 0.3);
+  }
+</style>
+
+<script>
+  const q = document.getElementById('scr-q') as HTMLInputElement;
+  const venue = document.getElementById('scr-venue') as HTMLSelectElement;
+  const sector = document.getElementById('scr-sector') as HTMLSelectElement;
+  const typeBtns = Array.from(
+    document.querySelectorAll<HTMLButtonElement>('.scr-types button')
+  );
+  const rows = Array.from(document.querySelectorAll<HTMLTableRowElement>('.scr-row'));
+  const empty = document.getElementById('scr-empty');
+  const count = document.getElementById('scr-count');
+
+  let activeType = 'all';
+
+  const apply = () => {
+    const needle = q.value.trim().toLowerCase();
+    let shown = 0;
+    rows.forEach((r) => {
+      const matchesQ =
+        !needle ||
+        r.dataset.name!.includes(needle) ||
+        r.dataset.sector!.toLowerCase().includes(needle) ||
+        r.dataset.venueName!.includes(needle);
+      const matchesType = activeType === 'all' || r.dataset.type === activeType;
+      const matchesVenue = !venue.value || r.dataset.venue === venue.value;
+      const matchesSector = !sector.value || r.dataset.sector === sector.value;
+      const show = matchesQ && matchesType && matchesVenue && matchesSector;
+      r.hidden = !show;
+      if (show) shown++;
+    });
+    if (empty) empty.hidden = shown > 0;
+    if (count) count.textContent = String(shown);
+  };
+
+  q.addEventListener('input', apply);
+  venue.addEventListener('change', apply);
+  sector.addEventListener('change', apply);
+  typeBtns.forEach((b) => {
+    b.addEventListener('click', () => {
+      activeType = b.dataset.type || 'all';
+      typeBtns.forEach((x) => x.classList.toggle('active', x === b));
+      apply();
+    });
+  });
+
+  // Seed from URL (?q=…&type=…) and from #anchor deep-links
+  const params = new URLSearchParams(location.search);
+  const seedQ = params.get('q');
+  const seedType = params.get('type');
+  if (seedQ) q.value = seedQ;
+  if (seedType && typeBtns.some((b) => b.dataset.type === seedType)) {
+    activeType = seedType;
+    typeBtns.forEach((x) => x.classList.toggle('active', x.dataset.type === seedType));
+  }
+  if (seedQ || seedType) apply();
+</script>
