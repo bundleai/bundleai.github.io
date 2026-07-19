@@ -1,0 +1,138 @@
+---
+/**
+ * Scrolling market tape of aggregated deals. Duplicated list for a seamless
+ * CSS loop; pauses on hover; static (scrollable) when reduced motion is set.
+ */
+import { deals, fmtPrice, fmtChange, platformName } from '../data/deals';
+
+const tape = deals.filter((d) => d.type !== 'crowdfunding' || d.trending);
+---
+
+<div class="ticker" role="marquee" aria-label="Aggregated market tape (illustrative data)">
+  <div class="tape">
+    {
+      [0, 1].map((copy) => (
+        <ul class="tape-run" aria-hidden={copy === 1 ? 'true' : undefined}>
+          {tape.map((d) => (
+            <li>
+              <a href={`/deals#${d.id}`}>
+                <span class="t-code mono">{d.code}</span>
+                <span class="t-name">{d.name}</span>
+                <span class="t-price px">{fmtPrice(d)}</span>
+                <span class:list={['t-change', 'px', d.change > 0 ? 'up' : d.change < 0 ? 'down' : 'flat']}>
+                  {fmtChange(d)}
+                </span>
+                <span class="t-src">{platformName(d.platform)}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .ticker {
+    border-bottom: 1px solid var(--line);
+    background: #060a10;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .ticker::before,
+  .ticker::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 60px;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .ticker::before {
+    left: 0;
+    background: linear-gradient(90deg, #060a10, transparent);
+  }
+
+  .ticker::after {
+    right: 0;
+    background: linear-gradient(-90deg, #060a10, transparent);
+  }
+
+  .tape {
+    display: flex;
+    width: max-content;
+  }
+
+  .tape-run {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .tape-run li a {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.55rem;
+    padding: 0.55rem 1.4rem;
+    font-size: 0.82rem;
+    white-space: nowrap;
+    color: var(--text-2);
+    border-right: 1px solid var(--line);
+    transition: background-color 0.15s ease;
+  }
+
+  .tape-run li a:hover {
+    background: rgba(31, 210, 192, 0.05);
+  }
+
+  .t-code {
+    font-size: 0.72rem;
+    color: var(--faint);
+    letter-spacing: 0.06em;
+  }
+
+  .t-name {
+    font-weight: 570;
+    color: var(--ink);
+  }
+
+  .t-price {
+    color: var(--text);
+  }
+
+  .t-change.flat {
+    color: var(--faint);
+  }
+
+  .t-src {
+    font-size: 0.7rem;
+    color: var(--faint);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .tape {
+      animation: tape-scroll 55s linear infinite;
+    }
+
+    .ticker:hover .tape {
+      animation-play-state: paused;
+    }
+  }
+
+  @keyframes tape-scroll {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ticker {
+      overflow-x: auto;
+    }
+  }
+</style>

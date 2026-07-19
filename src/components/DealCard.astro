@@ -1,0 +1,215 @@
+---
+/**
+ * Aggregated deal card: company, source venue, price/valuation, funding
+ * progress (crowdfunding) and a trade-style CTA. Whole card links to the
+ * screener anchored at the deal.
+ */
+import type { Deal } from '../data/deals';
+import { fmtPrice, fmtChange, platformName } from '../data/deals';
+
+interface Props {
+  deal: Deal;
+  style?: string;
+  class?: string;
+}
+
+const { deal: d, style, class: className } = Astro.props;
+const initials = d.name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2);
+const typeLabel =
+  d.type === 'crowdfunding' ? 'Crowdfunding' : d.type === 'pre-ipo' ? 'Pre-IPO' : 'Secondary';
+---
+
+<a href={`/deals#${d.id}`} class:list={['deal-card', 'card', 'card-hover', className]} style={style}>
+  <header class="dc-head">
+    <span class="dc-avatar" style={`--h: var(--${d.hue})`}>{initials}</span>
+    <span class="dc-id">
+      <span class="dc-name">{d.name} <span class="dc-code mono">{d.code}</span></span>
+      <span class="dc-sector">{d.sector} · {typeLabel}</span>
+    </span>
+    <span class="src-chip">{platformName(d.platform)}</span>
+  </header>
+
+  <div class="dc-price-row">
+    <span class="dc-price px">{fmtPrice(d)}<span class="dc-unit"> /share</span></span>
+    {
+      d.change !== 0 ? (
+        <span class:list={['badge', d.change > 0 ? 'badge-up' : 'badge-down', 'px']}>
+          {fmtChange(d)}
+        </span>
+      ) : d.closes ? (
+        <span class="badge badge-sand">Closes in {d.closes}</span>
+      ) : null
+    }
+  </div>
+
+  {
+    d.progress != null ? (
+      <div class="dc-progress">
+        <div class="prog"><span style={`width:${Math.min(d.progress, 100)}%`} /></div>
+        <div class="dc-progress-row px">
+          <span class="dc-raised">{d.raised} raised</span>
+          <span class="dc-pct">{d.progress}% of {d.target}</span>
+        </div>
+      </div>
+    ) : (
+      <div class="dc-meta px">
+        <span>Valuation <strong>{d.valuation}</strong></span>
+        <span>Min <strong>{d.minTicket}</strong></span>
+      </div>
+    )
+  }
+
+  <footer class="dc-foot">
+    <span class="dc-cta">View deal <span class="arrow">→</span></span>
+    {d.progress != null && <span class="dc-min px">from {d.minTicket}</span>}
+  </footer>
+</a>
+
+<style>
+  .deal-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.95rem;
+    padding: 1.15rem 1.2rem 1.05rem;
+    color: var(--text);
+  }
+
+  .dc-head {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    min-width: 0;
+  }
+
+  .dc-avatar {
+    flex: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--h);
+    background: color-mix(in srgb, var(--h) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--h) 30%, transparent);
+  }
+
+  .dc-id {
+    min-width: 0;
+    display: grid;
+    gap: 0.05rem;
+  }
+
+  .dc-name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .dc-code {
+    font-size: 0.68rem;
+    color: var(--faint);
+    letter-spacing: 0.06em;
+    margin-left: 0.15rem;
+  }
+
+  .dc-sector {
+    font-size: 0.76rem;
+    color: var(--text-2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .dc-head .src-chip {
+    margin-left: auto;
+  }
+
+  .dc-price-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.6rem;
+  }
+
+  .dc-price {
+    font-size: 1.42rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .dc-unit {
+    font-size: 0.72rem;
+    color: var(--faint);
+    font-weight: 400;
+  }
+
+  .dc-progress {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .dc-progress-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.76rem;
+    color: var(--text-2);
+  }
+
+  .dc-raised {
+    color: var(--up);
+  }
+
+  .dc-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.6rem;
+    font-size: 0.78rem;
+    color: var(--text-2);
+    border-top: 1px dashed var(--line);
+    padding-top: 0.7rem;
+  }
+
+  .dc-meta strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .dc-foot {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--line);
+    padding-top: 0.8rem;
+  }
+
+  .dc-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    font-weight: 570;
+    color: var(--teal);
+  }
+
+  .dc-cta .arrow {
+    transition: transform 0.18s ease;
+  }
+
+  .deal-card:hover .dc-cta .arrow {
+    transform: translateX(3px);
+  }
+
+  .dc-min {
+    font-size: 0.74rem;
+    color: var(--faint);
+  }
+</style>
