@@ -1,9 +1,21 @@
 /**
  * Aggregated deal + venue data powering the market UI.
- * Illustrative demo data — not live quotes, not financial promotions.
- * Venue names identify where deals of this kind are listed; Bundle is
- * independent and unaffiliated unless stated.
+ *
+ * Sourced from venue public pages on 19 July 2026:
+ *  - Secondary / pre-IPO rows: Forge Global public "Forge Price" and
+ *    Forge Price valuation (forgeglobal.com/<slug>_stock/), all marked
+ *    "Updated Jul 19, 2026" at capture time.
+ *  - Crowdfunding rows: Crowdcube public company pages (total raised /
+ *    investor count) and Wefunder explore listings (raised, investors,
+ *    valuation caps, closing status).
+ *
+ * Prices are indicative venue marks, not live quotes or offers. Refresh
+ * by re-scraping the `url` on each deal. Companies checked and excluded:
+ * SpaceX (IPO'd June 2026, NASDAQ: SPCX), Anthropic (no direct share
+ * transfers permitted on Forge), Canva/Monzo/Starling (no public mark).
  */
+
+export const dataAsOf = '19 July 2026';
 
 export type DealType = 'crowdfunding' | 'secondary' | 'pre-ipo';
 
@@ -17,25 +29,26 @@ export interface Platform {
 export interface Deal {
   id: string;
   name: string;
-  code: string; // short ticker-style code
+  code: string; // short ticker-style code (Bundle's own, not official)
   sector: string;
   type: DealType;
   platform: string; // Platform.id
+  url: string; // the venue page this deal lives on
   currency: '£' | '$' | '€';
-  price: number; // per-share, illustrative
-  change: number; // % move over the window / vs last round
-  valuation: string;
-  progress?: number; // % of round funded (crowdfunding)
-  raised?: string; // e.g. '£1.9m'
-  target?: string; // e.g. '£2.2m'
-  closes?: string; // e.g. '3 days'
+  price?: number; // per-share venue mark (Forge Price), if published
+  change?: number; // % move shown by the venue alongside the mark
+  valuation: string; // Forge Price valuation, or crowdfunding valuation (cap)
+  raised?: string; // crowdfunding: total raised shown publicly
+  investors?: number; // crowdfunding: investor count shown publicly
+  closes?: string; // e.g. '2 days' when the venue displays it
+  status?: string; // e.g. 'Almost fully funded'
   minTicket: string;
   trending?: boolean;
   hue: 'c1' | 'c2' | 'c3' | 'c4' | 'c5' | 'c6';
 }
 
 export const platforms: Platform[] = [
-  { id: 'crowdcube', name: 'Crowdcube', type: 'crowdfunding', region: 'UK' },
+  { id: 'crowdcube', name: 'Crowdcube', type: 'crowdfunding', region: 'UK · EU' },
   { id: 'republic-eu', name: 'Republic Europe', type: 'crowdfunding', region: 'UK · EU' },
   { id: 'wefunder', name: 'Wefunder', type: 'crowdfunding', region: 'US' },
   { id: 'startengine', name: 'StartEngine', type: 'crowdfunding', region: 'US' },
@@ -51,124 +64,122 @@ export const platformName = (id: string): string =>
   platforms.find((p) => p.id === id)?.name ?? id;
 
 export const deals: Deal[] = [
-  /* ---- Pre-IPO & secondaries (well-known private names; figures illustrative) ---- */
-  {
-    id: 'spacex', name: 'SpaceX', code: 'SPX', sector: 'Aerospace',
-    type: 'pre-ipo', platform: 'forge', currency: '$',
-    price: 112.0, change: 4.2, valuation: '$350bn',
-    minTicket: '$5,000', trending: true, hue: 'c3',
-  },
+  /* ---- Pre-IPO & secondaries — Forge Global public marks, 19 Jul 2026 ---- */
   {
     id: 'openai', name: 'OpenAI', code: 'OAI', sector: 'AI',
-    type: 'pre-ipo', platform: 'equityzen', currency: '$',
-    price: 271.5, change: 6.8, valuation: '$300bn+',
-    minTicket: '$10,000', trending: true, hue: 'c1',
-  },
-  {
-    id: 'anthropic', name: 'Anthropic', code: 'ANTH', sector: 'AI',
-    type: 'pre-ipo', platform: 'forge', currency: '$',
-    price: 58.4, change: 5.1, valuation: '$180bn+',
-    minTicket: '$10,000', trending: true, hue: 'c2',
-  },
-  {
-    id: 'stripe', name: 'Stripe', code: 'STRP', sector: 'Fintech',
-    type: 'secondary', platform: 'equityzen', currency: '$',
-    price: 27.2, change: 1.9, valuation: '$91bn',
-    minTicket: '$5,000', hue: 'c4',
-  },
-  {
-    id: 'revolut', name: 'Revolut', code: 'REV', sector: 'Fintech',
-    type: 'secondary', platform: 'hiive', currency: '$',
-    price: 865.0, change: 3.4, valuation: '$75bn',
-    minTicket: '$2,500', trending: true, hue: 'c5',
-  },
-  {
-    id: 'monzo', name: 'Monzo', code: 'MNZO', sector: 'Fintech',
-    type: 'secondary', platform: 'republic-eu', currency: '£',
-    price: 0.92, change: -1.2, valuation: '£4.5bn',
-    minTicket: '£1,000', hue: 'c6',
-  },
-  {
-    id: 'starling', name: 'Starling Bank', code: 'STRL', sector: 'Fintech',
-    type: 'secondary', platform: 'nasdaq-pm', currency: '£',
-    price: 2.84, change: 0.8, valuation: '£2.5bn',
-    minTicket: '£2,000', hue: 'c1',
+    type: 'pre-ipo', platform: 'forge',
+    url: 'https://forgeglobal.com/openai_stock/',
+    currency: '$', price: 721.85, change: 0.02, valuation: '$894.3bn',
+    minTicket: 'Accredited', trending: true, hue: 'c1',
   },
   {
     id: 'databricks', name: 'Databricks', code: 'DBRX', sector: 'Data & AI',
-    type: 'pre-ipo', platform: 'forge', currency: '$',
-    price: 92.6, change: 2.7, valuation: '$62bn',
-    minTicket: '$5,000', hue: 'c2',
+    type: 'pre-ipo', platform: 'forge',
+    url: 'https://forgeglobal.com/databricks_stock/',
+    currency: '$', price: 242.04, change: 7.57, valuation: '$170.7bn',
+    minTicket: 'Accredited', trending: true, hue: 'c2',
   },
   {
-    id: 'canva', name: 'Canva', code: 'CNVA', sector: 'SaaS',
-    type: 'secondary', platform: 'hiive', currency: '$',
-    price: 21.4, change: -0.6, valuation: '$32bn',
-    minTicket: '$2,500', hue: 'c3',
+    id: 'revolut', name: 'Revolut', code: 'REV', sector: 'Fintech',
+    type: 'pre-ipo', platform: 'forge',
+    url: 'https://forgeglobal.com/revolut_stock/',
+    currency: '$', price: 1315.53, change: -4.74, valuation: '$71.4bn',
+    minTicket: 'Accredited', trending: true, hue: 'c5',
+  },
+  {
+    id: 'stripe', name: 'Stripe', code: 'STRP', sector: 'Fintech',
+    type: 'secondary', platform: 'forge',
+    url: 'https://forgeglobal.com/stripe_stock/',
+    currency: '$', price: 72.45, change: 0.61, valuation: '$180.0bn',
+    minTicket: 'Accredited', hue: 'c4',
+  },
+  {
+    id: 'anduril', name: 'Anduril', code: 'ANDL', sector: 'Defence',
+    type: 'secondary', platform: 'forge',
+    url: 'https://forgeglobal.com/anduril_stock/',
+    currency: '$', price: 116.68, change: -0.26, valuation: '$103.2bn',
+    minTicket: 'Accredited', hue: 'c3',
   },
   {
     id: 'ramp', name: 'Ramp', code: 'RAMP', sector: 'Fintech',
-    type: 'secondary', platform: 'hiive', currency: '$',
-    price: 41.8, change: 1.4, valuation: '$13bn',
-    minTicket: '$2,500', hue: 'c4',
+    type: 'secondary', platform: 'forge',
+    url: 'https://forgeglobal.com/ramp_stock/',
+    currency: '$', price: 125.55, change: 0.01, valuation: '$46.0bn',
+    minTicket: 'Accredited', hue: 'c6',
+  },
+  {
+    id: 'perplexity', name: 'Perplexity', code: 'PPLX', sector: 'AI',
+    type: 'secondary', platform: 'forge',
+    url: 'https://forgeglobal.com/perplexity_stock/',
+    currency: '$', price: 69.5, change: 6.92, valuation: '$20.4bn',
+    minTicket: 'Accredited', trending: true, hue: 'c2',
+  },
+  {
+    id: 'shield-ai', name: 'Shield AI', code: 'SHAI', sector: 'Defence',
+    type: 'secondary', platform: 'forge',
+    url: 'https://forgeglobal.com/shield-ai_stock/',
+    currency: '$', price: 163.79, change: 1.49, valuation: '$13.2bn',
+    minTicket: 'Accredited', hue: 'c1',
   },
 
-  /* ---- Live crowdfunding rounds (illustrative companies) ---- */
+  /* ---- Live crowdfunding — Crowdcube public pages, 19 Jul 2026 ---- */
   {
-    id: 'aurora-fusion', name: 'Aurora Fusion', code: 'AURF', sector: 'Energy',
-    type: 'crowdfunding', platform: 'crowdcube', currency: '£',
-    price: 2.1, change: 0, valuation: '£38m',
-    progress: 84, raised: '£1.85m', target: '£2.2m', closes: '3 days',
-    minTicket: '£10', trending: true, hue: 'c4',
+    id: 'permia-sensing', name: 'Permia Sensing', code: 'PERM', sector: 'Agritech',
+    type: 'crowdfunding', platform: 'crowdcube',
+    url: 'https://www.crowdcube.com/companies/permia-sensing',
+    currency: '£', valuation: 'Imperial spinout',
+    raised: '£41.1k', investors: 111,
+    minTicket: '£10+', hue: 'c4',
   },
   {
-    id: 'loop-health', name: 'Loop Health', code: 'LOOP', sector: 'Healthtech',
-    type: 'crowdfunding', platform: 'republic-eu', currency: '£',
-    price: 0.64, change: 0, valuation: '£12m',
-    progress: 112, raised: '£896k', target: '£800k', closes: '6 days',
-    minTicket: '£10', trending: true, hue: 'c1',
+    id: 'greenback', name: 'Greenback Recycling', code: 'GRBK', sector: 'Climate',
+    type: 'crowdfunding', platform: 'crowdcube',
+    url: 'https://www.crowdcube.com/companies/greenback-recycling-technologies',
+    currency: '£', valuation: 'Advanced recycling',
+    raised: '£51.4k', investors: 110,
+    minTicket: '£10+', hue: 'c3',
   },
   {
-    id: 'ferra-robotics', name: 'Ferra Robotics', code: 'FERA', sector: 'Robotics',
-    type: 'crowdfunding', platform: 'crowdcube', currency: '£',
-    price: 3.45, change: 0, valuation: '£29m',
-    progress: 67, raised: '£1.0m', target: '£1.5m', closes: '11 days',
-    minTicket: '£10', hue: 'c3',
+    id: 'collider', name: 'Collider', code: 'CLDR', sector: 'Consumer',
+    type: 'crowdfunding', platform: 'crowdcube',
+    url: 'https://www.crowdcube.com/companies/collider',
+    currency: '£', valuation: 'Functional NA beer',
+    raised: '£75.1k', investors: 106,
+    minTicket: '£10+', hue: 'c6',
+  },
+
+  /* ---- Live crowdfunding — Wefunder explore listings, 19 Jul 2026 ---- */
+  {
+    id: 'bito', name: 'Bito', code: 'BITO', sector: 'AI',
+    type: 'crowdfunding', platform: 'wefunder',
+    url: 'https://wefunder.com/bito',
+    currency: '$', valuation: '$72m cap',
+    raised: '$2.63m', investors: 40, closes: '2 days',
+    minTicket: '$100', trending: true, hue: 'c1',
   },
   {
-    id: 'nimbuspay', name: 'NimbusPay', code: 'NMBP', sector: 'Fintech',
-    type: 'crowdfunding', platform: 'republic-eu', currency: '£',
-    price: 1.28, change: 0, valuation: '£18m',
-    progress: 93, raised: '£1.4m', target: '£1.5m', closes: '2 days',
-    minTicket: '£20', hue: 'c2',
+    id: 'rise-robotics', name: 'RISE Robotics', code: 'RISE', sector: 'Robotics',
+    type: 'crowdfunding', platform: 'wefunder',
+    url: 'https://wefunder.com/riserobotics',
+    currency: '$', valuation: '$62.1m',
+    raised: '$18.4m', investors: 761, status: 'Almost fully funded',
+    minTicket: '$100', trending: true, hue: 'c3',
   },
   {
-    id: 'brightloop', name: 'Brightloop', code: 'BRLP', sector: 'Climate',
-    type: 'crowdfunding', platform: 'crowdcube', currency: '£',
-    price: 0.88, change: 0, valuation: '£9.5m',
-    progress: 41, raised: '£410k', target: '£1.0m', closes: '19 days',
-    minTicket: '£10', hue: 'c5',
+    id: 'biostate-ai', name: 'Biostate AI', code: 'BIOS', sector: 'Biotech',
+    type: 'crowdfunding', platform: 'wefunder',
+    url: 'https://wefunder.com/biostateai',
+    currency: '$', valuation: '$100m cap',
+    raised: '$1.47m', investors: 354, status: 'Almost fully funded',
+    minTicket: '$100', hue: 'c5',
   },
   {
-    id: 'kestrel-aero', name: 'Kestrel Aero', code: 'KSTL', sector: 'Aerospace',
-    type: 'crowdfunding', platform: 'wefunder', currency: '$',
-    price: 5.6, change: 0, valuation: '$44m',
-    progress: 58, raised: '$1.3m', target: '$2.2m', closes: '14 days',
-    minTicket: '$100', hue: 'c6',
-  },
-  {
-    id: 'verdant-foods', name: 'Verdant Foods', code: 'VRDT', sector: 'Foodtech',
-    type: 'crowdfunding', platform: 'startengine', currency: '$',
-    price: 1.15, change: 0, valuation: '$16m',
-    progress: 76, raised: '$912k', target: '$1.2m', closes: '8 days',
-    minTicket: '$100', hue: 'c1',
-  },
-  {
-    id: 'solent-micro', name: 'Solent Micro', code: 'SLNT', sector: 'Semiconductors',
-    type: 'crowdfunding', platform: 'seedblink', currency: '€',
-    price: 4.02, change: 0, valuation: '€27m',
-    progress: 88, raised: '€1.76m', target: '€2.0m', closes: '4 days',
-    minTicket: '€50', trending: true, hue: 'c2',
+    id: 'airthium', name: 'Airthium', code: 'AIRT', sector: 'Energy',
+    type: 'crowdfunding', platform: 'wefunder',
+    url: 'https://wefunder.com/airthium',
+    currency: '$', valuation: '$21m cap',
+    raised: '$258.6k', investors: 234, status: 'Almost fully funded',
+    minTicket: '$100', hue: 'c2',
   },
 ];
 
@@ -179,10 +190,14 @@ export const marketStats = {
 };
 
 export const fmtPrice = (d: Deal): string =>
-  `${d.currency}${d.price.toLocaleString('en-GB', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
+  d.price == null
+    ? '—'
+    : `${d.currency}${d.price.toLocaleString('en-GB', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}`;
 
 export const fmtChange = (d: Deal): string =>
-  d.change === 0 ? '—' : `${d.change > 0 ? '+' : ''}${d.change.toFixed(1)}%`;
+  d.change == null || d.change === 0
+    ? '—'
+    : `${d.change > 0 ? '+' : ''}${d.change.toFixed(2)}%`;

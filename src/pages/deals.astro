@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
 import Ticker from '../components/Ticker.astro';
-import { deals, platforms, fmtPrice, fmtChange, platformName } from '../data/deals';
+import { deals, dataAsOf, platforms, fmtPrice, fmtChange, platformName } from '../data/deals';
 
 const sectors = [...new Set(deals.map((d) => d.sector))].sort();
 const usedVenues = [...new Set(deals.map((d) => d.platform))];
@@ -80,9 +80,9 @@ const typeLabel = (t: string) =>
               <th>Venue</th>
               <th>Type</th>
               <th class="num">Price</th>
-              <th class="num">Move / Closes</th>
-              <th class="num">Round / Valuation</th>
-              <th class="num">Min</th>
+              <th class="num">Move / Status</th>
+              <th class="num">Valuation / Raised</th>
+              <th class="num">Access</th>
               <th></th>
             </tr>
           </thead>
@@ -113,19 +113,21 @@ const typeLabel = (t: string) =>
                   <td><span class="type-cell">{typeLabel(d.type)}</span></td>
                   <td class="num strong">{fmtPrice(d)}</td>
                   <td class="num">
-                    {d.change !== 0 ? (
+                    {d.change != null && d.change !== 0 ? (
                       <span class:list={['px', d.change > 0 ? 'up' : 'down']}>{fmtChange(d)}</span>
                     ) : d.closes ? (
-                      <span class="closes">{d.closes}</span>
+                      <span class="closes">Closes in {d.closes}</span>
+                    ) : d.status ? (
+                      <span class="closes">{d.status}</span>
                     ) : (
                       <span class="flat">—</span>
                     )}
                   </td>
                   <td class="num">
-                    {d.progress != null ? (
+                    {d.raised != null ? (
                       <span class="round-cell">
-                        <span class="prog"><span style={`width:${Math.min(d.progress, 100)}%`} /></span>
-                        <span class="round-label">{d.progress}% of {d.target}</span>
+                        <span>{d.raised} raised</span>
+                        <span class="round-label">{d.investors} investors · {d.valuation}</span>
                       </span>
                     ) : (
                       d.valuation
@@ -133,7 +135,12 @@ const typeLabel = (t: string) =>
                   </td>
                   <td class="num">{d.minTicket}</td>
                   <td class="num">
-                    <a href="/waitlist" class="btn btn-ghost btn-sm trade-btn">Trade</a>
+                    <a
+                      href={d.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="btn btn-ghost btn-sm trade-btn"
+                    >Trade ↗</a>
                   </td>
                 </tr>
               ))
@@ -148,9 +155,12 @@ const typeLabel = (t: string) =>
       </div>
 
       <p class="scr-note small muted">
-        Illustrative deals and prices for demonstration — not live quotes, offers
-        or financial promotions. At launch, "Trade" routes you to the venue that
-        lists the deal; Bundle never holds your money.
+        Indicative data sourced from venue public pages (Forge Global's
+        published Forge Price marks, Crowdcube company pages, Wefunder
+        listings) as of {dataAsOf} — not live quotes, offers or financial
+        promotions. "Trade" opens the deal on the venue that lists it, under
+        that venue's rules and eligibility; Bundle never holds your money.
+        Venue names don't imply partnership or endorsement.
         <a href="/legal/risk-warning">Capital at risk.</a>
       </p>
     </div>
@@ -279,7 +289,22 @@ const typeLabel = (t: string) =>
     border-color: var(--teal);
   }
 
-  /* Table cells */
+  /* Table cells — 8 columns, keep them on one screen at desktop */
+  .scr-table :global(table.table th),
+  .scr-table :global(table.table td) {
+    padding-inline: 0.8rem;
+  }
+
+  .scr-table :global(table.table th:first-child),
+  .scr-table :global(table.table td:first-child) {
+    padding-left: 1.1rem;
+  }
+
+  .scr-table :global(table.table th:last-child),
+  .scr-table :global(table.table td:last-child) {
+    padding-right: 1.1rem;
+  }
+
   .co {
     display: inline-flex;
     align-items: center;

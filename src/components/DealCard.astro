@@ -1,8 +1,7 @@
 ---
 /**
- * Aggregated deal card: company, source venue, price/valuation, funding
- * progress (crowdfunding) and a trade-style CTA. Whole card links to the
- * screener anchored at the deal.
+ * Aggregated deal card: company, source venue, venue mark or raise totals,
+ * and a trade CTA. The whole card links out to the deal on the listing venue.
  */
 import type { Deal } from '../data/deals';
 import { fmtPrice, fmtChange, platformName } from '../data/deals';
@@ -19,7 +18,13 @@ const typeLabel =
   d.type === 'crowdfunding' ? 'Crowdfunding' : d.type === 'pre-ipo' ? 'Pre-IPO' : 'Secondary';
 ---
 
-<a href={`/deals#${d.id}`} class:list={['deal-card', 'card', 'card-hover', className]} style={style}>
+<a
+  href={d.url}
+  target="_blank"
+  rel="noopener noreferrer"
+  class:list={['deal-card', 'card', 'card-hover', className]}
+  style={style}
+>
   <header class="dc-head">
     <span class="dc-avatar" style={`--h: var(--${d.hue})`}>{initials}</span>
     <span class="dc-id">
@@ -30,38 +35,40 @@ const typeLabel =
   </header>
 
   <div class="dc-price-row">
-    <span class="dc-price px">{fmtPrice(d)}<span class="dc-unit"> /share</span></span>
     {
-      d.change !== 0 ? (
+      d.price != null ? (
+        <span class="dc-price px">{fmtPrice(d)}<span class="dc-unit"> /share</span></span>
+      ) : (
+        <span class="dc-price px">{d.raised}<span class="dc-unit"> raised</span></span>
+      )
+    }
+    {
+      d.change != null && d.change !== 0 ? (
         <span class:list={['badge', d.change > 0 ? 'badge-up' : 'badge-down', 'px']}>
           {fmtChange(d)}
         </span>
       ) : d.closes ? (
         <span class="badge badge-sand">Closes in {d.closes}</span>
+      ) : d.status ? (
+        <span class="badge badge-up">{d.status}</span>
       ) : null
     }
   </div>
 
-  {
-    d.progress != null ? (
-      <div class="dc-progress">
-        <div class="prog"><span style={`width:${Math.min(d.progress, 100)}%`} /></div>
-        <div class="dc-progress-row px">
-          <span class="dc-raised">{d.raised} raised</span>
-          <span class="dc-pct">{d.progress}% of {d.target}</span>
-        </div>
-      </div>
-    ) : (
-      <div class="dc-meta px">
-        <span>Valuation <strong>{d.valuation}</strong></span>
+  <div class="dc-meta px">
+    <span>Valuation <strong>{d.valuation}</strong></span>
+    {
+      d.investors != null ? (
+        <span>Investors <strong>{d.investors}</strong></span>
+      ) : (
         <span>Min <strong>{d.minTicket}</strong></span>
-      </div>
-    )
-  }
+      )
+    }
+  </div>
 
   <footer class="dc-foot">
-    <span class="dc-cta">View deal <span class="arrow">→</span></span>
-    {d.progress != null && <span class="dc-min px">from {d.minTicket}</span>}
+    <span class="dc-cta">Trade on {platformName(d.platform)} <span class="arrow">↗</span></span>
+    {d.investors != null && <span class="dc-min px">from {d.minTicket}</span>}
   </footer>
 </a>
 
@@ -151,22 +158,6 @@ const typeLabel =
     font-weight: 400;
   }
 
-  .dc-progress {
-    display: grid;
-    gap: 0.4rem;
-  }
-
-  .dc-progress-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.76rem;
-    color: var(--text-2);
-  }
-
-  .dc-raised {
-    color: var(--up);
-  }
-
   .dc-meta {
     display: flex;
     justify-content: space-between;
@@ -195,7 +186,7 @@ const typeLabel =
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     font-weight: 570;
     color: var(--teal);
   }
@@ -205,7 +196,7 @@ const typeLabel =
   }
 
   .deal-card:hover .dc-cta .arrow {
-    transform: translateX(3px);
+    transform: translate(2px, -2px);
   }
 
   .dc-min {

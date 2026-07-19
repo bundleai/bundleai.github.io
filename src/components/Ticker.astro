@@ -3,12 +3,12 @@
  * Scrolling market tape of aggregated deals. Duplicated list for a seamless
  * CSS loop; pauses on hover; static (scrollable) when reduced motion is set.
  */
-import { deals, fmtPrice, fmtChange, platformName } from '../data/deals';
+import { deals, dataAsOf, fmtPrice, fmtChange, platformName } from '../data/deals';
 
-const tape = deals.filter((d) => d.type !== 'crowdfunding' || d.trending);
+const tape = deals.filter((d) => d.price != null);
 ---
 
-<div class="ticker" role="marquee" aria-label="Aggregated market tape (illustrative data)">
+<div class="ticker" role="marquee" aria-label={`Aggregated market tape — indicative venue marks as of ${dataAsOf}`}>
   <div class="tape">
     {
       [0, 1].map((copy) => (
@@ -19,7 +19,7 @@ const tape = deals.filter((d) => d.type !== 'crowdfunding' || d.trending);
                 <span class="t-code mono">{d.code}</span>
                 <span class="t-name">{d.name}</span>
                 <span class="t-price px">{fmtPrice(d)}</span>
-                <span class:list={['t-change', 'px', d.change > 0 ? 'up' : d.change < 0 ? 'down' : 'flat']}>
+                <span class:list={['t-change', 'px', (d.change ?? 0) > 0 ? 'up' : (d.change ?? 0) < 0 ? 'down' : 'flat']}>
                   {fmtChange(d)}
                 </span>
                 <span class="t-src">{platformName(d.platform)}</span>

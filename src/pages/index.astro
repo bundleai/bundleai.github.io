@@ -4,12 +4,12 @@ import Icon from '../components/Icon.astro';
 import Ticker from '../components/Ticker.astro';
 import DealCard from '../components/DealCard.astro';
 import WaitlistForm from '../components/WaitlistForm.astro';
-import { deals, platforms, fmtPrice, fmtChange, platformName } from '../data/deals';
+import { deals, dataAsOf, platforms, fmtPrice, fmtChange, platformName } from '../data/deals';
 
 const trending = deals.filter((d) => d.trending).slice(0, 4);
 const closingSoon = deals
-  .filter((d) => d.type === 'crowdfunding' && d.closes)
-  .sort((a, b) => parseInt(a.closes!) - parseInt(b.closes!))
+  .filter((d) => d.type === 'crowdfunding' && (d.closes || d.status))
+  .sort((a, b) => (a.closes ? -1 : 0) - (b.closes ? -1 : 0) || parseInt(a.closes ?? '99') - parseInt(b.closes ?? '99'))
   .slice(0, 3);
 
 const boardTabs = [
@@ -115,17 +115,10 @@ const edges = [
                             <span class="br-name">{d.name}</span>
                             <span class="br-src">{platformName(d.platform)} · {d.sector}</span>
                           </span>
-                          {d.progress != null ? (
-                            <span class="br-prog">
-                              <span class="prog"><span style={`width:${Math.min(d.progress, 100)}%`} /></span>
-                              <span class="br-prog-label px">{d.progress}% funded</span>
-                            </span>
-                          ) : (
-                            <span class="br-val px">{d.valuation}</span>
-                          )}
-                          <span class="br-price px">{fmtPrice(d)}</span>
-                          <span class:list={['br-change', 'px', d.change > 0 ? 'up' : d.change < 0 ? 'down' : 'flat']}>
-                            {d.change !== 0 ? fmtChange(d) : d.closes ? `${d.closes} left` : '—'}
+                          <span class="br-val px">{d.valuation}</span>
+                          <span class="br-price px">{d.price != null ? fmtPrice(d) : d.raised}</span>
+                          <span class:list={['br-change', 'px', (d.change ?? 0) > 0 ? 'up' : (d.change ?? 0) < 0 ? 'down' : 'flat']}>
+                            {d.change != null && d.change !== 0 ? fmtChange(d) : d.closes ? `${d.closes} left` : d.investors != null ? `${d.investors} investors` : '—'}
                           </span>
                         </a>
                       </li>
@@ -138,7 +131,7 @@ const edges = [
               ))
             }
           </div>
-          <p class="board-caption">Illustrative deals and prices — not live quotes or financial promotions.</p>
+          <p class="board-caption">Indicative marks from venue public pages, as of {dataAsOf} — not live quotes or financial promotions.</p>
         </div>
       </div>
     </div>
@@ -276,10 +269,12 @@ const edges = [
           <summary>Are the prices on this page live?</summary>
           <div class="faq-body">
             <p>
-              Not yet. Everything on this site is illustrative demo data while
-              we build. Private-market pricing is indicative by nature — even at
-              launch, quotes reflect the venue's latest listed price, not a
-              continuous exchange feed.
+              They're real but not live. Figures are sourced from the venues'
+              own public pages — Forge Global's published Forge Price marks,
+              Crowdcube company pages and Wefunder listings — as of
+              {dataAsOf}, and refreshed manually while we build. Private-market
+              pricing is indicative by nature: even at launch, quotes reflect
+              the venue's latest listed mark, not a continuous exchange feed.
             </p>
           </div>
         </details>
