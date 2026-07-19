@@ -5,321 +5,189 @@ import Icon from '../components/Icon.astro';
 import FAQ from '../components/FAQ.astro';
 import CTABand from '../components/CTABand.astro';
 
+const freeFeatures = [
+  'Full deal screener across every tracked venue',
+  'Watchlists on companies, sectors and venues',
+  'Price, funding and closing alerts',
+  'Cross-venue portfolio tracking, one P&L',
+  'Venue comparison: fees, minimums, access',
+];
+
+const proFeatures = [
+  'Saved screens with instant-fire alerts',
+  'Premium/discount analytics vs last round',
+  'Deal-doc AI summaries and risk flags',
+  'Portfolio exports and tax-season packs',
+  'Early access to new venues and markets',
+];
+
 const faqs = [
   {
-    q: 'Why can Bundle charge less than incumbents?',
-    a: 'Because the cost incumbents pass on is mostly labour: per-campaign diligence, compliance handling, investor servicing. Bundle’s AI engine does that per-position work at software cost, with humans supervising rather than typing. Lower cost per position is precisely what makes low minimums economical: the fee model and the diversification thesis are the same idea.',
+    q: 'Why is the screener free?',
+    a: 'Because aggregators win on coverage, and coverage only matters if everyone can see it. The screener, watchlists and portfolio tracking stay free. If we ever charge investors, it will be for extra analytics on top, never for access to the market itself.',
   },
   {
-    q: 'Will these numbers change?',
-    a: 'These are design targets, published early on purpose. Final fees will be confirmed, plainly and with worked examples, before any regulated investment service goes live. What won’t change: capped, disclosed, no spread games, no "free" that’s actually payment for order flow.',
+    q: 'So how does Bundle make money?',
+    a: 'The Skyscanner model: when a venue runs a referral or partner programme, Bundle may earn a fee when you complete an investment we routed to it. That fee comes from the venue’s marketing budget, not from a markup on your price. Where no programme exists, deals are listed anyway — coverage is ranked by relevance, never by commission.',
   },
   {
-    q: 'What does the premium investor tier add?',
-    a: 'Deeper analytics: scenario simulation, exposure stress views, richer benchmarks, tax-pack exports. The safety layer (education, risk summaries, concentration alerts, cooling-off) is never premium. Protection isn’t an upsell.',
+    q: 'Do referral fees bias what I see?',
+    a: 'The ranking rule is public and simple: search and screener results are ordered by the filters you set, nothing else. Sponsored placements, if we ever run them, will be labelled as such. An aggregator that quietly reorders the market for commission is dead the day users notice; we’d rather not die.',
   },
   {
-    q: 'Are there hidden costs, such as FX, custody or exit fees?',
-    a: 'The design goal is zero surprises: nominee/custody admin is included in the published fees, and any future secondary-market transaction fee will be flat and disclosed before you place an order. If a cost ever exists, it will be on this page first.',
+    q: 'What will Pro cost?',
+    a: 'Pro pricing will be published before it launches, and the free tier keeps everything you need to find, compare and track deals. Design goal: a price an active retail investor shrugs at, not a professional-terminal price.',
   },
 ];
 ---
 
 <BaseLayout
   title="Pricing"
-  description="Low, simple, published early: free basic accounts and 0–1.5% capped investment fees for investors; 3–5% success fees with AI-assisted preparation included for founders."
+  description="Bundle is free for investors: the full cross-venue deal screener, watchlists, alerts and portfolio tracking. Revenue comes from venue referrals, never markups."
 >
   <PageHero
     center
     eyebrow="Pricing"
-    title='Low minimums need <em class="serif-aside">low fees</em>. So both are the product.'
-    lead="Platforms that allow small cheques usually punish them with high effective fees. Bundle's AI removes the per-position labour, so we can hold both low, and publish the numbers before we're even live."
+    title='The whole market, <em class="serif-aside">free to watch.</em>'
+    lead="You don't pay to see the market. Bundle earns venue referral fees when you invest through a routed deal — the price you pay on the venue is never marked up."
   />
 
-  <section class="section" data-tabs>
+  <section class="section">
     <div class="container">
-      <div class="tab-row" role="tablist" aria-label="Pricing audience">
-        <button role="tab" id="tab-investors" aria-controls="panel-investors" aria-selected="true" class="tab-btn">For investors</button>
-        <button role="tab" id="tab-founders" aria-controls="panel-founders" aria-selected="false" class="tab-btn" tabindex="-1">For founders</button>
-      </div>
-
-      <!-- Investors panel -->
-      <div id="panel-investors" role="tabpanel" aria-labelledby="tab-investors">
-        <div class="grid cols-3 price-grid">
-          <article class="card price-card reveal">
-            <p class="pc-name">Basic account</p>
-            <p class="pc-price">Free</p>
-            <p class="pc-sub">Everything needed to invest with discipline</p>
-            <ul class="check-list small-list">
-              {
-                ['Full Academy access', 'Appropriateness journey & risk profile', 'Educational frameworks & simulations', 'Portfolio dashboard with concentration meter', 'All alerts: dilution, follow-on, failure'].map((f) => (
-                  <li>
-                    <span class="tick"><Icon name="check" size={11} stroke={2.6} /></span>
-                    <span>{f}</span>
-                  </li>
-                ))
-              }
-            </ul>
-          </article>
-
-          <article class="card price-card featured reveal" style="--d:.07s">
-            <p class="pc-name">Investing</p>
-            <p class="pc-price">0–1.5% <span class="pc-unit">per investment, capped</span></p>
-            <p class="pc-sub">Charged only when you invest, never for holding</p>
-            <ul class="check-list small-list">
-              {
-                ['£10–£50 minimums per company', 'Nominee custody & admin included', 'SEIS/EIS eligibility surfaced per deal', 'Cooling-off period honoured, always', 'No exit fees on primary holdings'].map((f) => (
-                  <li>
-                    <span class="tick"><Icon name="check" size={11} stroke={2.6} /></span>
-                    <span>{f}</span>
-                  </li>
-                ))
-              }
-            </ul>
-          </article>
-
-          <article class="card price-card reveal" style="--d:.14s">
-            <p class="pc-name">Premium analytics</p>
-            <p class="pc-price">£9<span class="pc-unit">/month</span></p>
-            <p class="pc-sub">Optional depth: protection is never paywalled</p>
-            <ul class="check-list small-list">
-              {
-                ['Advanced simulation & stress views', 'Richer benchmarks & exposure analytics', 'Tax pack & SEIS/EIS admin support (add-on)', 'Priority support', 'Cancel any time'].map((f) => (
-                  <li>
-                    <span class="tick"><Icon name="check" size={11} stroke={2.6} /></span>
-                    <span>{f}</span>
-                  </li>
-                ))
-              }
-            </ul>
-          </article>
-        </div>
-        <p class="price-note reveal">
-          Design targets, confirmed before launch. Premium tier priced in the
-          £5–£15 range; £9 is the working number. Investing remains high-risk
-          whatever it costs. Fees are the certain part, returns are not.
-        </p>
-      </div>
-
-      <!-- Founders panel -->
-      <div id="panel-founders" role="tabpanel" aria-labelledby="tab-founders" hidden>
-        <div class="split wide-left">
-          <div class="table-wrap reveal">
-            <table class="table">
-              <thead>
-                <tr><th>Fee</th><th>Amount</th><th>Notes</th></tr>
-              </thead>
-              <tbody>
-                <tr><td>Application & readiness</td><td class="num">£250 – £1,000</td><td>Diligence + Pitch Health Check depth</td></tr>
-                <tr><td>Campaign setup</td><td class="num">£1,000 – £3,000</td><td>Structured disclosure & page build</td></tr>
-                <tr><td><strong>Success fee</strong></td><td class="num"><strong>3% – 5%</strong></td><td>Of funds raised, only on success</td></tr>
-                <tr><td>Payment & admin</td><td class="num">1% – 2%</td><td>Processing, KYC/AML, records</td></tr>
-                <tr><td>Nominee / admin</td><td class="num">Annual</td><td>Charged to founder or within success fee</td></tr>
-                <tr><td>Premium pitch support</td><td class="num">£1,000 – £10,000</td><td>Optional, human-led</td></tr>
-              </tbody>
-            </table>
+      <div class="grid cols-2 price-grid">
+        <article class="card price-card glow-card reveal">
+          <div class="pc-head">
+            <p class="pc-name">Investor</p>
+            <span class="badge badge-up">Free forever</span>
           </div>
-          <div>
-            <h3 class="h3 reveal">Lower headline fees than incumbents, with preparation included</h3>
-            <p class="reveal" style="--d:.06s">
-              The market norm clusters near 2–2.5% from investors plus ~5% success
-              fees and paid extras. Bundle prices below the stack because AI does
-              the preparation labour (diagnostics, FAQ drafting, disclosure
-              structuring) that incumbents either charge for or skip.
-            </p>
-            <ul class="check-list reveal" style="--d:.12s">
-              <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Pitch Health Check free, before any commitment</span></li>
-              <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Readiness tooling included, not upsold</span></li>
-              <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Post-raise investor comms tools included</span></li>
-            </ul>
+          <p class="pc-price">£0</p>
+          <p class="pc-sub">Everything you need to scan, compare and track</p>
+          <ul class="check-list">
+            {
+              freeFeatures.map((f) => (
+                <li>
+                  <span class="tick"><Icon name="check" size={11} stroke={2.6} /></span>
+                  <span>{f}</span>
+                </li>
+              ))
+            }
+          </ul>
+          <a href="/waitlist" class="btn btn-primary pc-cta">Get early access <span class="arrow">→</span></a>
+        </article>
+
+        <article class="card price-card reveal" style="--d:.07s">
+          <div class="pc-head">
+            <p class="pc-name">Pro</p>
+            <span class="badge badge-line">Coming later</span>
           </div>
-        </div>
+          <p class="pc-price">TBA</p>
+          <p class="pc-sub">Sharper tools for active private-market investors</p>
+          <ul class="check-list">
+            {
+              proFeatures.map((f) => (
+                <li>
+                  <span class="tick"><Icon name="check" size={11} stroke={2.6} /></span>
+                  <span>{f}</span>
+                </li>
+              ))
+            }
+          </ul>
+          <a href="/waitlist" class="btn btn-ghost pc-cta">Join the waitlist</a>
+        </article>
       </div>
 
-      <!-- Comparison -->
-      <div class="compare-block">
-        <div class="section-head" style="margin-top:4rem">
-          <p class="eyebrow reveal">How we compare</p>
-          <h2 class="h2 reveal" style="--d:.05s">The small-cheque penalty, retired</h2>
-          <p class="lead reveal" style="--d:.1s">
-            UK equity crowdfunding norms, as published by the platforms themselves
-            (indicative, 2025–26): meaningful entry fees and 5% of your profits at
-            exit. Bundle's design puts both low, and adds the discipline layer.
+      <div class="panel-tint how-paid reveal">
+        <span class="icon-chip"><Icon name="coins" size={19} /></span>
+        <div>
+          <h2 class="h3">How the money flows</h2>
+          <p class="small" style="margin:0">
+            You invest on the venue at the venue's price and the venue's fees —
+            Bundle adds nothing on top. If that venue runs a partner programme,
+            it pays Bundle a referral fee out of its own take. No programme, no
+            problem: the deal stays on the tape. Bundle never holds client money,
+            never executes trades and never charges a spread.
           </p>
         </div>
-        <div class="table-wrap reveal">
-          <table class="table">
-            <thead>
-              <tr>
-                <th></th>
-                <th>Typical UK platform norm*</th>
-                <th class="hl-col">Bundle.ai (design)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Investor fee</td>
-                <td class="num">~2.5% in (min ~£5) + 5% of profit</td>
-                <td class="num hl-col"><strong>0–1.5% capped · no profit share</strong></td>
-              </tr>
-              <tr>
-                <td>Practical minimum</td>
-                <td class="num">£10–£100+ (fees penalise small tickets)</td>
-                <td class="num hl-col"><strong>£10–£50, fee-efficient by design</strong></td>
-              </tr>
-              <tr>
-                <td>Education</td>
-                <td>Compliance quiz</td>
-                <td class="hl-col"><strong>The product itself, before investing</strong></td>
-              </tr>
-              <tr>
-                <td>Portfolio analytics</td>
-                <td>Holdings list</td>
-                <td class="hl-col"><strong>Concentration meter, exposure, alerts</strong></td>
-              </tr>
-              <tr>
-                <td>Founder success fee</td>
-                <td class="num">~5–7% all-in</td>
-                <td class="num hl-col"><strong>3–5% + prep included</strong></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="small muted reveal" style="margin-top:1rem">
-          *Indicative of published fee schedules at major UK platforms (e.g.
-          Crowdcube: 2.49% investment fee min £5 plus 5% on profit; Republic
-          Europe: 2.5% capped at £250 plus 5% on profit), as at 2025–26. Their
-          fees may change; check their sites. This is a philosophy comparison, not
-          a like-for-like quote.
-        </p>
       </div>
     </div>
   </section>
 
-  <!-- FAQ -->
-  <section class="section section-tint-full">
+  <section class="section tight section-tint-full">
     <div class="container narrow">
-      <div class="section-head center">
-        <p class="eyebrow reveal">Questions</p>
-        <h2 class="h2 reveal" style="--d:.05s">Fee questions, answered like adults</h2>
+      <div class="section-head">
+        <p class="eyebrow reveal">Straight answers</p>
+        <h2 class="h2 reveal" style="--d:.05s">Pricing questions, answered plainly</h2>
       </div>
-      <FAQ items={faqs} class="reveal" />
+      <FAQ items={faqs} />
     </div>
   </section>
 
   <CTABand
-    title="Simple fees. <em class='serif-aside'>Published early.</em>"
-    sub="Join the waitlist and hold us to these numbers at launch."
+    title="Free to watch. <em>Fast to act.</em>"
+    sub="Early access opens in order of sign-up."
+    primaryLabel="Get early access"
+    primaryHref="/waitlist"
+    secondaryLabel="Browse live deals"
+    secondaryHref="/deals"
   />
 </BaseLayout>
 
 <style>
-  .tab-row {
-    display: inline-flex;
-    padding: 0.3rem;
-    background: var(--tint-soft);
-    border: 1px solid var(--line);
-    border-radius: var(--r-pill);
-    margin-bottom: 2.5rem;
-  }
-
-  .tab-btn {
-    border: 0;
-    background: transparent;
-    padding: 0.55rem 1.4rem;
-    border-radius: var(--r-pill);
-    font-size: 0.95rem;
-    font-weight: 570;
-    color: var(--text-2);
-    cursor: pointer;
-    transition: all 0.18s ease;
-  }
-
-  .tab-btn[aria-selected='true'] {
-    background: var(--surface);
-    color: var(--ink);
-    box-shadow: var(--shadow-s);
-  }
-
   .price-grid {
-    align-items: stretch;
+    max-width: 58rem;
+    margin-inline: auto;
   }
 
   .price-card {
     display: flex;
     flex-direction: column;
+    gap: 0.9rem;
     padding: 1.9rem;
   }
 
-  .price-card.featured {
-    border-color: rgba(13, 126, 138, 0.4);
-    box-shadow: var(--shadow-m);
-    position: relative;
-  }
-
-  .price-card.featured::before {
-    content: "Core";
-    position: absolute;
-    top: -0.75rem;
-    left: 1.5rem;
-    background: var(--teal);
-    color: #fff;
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 0.22rem 0.7rem;
-    border-radius: var(--r-pill);
+  .pc-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
   }
 
   .pc-name {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--text-2);
-    margin: 0 0 0.75rem;
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--ink);
   }
 
   .pc-price {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 2.1rem;
-    letter-spacing: -0.025em;
-    color: var(--ink);
     margin: 0;
-    line-height: 1.1;
-  }
-
-  .pc-unit {
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: var(--text-2);
-    letter-spacing: 0;
+    font-family: var(--font-mono);
+    font-size: 2.3rem;
+    color: var(--ink);
+    letter-spacing: -0.02em;
   }
 
   .pc-sub {
+    margin: -0.4rem 0 0.4rem;
     font-size: 0.9rem;
     color: var(--text-2);
-    margin: 0.5rem 0 1.25rem;
   }
 
-  .small-list {
-    font-size: 0.92rem;
+  .pc-cta {
+    margin-top: auto;
   }
 
-  .price-note {
-    margin-top: 1.5rem;
-    font-size: 0.875rem;
-    color: var(--text-2);
-    max-width: 56rem;
+  .how-paid {
+    display: flex;
+    gap: 1.1rem;
+    align-items: flex-start;
+    max-width: 58rem;
+    margin: 1.5rem auto 0;
+    padding: 1.5rem 1.7rem;
   }
 
-  .hl-col {
-    background: var(--tint-soft);
-  }
-
-  th.hl-col {
-    color: var(--teal-deep);
+  .how-paid .h3 {
+    margin-bottom: 0.35rem;
   }
 </style>

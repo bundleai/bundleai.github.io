@@ -3,17 +3,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import Icon from '../components/Icon.astro';
 import CTABand from '../components/CTABand.astro';
-import LogoCloud from '../components/LogoCloud.astro';
 ---
 
 <BaseLayout
   title="About"
-  description="Bundle.ai exists to close the gap between how professional investors and retail investors behave in startup markets. Founded by Arjun Arun and Madhavi Bansal."
+  description="Bundle is building the aggregation layer for private markets — every crowdfunding round, secondary block and pre-IPO offer on one screen. Founded by Arjun Arun and Madhavi Bansal."
 >
   <PageHero
     eyebrow="About Bundle"
-    title='We democratise the <em class="serif-aside">behaviour</em>, not just the access'
-    lead="A professional investor's edge has two parts: the access they get, and the discipline they apply. Retail investors can't be handed proprietary deal flow, and we don't pretend otherwise. But the discipline? That can be built into a product. That's Bundle."
+    title='Private markets are having their <em class="serif-aside">Skyscanner moment.</em>'
+    lead="Flights were bookable long before they were comparable. Private-market deals are exactly there today: live on a dozen venues, visible on none of them together. Bundle is the comparison layer."
   />
 
   <!-- Mission narrative -->
@@ -21,30 +20,33 @@ import LogoCloud from '../components/LogoCloud.astro';
     <div class="container narrow">
       <div class="prose mx-auto reveal">
         <p>
-          Retail investors are currently asked to make angel-style bets without any
-          of the angel's discipline, no diversification logic, no allocation
-          control, no expectation that most bets fail, no defence against hype.
-          That, not the lack of access, is what destroys most retail returns in
-          private markets.
+          The last decade solved <strong>access</strong>: crowdfunding platforms
+          let anyone back a startup, and secondary marketplaces let employees
+          and early backers sell before an IPO. The next decade is solving
+          <strong>liquidity</strong> — tender programmes, order-book
+          marketplaces and, in the UK, the PISCES regime for regulated
+          private-share trading windows.
         </p>
         <blockquote>
-          One bet is a gamble. Twenty is a strategy. Our job is to make the
-          strategy the default.
+          What nobody solved is discovery. The market exists — it's just
+          unwatchable.
         </blockquote>
         <p>
-          UK equity crowdfunding solved access a decade ago, and we're glad it did.
-          But the experience it built is deal-led: browse campaigns, read the
-          story, back a company. The hardest question, <em>how do I build a
-          sensible startup portfolio?</em>, was left to the investor. Bundle is
-          that question, turned into a platform: education before investing,
-          frameworks before deals, portfolio intelligence for the decade after.
+          A serious private-market investor today runs a dozen tabs: two
+          crowdfunding platforms, three secondary marketplaces, a couple of
+          newsletters, a spreadsheet for the portfolio. Deals close before they
+          hear about them. The same company trades at different prices on
+          different venues, and nobody notices. That fragmentation isn't a
+          detail — it's the whole problem.
         </p>
         <p>
-          We are deliberately boring about the important things: honest risk
-          warnings, cooling-off periods, human oversight of every consequential AI
-          output, and a refusal to ship the dark patterns that make platforms money
-          and investors worse. If that costs us conversion, good, that's the moat
-          working.
+          Bundle aggregates the market the way Skyscanner aggregated flights:
+          scan every venue, normalise every listing, put price against price —
+          then route you to the venue to do the deal under its regulatory
+          protections. We don't hold your money, we don't sell you our own
+          inventory, and we don't reorder the market for commission. The
+          aggregator only works if it's ruthlessly neutral, so that neutrality
+          is the product.
         </p>
       </div>
     </div>
@@ -58,226 +60,76 @@ import LogoCloud from '../components/LogoCloud.astro';
         <h2 class="h2 reveal" style="--d:.05s">Built at Oxford. Aimed at the gap.</h2>
       </div>
       <div class="grid cols-2 founders-grid">
-        <article class="card card-hover founder-card reveal">
-          <span class="f-avatar" aria-hidden="true">AA</span>
-          <div>
-            <h3 class="f-name">Arjun Arun</h3>
-            <p class="f-role mono">Co-founder</p>
-            <p class="small muted">
-              Leads Bundle's platform and AI engine, the agents, the data systems,
-              and the conviction that per-position diligence can cost pennies
-              without cutting corners.
-            </p>
-          </div>
-        </article>
-        <article class="card card-hover founder-card reveal" style="--d:.08s">
-          <span class="f-avatar" aria-hidden="true">MB</span>
-          <div>
-            <h3 class="f-name">Madhavi Bansal</h3>
-            <p class="f-role mono">Co-founder</p>
-            <p class="small muted">
-              Leads commercial strategy, partnerships and the founder side of the
-              marketplace, and keeps the discipline thesis honest against the
-              realities of UK private markets.
-            </p>
-          </div>
-        </article>
-      </div>
-      <p class="small muted center reveal" style="margin-top:1.5rem">
-        Bundle grew out of research at the University of Oxford's Saïd Business
-        School into why retail startup investing underperforms, and what
-        regulation, AI economics and founder supply now make possible.
-      </p>
-    </div>
-  </section>
-
-  <!-- Why now -->
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow reveal">Why now</p>
-        <h2 class="h2 reveal" style="--d:.05s">Three doors opened at once</h2>
-      </div>
-      <div class="grid cols-3">
         <article class="card card-hover reveal">
-          <span class="icon-chip"><Icon name="scale" /></span>
-          <h3 class="h3 card-title">Regulation caught up</h3>
-          <p class="small muted">
-            The FCA's high-risk investment rules and the 2026 Public Offer Platform
-            regime require what we wanted to build anyway: vetting, warnings,
-            appropriateness, honest friction. Rules that burden incumbents are our
-            specification.
+          <span class="icon-chip"><Icon name="users" size={20} /></span>
+          <h3 class="h3" style="margin-top:1.1rem">Arjun Arun</h3>
+          <p class="small muted" style="margin-bottom:0">
+            Co-founder. Oxford Saïd MBA. Product and markets — obsessed with
+            why private-market investors accept tooling that public-market
+            investors would laugh at.
           </p>
         </article>
         <article class="card card-hover reveal" style="--d:.07s">
-          <span class="icon-chip"><Icon name="spark" /></span>
-          <h3 class="h3 card-title">AI fixed the economics</h3>
-          <p class="small muted">
-            Educating, checking and monitoring investors used to be too expensive at
-            £25 tickets. AI-assisted diligence and servicing collapse that
-            per-position cost, so low minimums and low fees can finally coexist.
+          <span class="icon-chip"><Icon name="users" size={20} /></span>
+          <h3 class="h3" style="margin-top:1.1rem">Madhavi Bansal</h3>
+          <p class="small muted" style="margin-bottom:0">
+            Co-founder. Oxford Saïd MBA. Operations and partnerships — building
+            the venue relationships and data plumbing that make one tape out of
+            a fragmented market.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Principles -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow reveal">Operating principles</p>
+        <h2 class="h2 reveal" style="--d:.05s">Three rules we don't trade away</h2>
+      </div>
+      <div class="grid cols-3">
+        <article class="card card-hover reveal">
+          <span class="icon-chip"><Icon name="scale" size={20} /></span>
+          <h3 class="h3" style="margin-top:1.1rem">Neutral or nothing</h3>
+          <p class="small muted" style="margin-bottom:0">
+            Results rank by your filters, never by our commission. Sponsored
+            placement, if it ever exists, gets a label you can't miss.
+          </p>
+        </article>
+        <article class="card card-hover reveal" style="--d:.07s">
+          <span class="icon-chip"><Icon name="lock" size={20} /></span>
+          <h3 class="h3" style="margin-top:1.1rem">Never touch the money</h3>
+          <p class="small muted" style="margin-bottom:0">
+            Execution, custody and investor protections belong to the regulated
+            venue that lists the deal. Bundle is the screen, not the till.
           </p>
         </article>
         <article class="card card-hover reveal" style="--d:.14s">
-          <span class="icon-chip"><Icon name="flask" /></span>
-          <h3 class="h3 card-title">Serious founders are underserved</h3>
-          <p class="small muted">
-            Consumer brands dominate crowdfunding; technical, B2B and spinout
-            founders mostly don't bother. A disciplined, education-first platform
-            built for them doesn't exist. That's our lane, and our supply moat.
+          <span class="icon-chip"><Icon name="alert" size={20} /></span>
+          <h3 class="h3" style="margin-top:1.1rem">Honest about risk</h3>
+          <p class="small muted" style="margin-bottom:0">
+            Aggregation makes the market visible, not safe. Every deal on the
+            tape can go to zero, and the site says so everywhere it matters.
           </p>
         </article>
       </div>
-    </div>
-  </section>
-
-  <!-- Moat -->
-  <section class="section section-tint-full">
-    <div class="container">
-      <div class="split">
-        <div>
-          <p class="eyebrow reveal">Our moat, stated plainly</p>
-          <h2 class="h2 reveal" style="--d:.05s">Competitors won't copy us, because it would hurt them</h2>
-          <p class="reveal" style="--d:.1s">
-            Any feature here could be cloned in weeks: a concentration meter, risk
-            scores, education content. What can't be cloned is the business-model
-            position. Bundle is built around friction that slows investors down, education gates, suitability checks, exposure warnings, no hype
-            mechanics. For us, that friction <em>is</em> the product.
-          </p>
-          <p class="reveal" style="--d:.14s">
-            For a deal-led incumbent, the same friction is poison: their revenue
-            runs on people investing quickly and often. They could build a
-            concentration warning tomorrow. They won't voluntarily add speed bumps
-            that cut their own conversion. That gap buys us time.
-          </p>
-          <p class="reveal" style="--d:.18s">
-            We use that time to build the second moat: <strong>owning the supply of
-            serious founders</strong>, through accelerators, university spinout
-            offices and VC overflow, the technical companies hype-driven
-            crowdfunding overlooks. Good deals are what make an educated investor
-            base worth anything, and founder relationships are far harder to copy
-            than software.
-          </p>
-          <p class="small muted reveal" style="--d:.22s">
-            The honest limit: this protects a window, not forever. Which is why the
-            window matters, and why we're building supply now.
-          </p>
-        </div>
-        <div class="moat-stack reveal" style="--d:.12s" aria-hidden="true">
-          <div class="moat-layer l1">
-            <span class="mono">Moat 2 · hard to copy</span>
-            <strong>Founder supply, accelerators, spinouts, VC overflow</strong>
-          </div>
-          <div class="moat-layer l2">
-            <span class="mono">Moat 1 · won't copy</span>
-            <strong>Discipline-first model that breaks incumbent economics</strong>
-          </div>
-          <div class="moat-layer l3">
-            <span class="mono">Compounding on top</span>
-            <strong>Trust brand · behavioural data · regulatory track record</strong>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section tight">
-    <div class="container">
-      <LogoCloud caption="The ecosystems we come from, and source from" />
     </div>
   </section>
 
   <CTABand
-    title="Help us make discipline the default."
-    sub="Join the waitlist as an investor or founder, or come build it with us."
-    secondaryLabel="Careers at Bundle"
-    secondaryHref="/careers"
+    title="Help us put the whole market <em>on one screen.</em>"
+    sub="Investor or venue, we'd like to hear from you."
+    primaryLabel="Get early access"
+    primaryHref="/waitlist"
+    secondaryLabel="Contact us"
+    secondaryHref="/contact"
   />
 </BaseLayout>
 
 <style>
   .founders-grid {
     max-width: 56rem;
-  }
-
-  .founder-card {
-    display: flex;
-    gap: 1.25rem;
-    align-items: flex-start;
-  }
-
-  .f-avatar {
-    flex: none;
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--teal) 0%, var(--teal-deep) 100%);
-    color: #fff;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 1.25rem;
-    letter-spacing: 0.02em;
-  }
-
-  .f-name {
-    font-size: 1.15rem;
-    margin: 0;
-  }
-
-  .f-role {
-    font-size: 0.72rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--teal-deep);
-    margin: 0.15rem 0 0.6rem;
-  }
-
-  .moat-stack {
-    display: grid;
-    gap: 0.9rem;
-    align-self: center;
-    width: 100%;
-    max-width: 430px;
-    justify-self: center;
-  }
-
-  .moat-layer {
-    padding: 1.25rem 1.4rem;
-    border-radius: var(--r-m);
-    display: grid;
-    gap: 0.3rem;
-  }
-
-  .moat-layer span {
-    font-size: 0.68rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    opacity: 0.75;
-  }
-
-  .moat-layer strong {
-    font-family: var(--font-display);
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    line-height: 1.35;
-  }
-
-  .l1 {
-    background: var(--ink);
-    color: #fff;
-  }
-
-  .l2 {
-    background: var(--teal);
-    color: #fff;
-  }
-
-  .l3 {
-    background: var(--tint);
-    color: var(--teal-deep);
-    border: 1px solid rgba(13, 126, 138, 0.2);
   }
 </style>
