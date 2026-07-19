@@ -2,162 +2,82 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import Icon from '../components/Icon.astro';
-import FAQ from '../components/FAQ.astro';
 import CTABand from '../components/CTABand.astro';
+import DealCard from '../components/DealCard.astro';
+import { deals } from '../data/deals';
 
-const windowSteps = [
-  { icon: 'calendar', title: 'Window announced', body: 'A liquidity window for a company is scheduled weeks in advance, with disclosure refreshed so buyers aren’t trading on stale information.' },
-  { icon: 'doc-check', title: 'Orders gathered', body: 'Eligible holders express sell interest; eligible, suitability-checked investors express buy interest, within stated limits.' },
-  { icon: 'scale', title: 'Single-price match', body: 'Orders match in a structured auction at one clearing price: price discovery without the theatre of a live ticker.' },
-  { icon: 'exchange', title: 'Settle & record', body: 'Transfers settle through the nominee structure; positions, cap tables and your portfolio intelligence update automatically.' },
+const secondaries = deals.filter((d) => d.type === 'secondary');
+
+const venueRows = [
+  { venue: 'Forge Global', region: 'US', model: 'Marketplace + data', access: 'Accredited investors', note: 'Deep late-stage inventory' },
+  { venue: 'Hiive', region: 'US · CA', model: 'Order-book marketplace', access: 'Accredited investors', note: 'Transparent bid/ask on VC-backed names' },
+  { venue: 'EquityZen', region: 'US', model: 'Funds over single names', access: 'Accredited investors', note: 'Lower minimums via pooled funds' },
+  { venue: 'Nasdaq Private Market', region: 'US', model: 'Company-sponsored programmes', access: 'Varies by programme', note: 'Tenders and structured liquidity events' },
+  { venue: 'PISCES venues (UK)', region: 'UK', model: 'Intermittent auction windows', access: 'Rules set per event', note: 'LSE PSM, JP Jenkins, Asset Match' },
 ];
 
-const faqs = [
+const whys = [
   {
-    q: 'Does a secondary market make my startup shares liquid?',
-    a: 'No, and be wary of anyone who implies otherwise. A structured window creates <em>possible</em> liquidity at scheduled moments, if there is matching demand at a price you’ll accept. Early-stage shares can remain unsellable for years. Treat any startup investment as locked up for 5–10 years; treat liquidity events as a bonus, not a plan.',
+    icon: 'search',
+    title: 'One tape, every venue',
+    body: 'Blocks and tenders are scattered across marketplaces that don’t talk to each other. Bundle merges them into one tape you can actually watch.',
   },
   {
-    q: 'What is PISCES, in one paragraph?',
-    a: 'PISCES (the Private Intermittent Securities and Capital Exchange System) is the UK framework, live since 2026, for regulated intermittent trading of private company shares. Approved venues (the LSE’s Private Securities Market, JP Jenkins, Asset Match) run scheduled auctions or matched trading rather than continuous markets. It makes responsible private-share liquidity a regulated reality rather than a grey area.',
+    icon: 'pulse',
+    title: 'Price against the last round',
+    body: 'A block is only cheap relative to something. Bundle shows every listing against the company’s last primary round, so premiums and discounts are visible at a glance.',
   },
   {
-    q: 'Why windows rather than continuous trading?',
-    a: 'Because continuous trading of illiquid, information-poor assets mostly produces bad prices and worse behaviour. Scheduled windows concentrate liquidity, allow disclosure to be refreshed beforehand, and remove the day-trading temptation entirely. It’s how the LSE’s own private market and serious operators worldwide approach the problem, and it matches Bundle’s no-urgency design.',
-  },
-  {
-    q: 'Will I be able to trade any company on Bundle?',
-    a: 'No. Companies opt in to liquidity windows, eligibility rules apply on both sides, and availability depends on regulatory permissions and venue arrangements. Where a company never runs a window, your realistic exit remains an acquisition, IPO or failure. The risk warning applies in full.',
-  },
-  {
-    q: 'What will it cost?',
-    a: 'Transaction fees for secondary trades are a future revenue line, subject to permissions, and will be published plainly before any window runs. Consistent with everything else here: low, simple, disclosed, with no spread games.',
+    icon: 'bell',
+    title: 'Alerts on the names you track',
+    body: 'Follow a company once, and get pinged whenever a block lists, a tender opens, or a UK PISCES window is announced for it — on any venue.',
   },
 ];
 ---
 
 <BaseLayout
-  title="Secondary Market"
-  description="Liquidity, done responsibly: structured, scheduled liquidity windows for private startup shares, designed for the UK's PISCES era, with suitability checks and concentration-impact previews."
+  title="Secondaries"
+  description="Track secondary blocks and tenders in pre-IPO companies across Forge, Hiive, EquityZen, Nasdaq Private Market and UK PISCES venues — one tape, one watchlist."
 >
   <PageHero
-    eyebrow="Secondary Market"
-    title='Liquidity, <em class="serif-aside">done responsibly</em>'
-    lead="Private startup shares are illiquid by default, sometimes for a decade. Bundle's secondary market is designed to offer structured, scheduled liquidity windows between eligible investors: real price discovery at calm intervals, never hype-driven day-trading."
+    eyebrow="Markets · Secondaries"
+    title="The secondary tape, <em>finally in one place.</em>"
+    lead="Employee blocks, fund tenders and structured liquidity windows trade every week across half a dozen marketplaces. Bundle puts them on one screen, priced against the last round."
   >
-    <Fragment slot="actions">
-      <a href="/waitlist" class="btn btn-primary btn-lg">Join the waitlist <span class="arrow">→</span></a>
-      <a href="#how-windows-work" class="btn btn-ghost btn-lg">How windows work</a>
-    </Fragment>
-    <Fragment slot="visual">
-      <div class="card window-mock" aria-hidden="true">
-        <div class="wm-head">
-          <div>
-            <span class="wm-company">Voltaic Grid Ltd</span>
-            <span class="wm-sub mono">Liquidity window · Oct 2026</span>
-          </div>
-          <span class="badge badge-teal"><span class="dot"></span> Opens in 12 days</span>
-        </div>
-        <div class="wm-price">
-          <div>
-            <span class="wm-label">Indicative price range</span>
-            <span class="wm-range">£2.10 – £2.45 <em>/ share</em></span>
-          </div>
-          <div class="wm-band" aria-hidden="true">
-            <span class="wm-band-track"><span class="wm-band-fill"></span></span>
-            <span class="wm-band-caption mono">last window cleared at £2.28</span>
-          </div>
-        </div>
-        <div class="wm-interest">
-          <div class="wm-int-row">
-            <span>Sell interest</span>
-            <span class="wm-int-track"><span style="width:38%;background:var(--c2)"></span></span>
-            <span class="mono wm-int-val">£46k</span>
-          </div>
-          <div class="wm-int-row">
-            <span>Buy interest</span>
-            <span class="wm-int-track"><span style="width:61%;background:var(--c1)"></span></span>
-            <span class="mono wm-int-val">£74k</span>
-          </div>
-        </div>
-        <div class="wm-gate">
-          <Icon name="shield" size={16} />
-          <span>Suitability check required before orders. Selling this holding would raise your climate concentration to 41%, and we'll show you that first.</span>
-        </div>
-      </div>
-    </Fragment>
+    <a slot="actions" href="/deals?type=secondary" class="btn btn-primary btn-lg">Watch the tape <span class="arrow">→</span></a>
+    <a slot="actions" href="/waitlist" class="btn btn-ghost btn-lg">Get early access</a>
   </PageHero>
 
-  <!-- Why illiquidity -->
-  <section class="section">
+  <!-- Live rail -->
+  <section class="section tight">
     <div class="container">
-      <div class="split">
-        <div>
-          <p class="eyebrow reveal">Start with the truth</p>
-          <h2 class="h2 reveal" style="--d:.05s">Illiquidity isn't a flaw. It's the deal.</h2>
-          <p class="lead reveal" style="--d:.1s">
-            When you buy startup shares, your money is typically locked in until the
-            company is acquired, lists publicly, or fails. That's the honest
-            trade-off behind every early-stage return story, and it's on every
-            Bundle risk summary.
-          </p>
-          <p class="reveal" style="--d:.14s">
-            What a well-designed secondary market adds is <strong>structure</strong>:
-            scheduled moments where a sale is possible, at a discovered price, with
-            refreshed disclosure. What it never does is turn a startup share into a
-            liquid stock.
-          </p>
-        </div>
-        <div class="card hold-card reveal" style="--d:.12s" aria-hidden="true">
-          <p class="av-title">A typical holding, honestly drawn</p>
-          <div class="hold-timeline">
-            {
-              [
-                { yr: 'Y0', label: 'Invest', tone: 'teal' },
-                { yr: 'Y1', label: 'Locked', tone: 'dim' },
-                { yr: 'Y2', label: 'Window?', tone: 'window' },
-                { yr: 'Y3', label: 'Locked', tone: 'dim' },
-                { yr: 'Y4', label: 'Window?', tone: 'window' },
-                { yr: 'Y5–8', label: 'Exit / failure', tone: 'end' },
-              ].map((s) => (
-                <div class:list={['ht-step', s.tone]}>
-                  <span class="ht-yr mono">{s.yr}</span>
-                  <span class="ht-node"></span>
-                  <span class="ht-label">{s.label}</span>
-                </div>
-              ))
-            }
-          </div>
-          <p class="av-note">
-            “Window?” = a scheduled liquidity window <em>may</em> run, subject to company
-            opt-in, demand, eligibility and permissions. No window is guaranteed.
-          </p>
-        </div>
+      <div class="rail-head reveal">
+        <h2 class="h3"><Icon name="exchange" size={18} /> On the tape now</h2>
+        <a href="/deals?type=secondary" class="text-link small">Full screener <span class="arrow">→</span></a>
       </div>
+      <div class="grid cols-3">
+        {secondaries.slice(0, 6).map((d, i) => <DealCard deal={d} class="reveal" style={`--d:${(i % 3) * 0.06}s`} />)}
+      </div>
+      <p class="small muted" style="margin-top:0.9rem">
+        Illustrative listings — not live quotes or offers.
+      </p>
     </div>
   </section>
 
-  <!-- How windows work -->
-  <section class="section section-tint-full" id="how-windows-work">
+  <!-- Why -->
+  <section class="section section-tint-full">
     <div class="container">
       <div class="section-head">
-        <p class="eyebrow reveal">How windows work</p>
-        <h2 class="h2 reveal" style="--d:.05s">Scheduled auctions, not a casino floor</h2>
-        <p class="lead reveal" style="--d:.1s">
-          The model regulators built PISCES around, and the one serious venues use:
-          intermittent, single-price auctions with disclosure attached.
-        </p>
+        <p class="eyebrow reveal">The edge</p>
+        <h2 class="h2 reveal" style="--d:.05s">Secondaries reward whoever sees the market first</h2>
       </div>
-      <div class="grid cols-4">
+      <div class="grid cols-3">
         {
-          windowSteps.map((s, i) => (
+          whys.map((w, i) => (
             <article class="card card-hover reveal" style={`--d:${i * 0.07}s`}>
-              <div class="ws-top">
-                <span class="step-num">{i + 1}</span>
-                <span class="icon-chip"><Icon name={s.icon} size={19} /></span>
-              </div>
-              <h3 class="h3 card-title">{s.title}</h3>
-              <p class="small muted" style="margin-bottom:0">{s.body}</p>
+              <span class="icon-chip"><Icon name={w.icon} /></span>
+              <h3 class="h3" style="margin-top:1.1rem">{w.title}</h3>
+              <p class="small muted" style="margin-bottom:0">{w.body}</p>
             </article>
           ))
         }
@@ -165,409 +85,97 @@ const faqs = [
     </div>
   </section>
 
-  <!-- PISCES context -->
+  <!-- Venue map -->
   <section class="section">
     <div class="container">
-      <div class="split wide-left">
-        <div>
-          <p class="eyebrow reveal">Built for the PISCES era</p>
-          <h2 class="h2 reveal" style="--d:.05s">The UK just made responsible private-share trading real</h2>
-          <p class="lead reveal" style="--d:.1s">
-            Since 2026, the PISCES regime has given private-share trading a regulated
-            home, with approved venues running intermittent auctions. The LSE's
-            Private Securities Market opened with an Oxford Science Enterprises
-            auction; JP Jenkins reaches earlier-stage companies through ordinary
-            brokerage accounts.
-          </p>
-          <p class="reveal" style="--d:.14s">
-            Incumbent platforms are racing to add liquidity as a feature. Bundle's
-            position is different: <strong>liquidity is only responsible when it's
-            paired with suitability.</strong> Nobody else is pairing private-market
-            liquidity with a discipline layer: checking who's buying, what it does
-            to their portfolio, and whether they understand what they're selling.
-          </p>
-          <ul class="check-list reveal" style="--d:.18s">
-            <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Suitability and eligibility gates on both sides of every window</span></li>
-            <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Concentration-impact preview before you buy <em>or</em> sell</span></li>
-            <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Refreshed company disclosure before each window, so no trades happen on stale information</span></li>
-            <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>No live tickers, no price push notifications, no day-trading mechanics</span></li>
-          </ul>
-        </div>
-        <div class="pisces-panel panel-tint reveal" style="--d:.12s">
-          <p class="pp-title mono">THE PISCES LANDSCAPE · 2026</p>
-          <div class="pp-venue">
-            <span class="pp-name">LSE Private Securities Market</span>
-            <span class="pp-desc">Intermittent auctions; admission thresholds suit later-stage companies</span>
-          </div>
-          <div class="pp-venue">
-            <span class="pp-name">JP Jenkins</span>
-            <span class="pp-desc">Brokerage-account trading, CREST settlement; reaches venture-backed firms</span>
-          </div>
-          <div class="pp-venue">
-            <span class="pp-name">Asset Match</span>
-            <span class="pp-desc">Periodic auction model; newest approved operator</span>
-          </div>
-          <div class="pp-bundle">
-            <svg width="16" height="16" viewBox="0 0 32 32" aria-hidden="true"><rect x="2.4" y="15" width="5" height="14" rx="2.5" fill="currentColor" opacity=".8"/><rect x="9.8" y="3" width="5" height="26" rx="2.5" fill="currentColor"/><rect x="17.2" y="11" width="5" height="18" rx="2.5" fill="currentColor" opacity=".8"/><rect x="24.6" y="7" width="5" height="22" rx="2.5" fill="currentColor"/></svg>
-            <span><strong>Bundle's layer:</strong> suitability, education and concentration discipline on top of structured windows. Designed to work with the regime, subject to FCA permissions.</span>
-          </div>
-        </div>
+      <div class="section-head">
+        <p class="eyebrow reveal">The venues</p>
+        <h2 class="h2 reveal" style="--d:.05s">Where secondary deals actually live</h2>
+        <p class="lead reveal" style="--d:.1s">
+          Each venue has its own model, minimums and eligibility rules. Bundle
+          shows you what applies before you click through.
+        </p>
       </div>
+      <div class="table-wrap reveal">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Venue</th>
+              <th>Region</th>
+              <th>Model</th>
+              <th>Who can buy</th>
+              <th>Known for</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              venueRows.map((r) => (
+                <tr>
+                  <td><strong style="color:var(--ink)">{r.venue}</strong></td>
+                  <td class="num">{r.region}</td>
+                  <td>{r.model}</td>
+                  <td>{r.access}</td>
+                  <td>{r.note}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+      <p class="small muted reveal" style="margin-top:1rem">
+        Indicative summaries, not offers or endorsements — always check the
+        venue's current terms. Eligibility, fees and minimums change.
+      </p>
     </div>
   </section>
 
-  <!-- Eligibility & risk -->
-  <section class="section tight">
-    <div class="container">
-      <div class="risk-box reveal">
-        <div class="rb-icon"><Icon name="alert" size={22} /></div>
-        <div>
-          <h3 class="rb-title">Secondary trading is still high-risk. Here's what to understand first.</h3>
-          <p class="small">
-            Buying private shares second-hand carries the same total-loss and
-            illiquidity risks as primary investing, plus valuation uncertainty
-            between windows and the possibility that no future window runs. SEIS/EIS
-            reliefs generally do <strong>not</strong> apply to secondary purchases.
-            Eligibility, suitability checks and cooling-off protections apply before
-            any order. This page describes functionality Bundle is designed to offer
-            where permitted, subject to FCA permissions and venue arrangements. It
-            is not an offer or invitation to trade.
-          </p>
-          <a href="/legal/risk-warning" class="text-link small">Read the full risk warning <span class="arrow">→</span></a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section class="section section-tint-full">
+  <!-- PISCES note (kept, condensed) -->
+  <section class="section section-ink grain">
     <div class="container narrow">
-      <div class="section-head center">
-        <p class="eyebrow reveal">Questions</p>
-        <h2 class="h2 reveal" style="--d:.05s">Liquidity questions, answered without spin</h2>
-      </div>
-      <FAQ items={faqs} class="reveal" />
+      <p class="eyebrow reveal">The UK angle</p>
+      <h2 class="h2 reveal" style="--d:.05s">PISCES turned UK private liquidity into a real market</h2>
+      <p class="reveal" style="--d:.1s">
+        Since 2026, the UK's PISCES framework lets approved venues run
+        regulated, intermittent trading windows in private-company shares —
+        scheduled auctions with refreshed disclosure, rather than a continuous
+        ticker. As companies opt in, those windows appear on Bundle's tape next
+        to everything else, with the venue's own eligibility rules attached.
+      </p>
+      <p class="small muted reveal" style="--d:.14s">
+        One honest caveat: secondary markets create <em>possible</em> liquidity,
+        not guaranteed liquidity. Private shares can remain unsellable for
+        years. <a href="/legal/risk-warning">The risk warning applies in full.</a>
+      </p>
     </div>
   </section>
 
   <CTABand
-    title="Liquidity with a <em class='serif-aside'>discipline layer.</em>"
-    sub="Join the waitlist to be first through the door when structured windows open, and learn how private-market liquidity really works in the Academy."
-    secondaryLabel="Learn: illiquidity explained"
-    secondaryHref="/learn"
+    title="Never miss <em>a block again.</em>"
+    sub="Watchlists and listing alerts across every secondary venue, from day one of early access."
+    primaryLabel="Get early access"
+    primaryHref="/waitlist"
+    secondaryLabel="Browse the tape"
+    secondaryHref="/deals?type=secondary"
   />
 </BaseLayout>
 
 <style>
-  .window-mock {
-    padding: 1.6rem;
-  }
-
-  .wm-head {
+  .rail-head {
     display: flex;
+    align-items: baseline;
     justify-content: space-between;
-    align-items: flex-start;
     gap: 1rem;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.15rem;
   }
 
-  .wm-company {
-    display: block;
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 1.12rem;
-    color: var(--ink);
-  }
-
-  .wm-sub {
-    font-size: 0.72rem;
-    color: var(--faint);
-  }
-
-  .wm-price {
-    padding: 1rem 1.15rem;
-    background: var(--tint-soft);
-    border: 1px solid var(--line);
-    border-radius: var(--r-s);
-    margin-bottom: 1rem;
-  }
-
-  .wm-label {
-    display: block;
-    font-size: 0.75rem;
-    color: var(--text-2);
-  }
-
-  .wm-range {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 1.45rem;
-    color: var(--ink);
-    letter-spacing: -0.02em;
-  }
-
-  .wm-range em {
-    font-style: normal;
-    font-size: 0.85rem;
-    color: var(--text-2);
-    font-weight: 500;
-  }
-
-  .wm-band {
-    margin-top: 0.6rem;
-  }
-
-  .wm-band-track {
-    display: block;
-    height: 8px;
-    background: var(--chart-track);
-    border-radius: 999px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .wm-band-fill {
-    position: absolute;
-    left: 22%;
-    right: 30%;
-    top: 0;
-    bottom: 0;
-    background: var(--teal);
-    opacity: 0.35;
-    border-radius: 999px;
-  }
-
-  .wm-band-track::after {
-    content: "";
-    position: absolute;
-    left: 52%;
-    top: -2px;
-    bottom: -2px;
-    width: 2.5px;
-    background: var(--teal-deep);
-    border-radius: 2px;
-  }
-
-  .wm-band-caption {
-    display: block;
-    margin-top: 0.4rem;
-    font-size: 0.68rem;
-    color: var(--faint);
-  }
-
-  .wm-interest {
-    display: grid;
-    gap: 0.6rem;
-    margin-bottom: 1.1rem;
-  }
-
-  .wm-int-row {
-    display: grid;
-    grid-template-columns: 5.4rem 1fr 3rem;
+  .rail-head h2 {
+    display: inline-flex;
     align-items: center;
-    gap: 0.75rem;
-    font-size: 0.85rem;
-    color: var(--text);
-  }
-
-  .wm-int-track {
-    height: 10px;
-    background: var(--chart-track);
-    border-radius: 999px;
-    overflow: hidden;
-  }
-
-  .wm-int-track span {
-    display: block;
-    height: 100%;
-    border-radius: 0 4px 4px 0;
-  }
-
-  .wm-int-val {
-    text-align: right;
-    color: var(--text-2);
-    font-size: 0.8rem;
-  }
-
-  .wm-gate {
-    display: flex;
-    gap: 0.6rem;
-    align-items: flex-start;
-    padding: 0.85rem 1rem;
-    background: var(--sand-tint);
-    border: 1px solid rgba(138, 100, 32, 0.18);
-    border-radius: var(--r-s);
-    font-size: 0.8rem;
-    line-height: 1.55;
-    color: var(--sand-ink);
-  }
-
-  .wm-gate svg {
-    flex: none;
-    margin-top: 0.15rem;
-  }
-
-  .av-title {
-    font-family: var(--font-display);
-    font-weight: 600;
-    color: var(--ink);
-    font-size: 1.08rem;
-    margin: 0 0 1.25rem;
-  }
-
-  .av-note {
-    margin: 1.25rem 0 0;
-    font-size: 0.75rem;
-    color: var(--faint);
-    line-height: 1.55;
-  }
-
-  .hold-card {
-    padding: 1.75rem;
-    max-width: 460px;
-    justify-self: center;
-    width: 100%;
-  }
-
-  .hold-timeline {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 0.4rem;
-    position: relative;
-  }
-
-  .hold-timeline::before {
-    content: "";
-    position: absolute;
-    top: calc(1.4rem + 6px);
-    left: 4%;
-    right: 4%;
-    height: 2px;
-    background: var(--line-2);
-  }
-
-  .ht-step {
-    display: grid;
-    justify-items: center;
-    gap: 0.35rem;
-    position: relative;
-    text-align: center;
-  }
-
-  .ht-yr {
-    font-size: 0.65rem;
-    color: var(--faint);
-  }
-
-  .ht-node {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: var(--line-2);
-    border: 2.5px solid var(--surface);
-    box-shadow: 0 0 0 1px var(--line-2);
-  }
-
-  .ht-step.teal .ht-node { background: var(--teal); }
-  .ht-step.window .ht-node { background: var(--sage); }
-  .ht-step.end .ht-node { background: var(--ink); }
-
-  .ht-label {
-    font-size: 0.7rem;
-    color: var(--text-2);
-    line-height: 1.3;
-  }
-
-  .ws-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .pisces-panel {
-    padding: 1.75rem;
-    display: grid;
-    gap: 1rem;
-  }
-
-  .pp-title {
-    font-size: 0.68rem;
-    letter-spacing: 0.16em;
-    color: var(--teal-deep);
+    gap: 0.55rem;
     margin: 0;
   }
 
-  .pp-venue {
-    padding: 0.9rem 1rem;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: var(--r-s);
-  }
-
-  .pp-name {
-    display: block;
-    font-weight: 600;
-    color: var(--ink);
-    font-size: 0.95rem;
-  }
-
-  .pp-desc {
-    font-size: 0.82rem;
-    color: var(--text-2);
-    line-height: 1.5;
-  }
-
-  .pp-bundle {
-    display: flex;
-    gap: 0.7rem;
-    align-items: flex-start;
-    padding: 1rem;
-    background: var(--ink);
-    color: #c9dade;
-    border-radius: var(--r-s);
-    font-size: 0.85rem;
-    line-height: 1.55;
-  }
-
-  .pp-bundle svg {
-    flex: none;
-    margin-top: 0.2rem;
-    color: #7fc6cf;
-  }
-
-  .pp-bundle strong {
-    color: #fff;
-  }
-
-  .risk-box {
-    display: flex;
-    gap: 1.25rem;
-    align-items: flex-start;
-    padding: clamp(1.5rem, 3.5vw, 2.25rem);
-    background: var(--sand-tint);
-    border: 1px solid rgba(138, 100, 32, 0.2);
-    border-radius: var(--r-l);
-  }
-
-  .rb-icon {
-    flex: none;
-    width: 48px;
-    height: 48px;
-    border-radius: 14px;
-    background: rgba(228, 179, 99, 0.28);
-    color: var(--sand-ink);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .rb-title {
-    font-size: 1.15rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .risk-box .small {
-    color: var(--text);
-    max-width: 64rem;
+  .rail-head h2 :global(svg) {
+    color: var(--teal);
   }
 </style>

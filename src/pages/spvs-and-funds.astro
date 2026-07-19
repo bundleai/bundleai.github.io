@@ -2,467 +2,152 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import Icon from '../components/Icon.astro';
-import FAQ from '../components/FAQ.astro';
 import CTABand from '../components/CTABand.astro';
-import Donut from '../components/Donut.astro';
+import DealCard from '../components/DealCard.astro';
+import { deals } from '../data/deals';
 
-const spvBenefits = {
-  investors: [
-    'Access to rounds and late-stage blocks at low minimums',
-    'One clean position in your portfolio, professionally administered',
-    'Nominee-style admin: one signature, no share-certificate chase',
-    'SEIS/EIS awareness, with relief passed through where structures allow',
-  ],
-  founders: [
-    'One line on the cap table instead of hundreds of small holders',
-    'Simpler future fundraising: institutional investors see a clean register',
-    'One point of contact for votes, consents and updates',
-    'Community capital without community-sized admin',
-  ],
-};
+const preIpo = deals.filter((d) => d.type === 'pre-ipo');
 
-const faqs = [
+const routes = [
   {
-    q: 'What exactly is an SPV?',
-    a: 'A Special Purpose Vehicle is a company created for one job: holding an investment in a single startup on behalf of a group of investors. You own a share of the SPV; the SPV owns shares in the startup. The startup sees one clean line on its cap table; you get pooled access with tiny minimums and simplified admin. It’s the structure AngelList and EquityZen made standard. Bundle’s version is designed for UK retail, with SEIS/EIS awareness built in.',
+    icon: 'target',
+    title: 'Direct blocks',
+    body: 'Buy a listed block of shares on a marketplace like Forge or Hiive. Highest minimums, cleanest exposure — you hold the position the venue settles.',
+    tag: 'Typical min: $5k–$100k',
   },
   {
-    q: 'Do SEIS/EIS reliefs work through an SPV?',
-    a: 'Sometimes. Structure matters enormously. Reliefs generally require qualifying direct or nominee-held investments in new shares; certain pooled structures preserve them and others break them. Bundle badges every opportunity with its expected relief status and explains why, before you commit. Tax treatment always depends on your circumstances and can change.',
+    icon: 'layers',
+    title: 'SPVs',
+    body: 'A special-purpose vehicle pools many investors into one entity that holds the shares. Platforms like Odin and EquityZen run the admin; you hold a slice of the vehicle.',
+    tag: 'Typical min: $1k–$10k',
   },
   {
-    q: 'What are the thematic baskets, really?',
-    a: 'A basket is one-click exposure to many vetted companies aligned to an educational framework: the convenience that has made products like US pre-IPO funds popular. The difference: Bundle’s baskets are designed with a suitability and education wrapper, full transparency on holdings and fees, and no premium-to-NAV games. Until the right permissions are in place, baskets shown on Bundle are illustrative and educational.',
+    icon: 'ring',
+    title: 'Pre-IPO funds & baskets',
+    body: 'Funds hold several late-stage names in one wrapper. Lowest minimums and instant spread — watch fees and any premium to the value of what the fund holds.',
+    tag: 'Typical min: $500+',
   },
-  {
-    q: 'How do fees compare?',
-    a: 'US pre-IPO funds commonly charge ~2.5% annual management fees, and some trade at big premiums to the value of what they hold. Bundle’s design goal is boring: low, capped, disclosed costs, because AI does the per-position labour that fees usually pay for. Exact fees will be published before any product goes live.',
-  },
-  {
-    q: 'When will these products be available?',
-    a: 'SPVs and fund-style baskets involve additional regulatory permissions beyond primary crowdfunding, so they follow in Bundle’s phased path: validated first through the core platform, launched when authorisation (or the right regulated partnership) is in place. Waitlist members hear first.',
-  },
+];
+
+const checks = [
+  'The same company, offered as a block, an SPV and a fund — often at different effective prices per share',
+  'Management and carry fees, surfaced per route, so cheap headline minimums don’t hide expensive wrappers',
+  'Premium or discount to the last primary round, computed the same way across every structure',
+  'Access rules per route — accreditation, residency, lockups — before you click through',
 ];
 ---
 
 <BaseLayout
-  title="SPVs & Pre-IPO Funds"
-  description="Pooled SPV access and one-click thematic baskets: diversified private-market exposure at low minimums, with SEIS/EIS awareness and Bundle's education wrapper. Designed for UK retail, subject to FCA permissions."
+  title="Pre-IPO & SPVs"
+  description="Compare routes into pre-IPO names — direct secondary blocks, SPVs and pre-IPO funds — across venues, with fees, minimums and premiums side by side."
 >
   <PageHero
-    eyebrow="SPVs & Pre-IPO Funds"
-    title='Diversified access, <em class="serif-aside">in one click</em>'
-    lead="Two pooled routes into private markets: SPVs that turn many small investors into one clean cap-table line, and curated thematic baskets for one-click diversified exposure. Both designed to push minimums lower and diversification wider, with the same education and suitability wrapper as everything else Bundle builds."
+    eyebrow="Markets · Pre-IPO"
+    title="Pre-IPO names, <em>every route priced.</em>"
+    lead="SpaceX via a block, an SPV or a fund? The ticket sizes, fees and effective share prices differ wildly. Bundle lines up every route into a name so you can pick the one that fits your cheque."
   >
-    <Fragment slot="actions">
-      <a href="/waitlist" class="btn btn-primary btn-lg">Join the waitlist <span class="arrow">→</span></a>
-      <a href="#baskets" class="btn btn-ghost btn-lg">See the baskets</a>
-    </Fragment>
+    <a slot="actions" href="/deals?type=pre-ipo" class="btn btn-primary btn-lg">See pre-IPO deals <span class="arrow">→</span></a>
+    <a slot="actions" href="/waitlist" class="btn btn-ghost btn-lg">Get early access</a>
   </PageHero>
 
-  <!-- SPV explainer + diagram -->
-  <section class="section">
+  <!-- Live rail -->
+  <section class="section tight">
+    <div class="container">
+      <div class="rail-head reveal">
+        <h2 class="h3"><Icon name="bars" size={18} /> Most-watched pre-IPO names</h2>
+        <a href="/deals?type=pre-ipo" class="text-link small">Full screener <span class="arrow">→</span></a>
+      </div>
+      <div class="grid cols-4">
+        {preIpo.slice(0, 4).map((d, i) => <DealCard deal={d} class="reveal" style={`--d:${i * 0.06}s`} />)}
+      </div>
+      <p class="small muted" style="margin-top:0.9rem">
+        Illustrative listings — not live quotes or offers.
+      </p>
+    </div>
+  </section>
+
+  <!-- Three routes -->
+  <section class="section section-tint-full">
     <div class="container">
       <div class="section-head">
-        <p class="eyebrow reveal">Product one: SPVs</p>
-        <h2 class="h2 reveal" style="--d:.05s">Many small investors. One clean line.</h2>
-        <p class="lead reveal" style="--d:.1s">
-          An SPV pools investors into a single vehicle that makes one investment.
-          Founders get a tidy cap table; investors get access to rounds (including
-          late-stage blocks) that individual £25 cheques could never reach alone.
-        </p>
-      </div>
-
-      <div class="spv-diagram card reveal" aria-hidden="true">
-        <div class="spv-col investors">
-          <p class="spv-label mono">Many investors</p>
-          <div class="spv-people">
-            {
-              ['£25', '£50', '£10', '£100', '£25', '£40', '£15', '£75', '£20'].map((amt) => (
-                <span class="spv-person">
-                  <i></i>
-                  {amt}
-                </span>
-              ))
-            }
-            <span class="spv-person more">+ hundreds more</span>
-          </div>
-        </div>
-        <div class="spv-flow" aria-hidden="true">
-          <span class="spv-line"></span>
-          <Icon name="arrow-right" size={18} />
-        </div>
-        <div class="spv-col vehicle">
-          <p class="spv-label mono">One SPV</p>
-          <div class="spv-box">
-            <svg width="22" height="22" viewBox="0 0 32 32"><rect x="2.4" y="15" width="5" height="14" rx="2.5" fill="#0d7e8a"/><rect x="9.8" y="3" width="5" height="26" rx="2.5" fill="#0d7e8a"/><rect x="17.2" y="11" width="5" height="18" rx="2.5" fill="#37a98c"/><rect x="24.6" y="7" width="5" height="22" rx="2.5" fill="#0d7e8a"/></svg>
-            <span class="spv-box-name">Bundle Nominees SPV 12 Ltd</span>
-            <span class="spv-box-sub">Pooled · administered · audited</span>
-          </div>
-        </div>
-        <div class="spv-flow" aria-hidden="true">
-          <span class="spv-line"></span>
-          <Icon name="arrow-right" size={18} />
-        </div>
-        <div class="spv-col captable">
-          <p class="spv-label mono">The company's cap table</p>
-          <div class="spv-cap">
-            <div class="cap-row"><span>Founders</span><span class="mono">58.0%</span></div>
-            <div class="cap-row"><span>Lead VC</span><span class="mono">22.5%</span></div>
-            <div class="cap-row hl"><span>Bundle SPV (one line)</span><span class="mono">6.5%</span></div>
-            <div class="cap-row"><span>Option pool</span><span class="mono">13.0%</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="grid cols-2" style="margin-top:2rem">
-        <div class="card reveal">
-          <h3 class="h3"><Icon name="pie" size={20} class="inline-ic" /> For investors</h3>
-          <ul class="check-list" style="margin-top:1rem">
-            {
-              spvBenefits.investors.map((b) => (
-                <li>
-                  <span class="tick"><Icon name="check" size={11} stroke={2.6} /></span>
-                  <span>{b}</span>
-                </li>
-              ))
-            }
-          </ul>
-        </div>
-        <div class="card reveal" style="--d:.08s">
-          <h3 class="h3"><Icon name="seedling" size={20} class="inline-ic" /> For founders</h3>
-          <ul class="check-list" style="margin-top:1rem">
-            {
-              spvBenefits.founders.map((b) => (
-                <li>
-                  <span class="tick"><Icon name="check" size={11} stroke={2.6} /></span>
-                  <span>{b}</span>
-                </li>
-              ))
-            }
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Baskets -->
-  <section class="section section-tint-full" id="baskets">
-    <div class="container">
-      <div class="split wide-left">
-        <div>
-          <p class="eyebrow reveal">Product two: thematic baskets</p>
-          <h2 class="h2 reveal" style="--d:.05s">One click. Twelve companies. Zero mystery.</h2>
-          <p class="lead reveal" style="--d:.1s">
-            Curated, fund-style baskets give diversified exposure to a vetted set of
-            private companies aligned to an educational framework: climate,
-            UK AI, university spinouts. The convenience retail money is visibly
-            choosing worldwide, from Destiny Tech100 to ARK Venture.
-          </p>
-          <p class="reveal" style="--d:.14s">
-            What that market hasn't offered: <strong>a suitability and discipline
-            layer.</strong> US retail funds can trade at steep premiums to the value
-            of their holdings, with 2.5% fees and no education attached. Bundle's
-            baskets are designed to be transparent to the holding, honest on fees,
-            and gated by the same appropriateness journey as everything else.
-          </p>
-          <ul class="check-list reveal" style="--d:.18s">
-            <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Full holdings transparency, so you always see all twelve companies</span></li>
-            <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Educational framework alignment, not black-box theming</span></li>
-            <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Suitability gate and concentration preview before entry</span></li>
-            <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Low, capped, disclosed costs, published before launch</span></li>
-          </ul>
-        </div>
-        <div class="card basket-card reveal" style="--d:.12s" aria-hidden="true">
-          <div class="bk-head">
-            <div>
-              <span class="bk-name">Climate Tech Basket</span>
-              <span class="bk-sub mono">Illustrative · educational preview</span>
-            </div>
-            <span class="badge badge-sage">SEIS/EIS aware</span>
-          </div>
-          <Donut
-            segments={[
-              { label: 'Grid & storage', value: 30 },
-              { label: 'Industrial decarb', value: 24 },
-              { label: 'Built environment', value: 18 },
-              { label: 'Food & land', value: 16 },
-              { label: 'Carbon markets', value: 12 },
-            ]}
-            centerTitle="12"
-            centerSub="companies"
-          />
-          <div class="bk-meta">
-            <div><span class="bk-k mono">From</span><span class="bk-v">£100</span></div>
-            <div><span class="bk-k mono">Positions</span><span class="bk-v">12</span></div>
-            <div><span class="bk-k mono">Largest</span><span class="bk-v">11%</span></div>
-          </div>
-          <p class="bk-note">Illustrative composition for education. Not an offer, recommendation or live product.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Transparency -->
-  <section class="section">
-    <div class="container">
-      <div class="section-head center">
-        <p class="eyebrow reveal">The point of pooling</p>
-        <h2 class="h2 reveal" style="--d:.05s">Every pooled product serves the same thesis</h2>
-        <p class="lead mx-auto reveal" style="--d:.1s">
-          Spread capital across many small positions. SPVs and baskets exist to make
-          that cheaper, wider and simpler, never to hide what you own.
-        </p>
+        <p class="eyebrow reveal">Three routes in</p>
+        <h2 class="h2 reveal" style="--d:.05s">Same company, three very different trades</h2>
       </div>
       <div class="grid cols-3">
-        <article class="card card-hover reveal">
-          <span class="icon-chip"><Icon name="coins" /></span>
-          <h3 class="h3 card-title">Lower minimums</h3>
-          <p class="small muted">Pooling spreads fixed costs, so £100 can reach rounds that once required £10,000, and £10 tickets stay economical.</p>
-        </article>
-        <article class="card card-hover reveal" style="--d:.07s">
-          <span class="icon-chip"><Icon name="ring" /></span>
-          <h3 class="h3 card-title">Wider diversification</h3>
-          <p class="small muted">A basket adds twelve positions in one decision. Your concentration meter counts every underlying company, not the wrapper.</p>
-        </article>
-        <article class="card card-hover reveal" style="--d:.14s">
-          <span class="icon-chip"><Icon name="eye" /></span>
-          <h3 class="h3 card-title">Nothing hidden</h3>
-          <p class="small muted">Holdings, fees, eligibility and relief status are visible before you commit, and tracked after. If we can't show it, we don't sell it.</p>
-        </article>
+        {
+          routes.map((r, i) => (
+            <article class="card card-hover reveal" style={`--d:${i * 0.07}s`}>
+              <span class="icon-chip"><Icon name={r.icon} /></span>
+              <h3 class="h3" style="margin-top:1.1rem">{r.title}</h3>
+              <p class="small muted">{r.body}</p>
+              <span class="badge badge-line mono route-tag">{r.tag}</span>
+            </article>
+          ))
+        }
       </div>
-
-      <div class="risk-note reveal">
-        <Icon name="info" size={16} />
-        <span>
-          SPVs and fund-style baskets involve additional FCA permissions. They are
-          described here as designed functionality: available where permitted, once
-          authorisation or the appropriate regulated partnership is in place. All
-          investments: capital at risk, illiquid, SEIS/EIS treatment depends on
-          structure and circumstances.
-        </span>
-      </div>
+      <p class="small muted reveal" style="margin-top:1rem">
+        Ranges are indicative of the market generally, not quotes from any venue.
+      </p>
     </div>
   </section>
 
-  <!-- FAQ -->
-  <section class="section section-tint-full">
+  <!-- What Bundle compares -->
+  <section class="section">
     <div class="container narrow">
-      <div class="section-head center">
-        <p class="eyebrow reveal">Questions</p>
-        <h2 class="h2 reveal" style="--d:.05s">Pooled structures, unpooled answers</h2>
+      <div class="section-head">
+        <p class="eyebrow reveal">What the comparison shows</p>
+        <h2 class="h2 reveal" style="--d:.05s">The stuff wrappers usually hide</h2>
       </div>
-      <FAQ items={faqs} class="reveal" />
+      <ul class="check-list reveal" style="--d:.08s">
+        {
+          checks.map((c) => (
+            <li>
+              <span class="tick"><Icon name="check" size={11} stroke={2.6} /></span>
+              <span>{c}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="small muted reveal" style="margin-top:1.5rem">
+        Pre-IPO investing is still private-market investing: illiquid, high-risk
+        and unprotected if things go wrong.
+        <a href="/legal/risk-warning">Read the risk warning</a>.
+      </p>
     </div>
   </section>
 
   <CTABand
-    title="Wider diversification, <em class='serif-aside'>lower friction.</em>"
-    sub="Join the waitlist to shape the first baskets, and learn how pooled vehicles work in the Academy."
+    title="Pick the route <em>with your eyes open.</em>"
+    sub="Every route into every name, priced side by side — from day one of early access."
+    primaryLabel="Get early access"
+    primaryHref="/waitlist"
+    secondaryLabel="See pre-IPO deals"
+    secondaryHref="/deals?type=pre-ipo"
   />
 </BaseLayout>
 
 <style>
-  .spv-diagram {
-    display: grid;
-    grid-template-columns: 1.2fr auto 1fr auto 1.2fr;
-    gap: 1.25rem;
-    align-items: center;
-    padding: clamp(1.5rem, 3.5vw, 2.5rem);
-  }
-
-  .spv-label {
-    font-size: 0.68rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--text-2);
-    margin: 0 0 0.75rem;
-  }
-
-  .spv-people {
+  .rail-head {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.15rem;
   }
 
-  .spv-person {
+  .rail-head h2 {
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
-    padding: 0.28rem 0.7rem;
-    background: var(--tint-soft);
-    border: 1px solid var(--line);
-    border-radius: var(--r-pill);
-    font-size: 0.78rem;
-    font-variant-numeric: tabular-nums;
-    color: var(--text);
+    gap: 0.55rem;
+    margin: 0;
   }
 
-  .spv-person i {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--teal);
-    opacity: 0.75;
-  }
-
-  .spv-person.more {
-    background: transparent;
-    border-style: dashed;
-    color: var(--faint);
-  }
-
-  .spv-person.more i {
-    display: none;
-  }
-
-  .spv-flow {
-    display: grid;
-    justify-items: center;
-    color: var(--faint);
-  }
-
-  .spv-box {
-    display: grid;
-    justify-items: center;
-    gap: 0.3rem;
-    padding: 1.4rem 1.2rem;
-    background: var(--tint);
-    border: 1px solid rgba(13, 126, 138, 0.25);
-    border-radius: var(--r-m);
-    text-align: center;
-  }
-
-  .spv-box-name {
-    font-weight: 600;
-    color: var(--ink);
-    font-size: 0.92rem;
-    font-family: var(--font-display);
-  }
-
-  .spv-box-sub {
-    font-size: 0.75rem;
-    color: var(--teal-deep);
-  }
-
-  .spv-cap {
-    border: 1px solid var(--line);
-    border-radius: var(--r-s);
-    overflow: hidden;
-  }
-
-  .cap-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 0.6rem 0.9rem;
-    font-size: 0.85rem;
-    border-bottom: 1px solid var(--line);
-    color: var(--text);
-    background: var(--surface);
-  }
-
-  .cap-row:last-child {
-    border-bottom: 0;
-  }
-
-  .cap-row.hl {
-    background: var(--sage-tint);
-    color: var(--ink);
-    font-weight: 600;
-  }
-
-  @media (max-width: 960px) {
-    .spv-diagram {
-      grid-template-columns: 1fr;
-    }
-
-    .spv-flow {
-      transform: rotate(90deg);
-      padding: 0.25rem 0;
-    }
-  }
-
-  .inline-ic {
-    display: inline-block;
-    vertical-align: -0.22em;
+  .rail-head h2 :global(svg) {
     color: var(--teal);
-    margin-right: 0.3rem;
   }
 
-  .basket-card {
-    padding: 1.75rem;
-  }
-
-  .bk-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1rem;
-    margin-bottom: 1.25rem;
-  }
-
-  .bk-name {
-    display: block;
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 1.12rem;
-    color: var(--ink);
-  }
-
-  .bk-sub {
-    font-size: 0.72rem;
-    color: var(--faint);
-  }
-
-  .bk-meta {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.75rem;
-    margin-top: 1.4rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--line);
-  }
-
-  .bk-k {
-    display: block;
-    font-size: 0.65rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--faint);
-  }
-
-  .bk-v {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 1.15rem;
-    color: var(--ink);
-  }
-
-  .bk-note {
-    margin: 1rem 0 0;
-    font-size: 0.75rem;
-    color: var(--faint);
-    line-height: 1.5;
-  }
-
-  .risk-note {
-    display: flex;
-    gap: 0.6rem;
-    align-items: flex-start;
-    margin: 2.25rem auto 0;
-    max-width: 56rem;
-    padding: 0.95rem 1.2rem;
-    background: var(--tint);
-    border: 1px solid rgba(13, 126, 138, 0.16);
-    border-radius: var(--r-s);
-    font-size: 0.85rem;
-    color: var(--teal-deep);
-    line-height: 1.6;
-  }
-
-  .risk-note svg {
-    flex: none;
-    margin-top: 0.2rem;
+  .route-tag {
+    margin-top: 0.4rem;
+    font-size: 0.7rem;
   }
 </style>

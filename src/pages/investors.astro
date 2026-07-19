@@ -2,142 +2,73 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import Icon from '../components/Icon.astro';
-import FAQ from '../components/FAQ.astro';
 import CTABand from '../components/CTABand.astro';
-import Donut from '../components/Donut.astro';
-
-const personas = [
-  {
-    icon: 'compass',
-    title: 'Curious first-timers',
-    body: 'You’re 25–45, you follow startups, AI or climate, and you’ve wondered how people invest in them. You need low minimums, honest education, and zero pressure. That’s the default Bundle experience.',
-  },
-  {
-    icon: 'bars',
-    title: 'Experienced retail investors',
-    body: 'You already run ISAs, index funds, maybe single stocks. You want private-market exposure with the analytics you’re used to (exposure breakdowns, risk scoring, monitoring), not a shopping site.',
-  },
-  {
-    icon: 'users',
-    title: 'Angel-curious professionals',
-    body: 'Consultant, engineer, banker, founder. You could write £5k angel cheques but you don’t have time to source or diligence deals. You want diversified access, data-led screening and minimal admin.',
-  },
-];
 
 const features = [
-  { icon: 'coins', title: '£10–£50 per company', body: 'Low minimums exist so you can spread the same money across more companies: diversification without needing a fortune.' },
-  { icon: 'graduation', title: 'Education before investing', body: 'Plain-English modules and an appropriateness test come first. You’ll understand failure rates, dilution and illiquidity before committing a pound.' },
-  { icon: 'pie', title: 'Frameworks, not tips', body: 'Educational portfolio frameworks (AI, climate, spinouts, B2B SaaS) teach the logic of a theme. You pick every company and every amount yourself.' },
-  { icon: 'gauge', title: 'The concentration meter', body: 'One honest gauge on your dashboard: are you making isolated bets or building a portfolio? No major UK platform offers it.' },
-  { icon: 'bell', title: 'Monitoring that doesn’t stop', body: 'Follow-on alerts, dilution tracking, anomaly detection and honest failure reporting, for the whole life of every holding.' },
-  { icon: 'award', title: 'SEIS/EIS awareness built in', body: 'Eligibility badges on deals, a relief tracker on your dashboard, and education on what the reliefs do, and what they don’t.' },
+  { icon: 'activity', title: 'One tape, three markets', body: 'Crowdfunding rounds, secondary blocks and pre-IPO offers stream into a single screener instead of a dozen tabs and newsletters.' },
+  { icon: 'bell', title: 'Alerts that hit first', body: 'A block lists below the last round. A raise crosses 90% funded. A liquidity window opens on a name you hold. You know within minutes.' },
+  { icon: 'scale', title: 'Venue-by-venue comparison', body: 'Price, fees, minimums, share class and access rules, side by side — so the venue you execute on is a decision, not a default.' },
+  { icon: 'pie', title: 'One portfolio, every venue', body: 'Positions on Crowdcube, Republic, Forge, Hiive and beyond, tracked in one P&L with revaluations as new rounds price.' },
+  { icon: 'eye', title: 'Watchlists on companies, not platforms', body: 'Follow the company once. Wherever its shares surface next — any venue, any structure — it shows up on your tape.' },
+  { icon: 'sliders', title: 'Screens that keep working', body: 'Save a screen — “UK fintech secondaries under £2k minimum” — and Bundle keeps running it while you sleep.' },
 ];
 
-const guardrails = [
-  'Appropriateness test with documented pass/fail records',
-  'Cooling-off period on first investments',
-  'Educational maximum-exposure warnings tuned to your profile',
-  'Concentration alerts when one position dominates',
-  'Plain-English risk summary on every startup',
-  'No gamified nudges, trending lists or countdown timers',
-];
-
-const faqs = [
-  {
-    q: 'Can I lose all my money?',
-    a: '<strong>Yes.</strong> Startups fail more often than they succeed, and when they fail your investment in them is usually lost entirely. Diversification spreads that risk across many companies. It does not remove it. Never invest money you may need back, and read the <a href="/legal/risk-warning">full risk warning</a> before anything else.',
-  },
-  {
-    q: 'How is this different from Crowdcube or Republic Europe?',
-    a: 'Those platforms are deal marketplaces, and good ones. They optimise for campaigns; the hardest question, "how do I build a sensible startup portfolio?", is left to you. Bundle is built around that question: education first, portfolio analytics always on, and behavioural guardrails instead of conversion tactics.',
-  },
-  {
-    q: 'When can I actually invest?',
-    a: 'Bundle is pre-launch. Investment services will go live through a regulated structure, subject to FCA authorisations or a partnership with an authorised firm. That sequencing is deliberate. Waitlist members get access first, and the Academy is free now.',
-  },
-  {
-    q: 'What does it cost?',
-    a: 'A basic account is designed to be free, with an investment fee of 0–1.5% (capped) and optional premium analytics from around £9/month. Low and simple: low minimums are central to the brand. See <a href="/pricing">pricing</a> for the full picture.',
-  },
-  {
-    q: 'What about getting my money out?',
-    a: 'Assume startup shares are locked up for 5–10 years: illiquidity is the default, not a bug. Bundle is designing a <a href="/secondary-market">secondary market</a> with structured liquidity windows for the PISCES era, but no secondary market makes an early-stage share reliably sellable. We’ll always say that plainly.',
-  },
+const alerts = [
+  { kind: 'down', icon: '▼', text: 'ANTH — block listed 6% below last round', src: 'Forge Global', time: '2m' },
+  { kind: 'up', icon: '▲', text: 'Aurora Fusion crossed 84% funded', src: 'Crowdcube', time: '18m' },
+  { kind: 'flat', icon: '◆', text: 'PISCES window announced: UK fintech you follow', src: 'LSE PSM', time: '1h' },
+  { kind: 'up', icon: '▲', text: 'REV — new high on the secondary tape', src: 'Hiive', time: '3h' },
 ];
 ---
 
 <BaseLayout
   title="For Investors"
-  description="Build diversified startup exposure from £10 per company: education-first, with portfolio intelligence and honest guardrails. For first-timers, experienced retail investors and angel-curious professionals."
+  description="Why investors run their private-market deal flow through Bundle: one screener, cross-venue alerts, side-by-side comparison and a single portfolio."
 >
   <PageHero
     eyebrow="For investors"
-    title='Own a slice of <em class="serif-aside">twenty futures</em>, not a ticket on one'
-    lead="Bundle gives retail investors the tools and education professionals rely on: low minimums, diversification discipline, risk literacy and continuous monitoring. The upside stays yours to pursue; the behaviour gets professional."
+    title="Your unfair advantage <em>in private markets.</em>"
+    lead="Public-market traders get one terminal for everything. Private-market investors get scattered tabs and stale newsletters. Bundle fixes your side of that."
   >
-    <Fragment slot="actions">
-      <a href="/waitlist" class="btn btn-primary btn-lg">Join the waitlist <span class="arrow">→</span></a>
-      <a href="/how-it-works" class="btn btn-ghost btn-lg">See the journey</a>
-    </Fragment>
-    <Fragment slot="visual">
-      <div class="card alloc-visual" aria-hidden="true">
-        <p class="av-title">The same £500, two ways</p>
-        <div class="av-compare">
-          <div class="av-col">
-            <span class="av-label mono">The gamble</span>
-            <div class="av-one">
-              <span class="av-block" style="height:100%;background:var(--red)"></span>
-            </div>
-            <span class="av-caption">1 company · all-or-nothing</span>
-          </div>
-          <div class="av-col">
-            <span class="av-label mono">The strategy</span>
-            <div class="av-many">
-              {Array.from({ length: 20 }).map(() => <span class="av-cell"></span>)}
-            </div>
-            <span class="av-caption">20 companies · £25 each</span>
-          </div>
-        </div>
-        <p class="av-note">Illustration of allocation structure, not of outcomes. Diversification reduces concentration risk. It does not remove the risk of loss.</p>
-      </div>
-    </Fragment>
+    <a slot="actions" href="/deals" class="btn btn-primary btn-lg">Start scanning <span class="arrow">→</span></a>
+    <a slot="actions" href="/waitlist" class="btn btn-ghost btn-lg">Get early access</a>
+
+    <div slot="visual" class="alerts-panel panel" aria-hidden="true">
+      <header class="ap-head">
+        <span class="ap-title mono"><span class="live-dot"></span> Alert stream</span>
+        <span class="ap-badge mono">4 new</span>
+      </header>
+      <ul class="ap-list">
+        {
+          alerts.map((a) => (
+            <li class="ap-row">
+              <span class:list={['ap-ico', 'px', a.kind]}>{a.icon}</span>
+              <span class="ap-body">
+                <span class="ap-text">{a.text}</span>
+                <span class="ap-meta">{a.src} · {a.time} ago</span>
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+      <footer class="ap-foot mono">Illustrative alerts, demo data</footer>
+    </div>
   </PageHero>
 
-  <!-- Personas -->
+  <!-- Features -->
   <section class="section">
     <div class="container">
       <div class="section-head">
-        <p class="eyebrow reveal">Who it's for</p>
-        <h2 class="h2 reveal" style="--d:.05s">Three kinds of investor, one discipline</h2>
-      </div>
-      <div class="grid cols-3">
-        {
-          personas.map((p, i) => (
-            <article class="card card-hover reveal" style={`--d:${i * 0.07}s`}>
-              <span class="icon-chip"><Icon name={p.icon} /></span>
-              <h3 class="h3 card-title">{p.title}</h3>
-              <p class="small muted">{p.body}</p>
-            </article>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  <!-- What you get -->
-  <section class="section section-tint-full">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow reveal">What you get</p>
-        <h2 class="h2 reveal" style="--d:.05s">The professional toolkit, sized for £25 cheques</h2>
+        <p class="eyebrow reveal">The toolkit</p>
+        <h2 class="h2 reveal" style="--d:.05s">Everything between you and the trade, compressed</h2>
       </div>
       <div class="grid cols-3">
         {
           features.map((f, i) => (
             <article class="card card-hover reveal" style={`--d:${(i % 3) * 0.07}s`}>
               <span class="icon-chip"><Icon name={f.icon} /></span>
-              <h3 class="h3 card-title">{f.title}</h3>
-              <p class="small muted">{f.body}</p>
+              <h3 class="h3" style="margin-top:1.1rem">{f.title}</h3>
+              <p class="small muted" style="margin-bottom:0">{f.body}</p>
             </article>
           ))
         }
@@ -145,191 +76,135 @@ const faqs = [
     </div>
   </section>
 
-  <!-- Discipline layer -->
-  <section class="section">
-    <div class="container">
-      <div class="split">
-        <div>
-          <p class="eyebrow reveal">The discipline layer</p>
-          <h2 class="h2 reveal" style="--d:.05s">Guardrails that would hurt a sales funnel but protect a portfolio</h2>
-          <p class="lead reveal" style="--d:.1s">
-            Every protection below reduces short-term conversion. We build them
-            anyway, because they're what make an investor base worth having.
-          </p>
-          <ul class="check-list reveal" style="--d:.14s">
-            {
-              guardrails.map((g) => (
-                <li>
-                  <span class="tick"><Icon name="check" size={11} stroke={2.6} /></span>
-                  <span>{g}</span>
-                </li>
-              ))
-            }
-          </ul>
-          <p class="reveal" style="--d:.18s; margin-top:1.5rem">
-            <a href="/trust" class="text-link">The full trust & safety design <span class="arrow">→</span></a>
-          </p>
-        </div>
-        <div class="card exposure-card reveal" style="--d:.12s" aria-hidden="true">
-          <p class="av-title">Exposure, always visible</p>
-          <Donut
-            segments={[
-              { label: 'Climate', value: 34 },
-              { label: 'B2B SaaS', value: 22 },
-              { label: 'Deeptech', value: 18 },
-              { label: 'Health', value: 14 },
-              { label: 'Consumer', value: 12 },
-            ]}
-            centerTitle="23"
-            centerSub="companies"
-          />
-          <hr class="hr" style="margin:1.25rem 0" />
-          <div class="exp-row">
-            <span class="badge badge-sage"><span class="dot"></span> SEIS eligible · 12</span>
-            <span class="badge badge-teal"><span class="dot"></span> EIS eligible · 6</span>
-            <span class="badge badge-line">No relief · 5</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Where it extends -->
-  <section class="section section-tint-full">
-    <div class="container">
-      <div class="section-head center">
-        <p class="eyebrow reveal">Beyond primary rounds</p>
-        <h2 class="h2 reveal" style="--d:.05s">The discipline extends as your portfolio matures</h2>
-      </div>
-      <div class="grid cols-2">
-        <a href="/secondary-market" class="card card-hover next-card reveal">
-          <span class="icon-chip"><Icon name="exchange" /></span>
-          <h3 class="h3 card-title">Secondary Market</h3>
-          <p class="small muted">Structured, scheduled liquidity windows for private shares, designed for the UK's PISCES era, with suitability checks and concentration-impact previews built in.</p>
-          <span class="text-link">The liquidity story <span class="arrow">→</span></span>
-        </a>
-        <a href="/spvs-and-funds" class="card card-hover next-card reveal" style="--d:.08s">
-          <span class="icon-chip"><Icon name="layers" /></span>
-          <h3 class="h3 card-title">SPVs & Pre-IPO Funds</h3>
-          <p class="small muted">Pooled vehicles and one-click diversified baskets, designed to push minimums even lower and diversification even wider, with the same education wrapper.</p>
-          <span class="text-link">Diversified access <span class="arrow">→</span></span>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section class="section">
+  <!-- Honesty strip -->
+  <section class="section tight section-tint-full">
     <div class="container narrow">
-      <div class="section-head center">
-        <p class="eyebrow reveal">Questions</p>
-        <h2 class="h2 reveal" style="--d:.05s">Asked by people who read the small print</h2>
+      <div class="panel-tint honesty reveal">
+        <Icon name="shield" size={22} />
+        <p>
+          Bundle shows you the market; it doesn't pick your investments, hold
+          your money or soften the risks. Private-market deals are illiquid and
+          high-risk on every venue — you can lose everything you put in.
+          <a href="/legal/risk-warning">Two minutes on the risks</a>.
+        </p>
       </div>
-      <FAQ items={faqs} class="reveal" />
     </div>
   </section>
 
   <CTABand
-    title="Twenty small positions beat one big hope."
-    sub="Join the waitlist: early access opens in order of sign-up, and the Academy is free today."
+    title="Trade the whole market, <em>not one platform's shelf.</em>"
+    sub="Screener, watchlists and cross-venue alerts — free for investors, from day one."
+    primaryLabel="Get early access"
+    primaryHref="/waitlist"
+    secondaryLabel="Browse live deals"
+    secondaryHref="/deals"
   />
 </BaseLayout>
 
 <style>
-  .alloc-visual {
-    padding: 1.75rem;
+  .alerts-panel {
+    overflow: hidden;
+    box-shadow: var(--shadow-l), 0 0 70px -28px rgba(31, 210, 192, 0.3);
   }
 
-  .av-title {
-    font-family: var(--font-display);
-    font-weight: 600;
-    color: var(--ink);
-    font-size: 1.08rem;
-    margin: 0 0 1.25rem;
+  .ap-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.8rem 1.1rem;
+    border-bottom: 1px solid var(--line);
+    background: #0b111c;
   }
 
-  .av-compare {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-  }
-
-  .av-label {
-    display: block;
-    font-size: 0.68rem;
-    letter-spacing: 0.12em;
+  .ap-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--text-2);
-    margin-bottom: 0.6rem;
   }
 
-  .av-one,
-  .av-many {
-    height: 148px;
-    border-radius: var(--r-s);
-    overflow: hidden;
+  .ap-badge {
+    font-size: 0.68rem;
+    color: var(--teal);
+    background: rgba(31, 210, 192, 0.1);
+    border: 1px solid rgba(31, 210, 192, 0.25);
+    border-radius: 999px;
+    padding: 0.12rem 0.55rem;
   }
 
-  .av-one {
+  .ap-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ap-row {
     display: flex;
+    gap: 0.8rem;
+    align-items: flex-start;
+    padding: 0.85rem 1.1rem;
+    border-bottom: 1px solid var(--line);
   }
 
-  .av-block {
-    width: 100%;
-    opacity: 0.9;
+  .ap-row:last-child {
+    border-bottom: 0;
   }
 
-  .av-many {
+  .ap-ico {
+    flex: none;
+    font-size: 0.7rem;
+    margin-top: 0.2rem;
+  }
+
+  .ap-ico.up { color: var(--up); }
+  .ap-ico.down { color: var(--down); }
+  .ap-ico.flat { color: var(--sand-ink); }
+
+  .ap-body {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 1fr;
-    gap: 4px;
+    gap: 0.1rem;
   }
 
-  .av-cell {
-    background: var(--teal);
-    border-radius: 4px;
-    opacity: 0.88;
+  .ap-text {
+    font-size: 0.9rem;
+    font-weight: 550;
+    color: var(--ink);
+    line-height: 1.4;
   }
 
-  .av-cell:nth-child(3n) { background: var(--sage); }
-  .av-cell:nth-child(7n) { background: var(--ramp2); }
-
-  .av-caption {
-    display: block;
-    margin-top: 0.6rem;
-    font-size: 0.8rem;
-    color: var(--text-2);
-  }
-
-  .av-note {
-    margin: 1.25rem 0 0;
-    font-size: 0.75rem;
+  .ap-meta {
+    font-size: 0.74rem;
     color: var(--faint);
-    line-height: 1.55;
   }
 
-  .exposure-card {
-    padding: 1.75rem;
-    max-width: 460px;
-    justify-self: center;
-    width: 100%;
+  .ap-foot {
+    padding: 0.55rem 1.1rem;
+    border-top: 1px solid var(--line);
+    background: #0b111c;
+    font-size: 0.64rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
   }
 
-  .exp-row {
+  .honesty {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1.4rem 1.6rem;
   }
 
-  .next-card {
-    display: flex;
-    flex-direction: column;
+  .honesty :global(svg) {
+    color: var(--teal);
+    flex: none;
+    margin-top: 0.15rem;
   }
 
-  .next-card .text-link {
-    margin-top: auto;
-    padding-top: 1rem;
-    font-size: 0.92rem;
+  .honesty p {
+    margin: 0;
+    font-size: 0.95rem;
   }
 </style>

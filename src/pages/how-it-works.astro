@@ -2,452 +2,226 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import Icon from '../components/Icon.astro';
-import FAQ from '../components/FAQ.astro';
 import CTABand from '../components/CTABand.astro';
-import ConcentrationMeter from '../components/ConcentrationMeter.astro';
 
-const faqs = [
+const steps = [
   {
-    q: 'Do I have to finish the education before I can invest?',
-    a: 'Yes, and that’s deliberate. Core modules and an appropriateness test come before any investment journey. It typically takes under an hour, it’s genuinely useful, and it’s the same discipline professional allocators are trained into. If a platform lets you skip straight to the "invest" button, ask why.',
+    num: '01',
+    icon: 'search',
+    title: 'Scan',
+    body: 'Bundle continuously scans the venues where private-market deals actually live — crowdfunding platforms, secondary marketplaces, pre-IPO desks. New listings hit your screen the moment they hit the market.',
   },
   {
-    q: 'What happens if I fail the appropriateness test?',
-    a: 'Nothing punitive. The Investor Education Agent identifies what you misunderstood (dilution, illiquidity, failure rates), teaches that specific concept, and lets you retake it after a pause. Pass/fail records are kept, as FCA rules expect. If startup investing remains unsuitable for your circumstances, we’ll say so plainly.',
+    num: '02',
+    icon: 'sliders',
+    title: 'Screen',
+    body: 'Cut the whole market by sector, valuation, minimum ticket, venue or market type. Save the screen, and Bundle keeps watching it after you close the tab.',
   },
   {
-    q: 'Do you choose my investments for me?',
-    a: 'No. Frameworks and simulations are educational: they show you how diversified exposure is constructed. You choose every company and every allocation yourself. Bundle never places capital on your behalf and never tells you "you should invest £X in Y."',
+    num: '03',
+    icon: 'scale',
+    title: 'Compare',
+    body: 'The same company often trades in more than one place at more than one price. Bundle lines up price, fees, minimums, share class and access requirements — so you route the order to the best venue.',
   },
   {
-    q: 'How much money do I need to start?',
-    a: 'Minimums are designed to be £10–£50 per company. The point isn’t to invest less. It’s to spread the same amount further. £500 concentrated in one startup is a coin flip; £500 across twenty is a portfolio.',
+    num: '04',
+    icon: 'exchange',
+    title: 'Execute',
+    body: 'One click drops you into the live deal on the venue that lists it. You invest under that venue’s regulatory protections; Bundle never touches your money.',
   },
   {
-    q: 'Is there a cooling-off period?',
-    a: 'Yes. First-time investments include a cooling-off period in line with FCA high-risk investment rules, and we don’t run countdown timers, "closing soon" banners or any mechanic designed to make you rush past it.',
+    num: '05',
+    icon: 'pie',
+    title: 'Track',
+    body: 'Positions across every venue sync into one portfolio — one P&L, revaluations as new rounds price, and alerts when liquidity opens up for something you hold.',
   },
+];
+
+const isnt = [
+  { is: true, text: 'A screener for the entire private market — crowdfunding, secondaries, pre-IPO' },
+  { is: true, text: 'A comparison layer: price, fees, minimums and access, venue by venue' },
+  { is: true, text: 'A single portfolio and alert engine across every venue you use' },
+  { is: false, text: 'A broker or exchange — trades execute on the venue that lists the deal' },
+  { is: false, text: 'A custodian — Bundle never holds your money or your shares' },
+  { is: false, text: 'An adviser — we show the whole market, we don’t tell you what to buy' },
 ];
 ---
 
 <BaseLayout
   title="How it works"
-  description="The Bundle.ai portfolio-first journey: profile and appropriateness, education, self-directed diversified investing, and continuous portfolio intelligence."
+  description="How Bundle works: scan every private-market venue, screen and compare deals, execute on the listing venue, and track it all in one portfolio."
 >
   <PageHero
     eyebrow="How it works"
-    title='A journey that starts with <em class="serif-aside">you</em>, not with deals'
-    lead="Four stages, in a deliberate order. Most platforms open with a wall of campaigns. Bundle opens with a question (what exposure are you trying to build?) and only gets to investing once you can answer it."
+    title="From scattered venues to <em>one order flow.</em>"
+    lead="The deals were always out there — spread across a dozen tabs, logins and mailing lists. Bundle collapses them into a single screen and gets you from discovery to execution in minutes."
   >
-    <Fragment slot="actions">
-      <a href="/waitlist" class="btn btn-primary btn-lg">Join the waitlist <span class="arrow">→</span></a>
-      <a href="/investors" class="btn btn-ghost btn-lg">What investors get</a>
-    </Fragment>
+    <a slot="actions" href="/deals" class="btn btn-primary btn-lg">Open the screener <span class="arrow">→</span></a>
+    <a slot="actions" href="/waitlist" class="btn btn-ghost btn-lg">Get early access</a>
   </PageHero>
 
-  <!-- Stage 1 -->
+  <!-- Steps -->
   <section class="section">
     <div class="container">
-      <div class="split">
-        <div>
-          <p class="eyebrow reveal">Stage 01: Profile & appropriateness</p>
-          <h2 class="h2 reveal" style="--d:.05s">First, we check this is right for you</h2>
-          <p class="lead reveal" style="--d:.1s">
-            Age band, income, emergency savings, experience, loss capacity, time
-            horizon. Then FCA-style client categorisation and an appropriateness
-            test. It's the industry's least glamorous step, and the one that
-            decides whether everything after it is responsible.
-          </p>
-          <ul class="check-list reveal" style="--d:.15s">
-            <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Risk profile before portfolio, never the reverse</span></li>
-            <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Documented pass/fail records, as the FCA expects</span></li>
-            <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Vulnerability signals trigger human review, not a sales flow</span></li>
-          </ul>
-        </div>
-        <div class="mock-card card reveal" style="--d:.12s" aria-hidden="true">
-          <div class="mock-progress mono"><span>Onboarding</span><span>2 of 5</span></div>
-          <div class="mock-track"><span style="width:40%"></span></div>
-          <p class="mock-q">If a startup in your portfolio fails, what happens to the money you invested in it?</p>
-          <div class="mock-opts">
-            <span class="mock-opt">The platform refunds it</span>
-            <span class="mock-opt sel"><i></i>It is usually lost entirely</span>
-            <span class="mock-opt">I can sell my shares immediately</span>
-          </div>
-          <p class="mock-note"><Icon name="check" size={13} /> Correct. Most early-stage startups fail. A portfolio expects this.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Stage 2 -->
-  <section class="section section-tint-full">
-    <div class="container">
-      <div class="split wide-right">
-        <div class="mock-card card reveal" aria-hidden="true">
-          <span class="badge badge-teal">Module 3 of 7</span>
-          <h3 class="mock-lesson">Why diversification matters</h3>
-          <p class="small muted">Venture outcomes follow a power law: a few companies return everything, most return nothing. Professionals don't pick winners. They build exposure to the distribution.</p>
-          <div class="mock-bars" aria-hidden="true">
-            {
-              [8, 5, 3, 2, 2, 1.5, 1, 1, 22].map((v, i) => (
-                <span
-                  class="mock-bar"
-                  style={`height:${v * 4}px;background:${i === 8 ? 'var(--c1)' : 'var(--chart-deemph)'}`}
-                />
-              ))
-            }
-          </div>
-          <p class="mock-caption mono">Illustrative power-law: one outlier pays for the portfolio</p>
-        </div>
-        <div>
-          <p class="eyebrow reveal">Stage 02: Learn the portfolio logic</p>
-          <h2 class="h2 reveal" style="--d:.05s">Education as the product, not the disclaimer</h2>
-          <p class="lead reveal" style="--d:.1s">
-            Short plain-English modules cover the things that actually lose people
-            money: why startups fail, what dilution does to your stake, why shares
-            are illiquid for years, what SEIS/EIS relief does and doesn't protect.
-          </p>
-          <p class="reveal" style="--d:.14s">
-            The Investor Education Agent adapts to you. Fail a dilution question
-            and it teaches dilution, with worked examples, before you continue.
-            Nobody gets waved through.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Stage 3 -->
-  <section class="section">
-    <div class="container">
-      <div class="split">
-        <div>
-          <p class="eyebrow reveal">Stage 03: Build diversified exposure</p>
-          <h2 class="h2 reveal" style="--d:.05s">You choose the companies. The discipline is built in.</h2>
-          <p class="lead reveal" style="--d:.1s">
-            Explore vetted campaigns through educational frameworks: UK AI &
-            Automation, Climate Tech, University Spinouts and more. Allocate £10–£50
-            per company at your own pace, watching concentration and exposure
-            respond as you go.
-          </p>
-          <ul class="check-list reveal" style="--d:.15s">
-            <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Educational maximum-exposure warnings, tuned to your profile</span></li>
-            <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Cooling-off period on first investments</span></li>
-            <li><span class="tick"><Icon name="check" size={11} stroke={2.6} /></span><span>Plain-English risk summary on every startup, no exceptions</span></li>
-          </ul>
-        </div>
-        <div class="mock-card card reveal" style="--d:.12s" aria-hidden="true">
-          <div class="alloc-row">
-            <div>
-              <span class="alloc-name">Caldera Robotics</span>
-              <span class="alloc-meta">Deeptech · Series A · EIS eligible</span>
-            </div>
-            <span class="alloc-amount mono">£25</span>
-          </div>
-          <div class="alloc-row">
-            <div>
-              <span class="alloc-name">Voltaic Grid</span>
-              <span class="alloc-meta">Climate · Seed · SEIS eligible</span>
-            </div>
-            <span class="alloc-amount mono">£25</span>
-          </div>
-          <div class="alloc-row dim">
-            <div>
-              <span class="alloc-name">Quill Ledger</span>
-              <span class="alloc-meta">B2B SaaS · Pre-seed · SEIS eligible</span>
-            </div>
-            <span class="alloc-add">+ Add</span>
-          </div>
-          <div class="alloc-meter">
-            <ConcentrationMeter score={44} sub="9 companies · largest position 18%" />
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Stage 4 -->
-  <section class="section section-tint-full">
-    <div class="container">
-      <div class="split wide-right">
-        <div class="mock-card card reveal" aria-hidden="true">
-          <div class="feed-mini">
-            <span class="chip sage"><Icon name="refresh" size={15} /></span>
-            <div><strong>Follow-on round</strong><span>Caldera Robotics opened a Series A extension.</span></div>
-          </div>
-          <div class="feed-mini">
-            <span class="chip sand"><Icon name="split" size={15} /></span>
-            <div><strong>Dilution notice</strong><span>Nettle Health raised at £8.2m: your stake 0.014% → 0.011%.</span></div>
-          </div>
-          <div class="feed-mini">
-            <span class="chip teal"><Icon name="spark" size={15} /></span>
-            <div><strong>AI summary</strong><span>Portfolio leans climate (34%). Two holdings report runway under 12 months.</span></div>
-          </div>
-          <div class="feed-mini">
-            <span class="chip red"><Icon name="alert" size={15} /></span>
-            <div><strong>Company dissolved</strong><span>Halcyon Post struck off. Impact −£60 (1.2%). This is what failure looks like, budgeted for.</span></div>
-          </div>
-        </div>
-        <div>
-          <p class="eyebrow reveal">Stage 04: Monitor with portfolio intelligence</p>
-          <h2 class="h2 reveal" style="--d:.05s">After you invest, we don't go quiet</h2>
-          <p class="lead reveal" style="--d:.1s">
-            The post-investment black box is where retail investing breaks down.
-            Bundle keeps watch continuously: structured company updates, follow-on
-            and dilution alerts, anomaly detection, and honest failure reporting at
-            portfolio level.
-          </p>
-          <p class="reveal" style="--d:.14s">
-            <a class="text-link" href="/portfolio-intelligence">See the full dashboard <span class="arrow">→</span></a>
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Never do -->
-  <section class="section">
-    <div class="container">
-      <div class="section-head center">
-        <p class="eyebrow reveal">The order is the point</p>
-        <h2 class="h2 reveal" style="--d:.05s">Friction where it protects you.<br />None where it doesn't.</h2>
-        <p class="lead mx-auto reveal" style="--d:.1s">
-          Every speed bump in the journey exists to slow a decision that deserves
-          slowing. The AI engine quietly removes everything else: admin,
-          paperwork, monitoring.
-        </p>
-      </div>
-      <div class="grid cols-4">
+      <ol class="flow">
         {
-          [
-            { icon: 'ban', title: 'No trending lists', body: 'Popularity is not diligence. We don’t rank startups by hype.' },
-            { icon: 'timer', title: 'No countdown pressure', body: 'No "closing soon" banners engineered to beat your cooling-off period.' },
-            { icon: 'ban', title: 'No confetti', body: 'Investing £200 in an illiquid startup is serious. We treat it that way.' },
-            { icon: 'eye', title: 'No dark patterns', body: 'Risk warnings you can read, settings you can find, emails you can stop.' },
-          ].map((item, i) => (
-            <article class="card card-hover reveal" style={`--d:${i * 0.06}s`}>
-              <span class="icon-chip sand"><Icon name={item.icon} /></span>
-              <h3 class="h3 card-title">{item.title}</h3>
-              <p class="small muted">{item.body}</p>
-            </article>
+          steps.map((s, i) => (
+            <li class="flow-step reveal" style={`--d:${i * 0.06}s`}>
+              <div class="flow-rail">
+                <span class="flow-num mono">{s.num}</span>
+                <span class="flow-line" />
+              </div>
+              <div class="flow-card card card-hover">
+                <span class="icon-chip"><Icon name={s.icon} /></span>
+                <div>
+                  <h2 class="h3">{s.title}</h2>
+                  <p class="small muted">{s.body}</p>
+                </div>
+              </div>
+            </li>
           ))
         }
-      </div>
+      </ol>
     </div>
   </section>
 
-  <!-- FAQ -->
-  <section class="section section-tint-full">
+  <!-- Is / isn't -->
+  <section class="section section-ink grain">
     <div class="container narrow">
-      <div class="section-head center">
-        <p class="eyebrow reveal">Questions</p>
-        <h2 class="h2 reveal" style="--d:.05s">Fair questions, straight answers</h2>
+      <div class="section-head">
+        <p class="eyebrow reveal">No small-print surprises</p>
+        <h2 class="h2 reveal" style="--d:.05s">What Bundle is — and what it refuses to be</h2>
       </div>
-      <FAQ items={faqs} class="reveal" />
+      <ul class="isnt-list reveal" style="--d:.08s">
+        {
+          isnt.map((row) => (
+            <li class:list={['isnt-row', row.is ? 'yes' : 'no']}>
+              <span class="isnt-mark">
+                <Icon name={row.is ? 'check' : 'close'} size={13} stroke={2.4} />
+              </span>
+              <span>{row.text}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="small muted reveal" style="margin-top:1.5rem">
+        Every deal carries the risks of the venue that lists it: illiquidity,
+        dilution and the real possibility of losing everything you invest.
+        <a href="/legal/risk-warning">Read the risk warning</a>.
+      </p>
     </div>
   </section>
 
   <CTABand
-    title="Start with the education. <em class='serif-aside'>It's free.</em>"
-    sub="Join the waitlist for early access, and learn the portfolio logic in the Academy while you wait."
-    secondaryLabel="Browse the Academy"
-    secondaryHref="/learn"
+    title="See the whole market <em>before everyone else.</em>"
+    sub="Early access opens in order of sign-up — screener, watchlists and alerts from day one."
+    primaryLabel="Get early access"
+    primaryHref="/waitlist"
+    secondaryLabel="Browse live deals"
+    secondaryHref="/deals"
   />
 </BaseLayout>
 
 <style>
-  .mock-card {
-    padding: 1.75rem;
-    max-width: 460px;
-    justify-self: center;
-    width: 100%;
-  }
-
-  .mock-progress {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.72rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-2);
-    margin-bottom: 0.5rem;
-  }
-
-  .mock-track {
-    height: 6px;
-    background: var(--chart-track);
-    border-radius: 999px;
-    overflow: hidden;
-    margin-bottom: 1.4rem;
-  }
-
-  .mock-track span {
-    display: block;
-    height: 100%;
-    background: var(--teal);
-    border-radius: 0 4px 4px 0;
-  }
-
-  .mock-q {
-    font-weight: 600;
-    color: var(--ink);
-    font-size: 1.02rem;
-    line-height: 1.5;
-  }
-
-  .mock-opts {
+  .flow {
+    list-style: none;
+    margin: 0 auto;
+    padding: 0;
+    max-width: 52rem;
     display: grid;
-    gap: 0.55rem;
-    margin: 1.1rem 0;
   }
 
-  .mock-opt {
-    padding: 0.7rem 1rem;
-    border: 1px solid var(--line-2);
-    border-radius: var(--r-s);
-    font-size: 0.9rem;
-    color: var(--text-2);
+  .flow-step {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1.4rem;
   }
 
-  .mock-opt.sel {
-    border-color: var(--sage-ink);
-    background: var(--sage-tint);
-    color: var(--ink);
-    font-weight: 550;
+  .flow-rail {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 0.55rem;
+    gap: 0.5rem;
   }
 
-  .mock-opt.sel i {
-    width: 8px;
-    height: 8px;
+  .flow-num {
+    flex: none;
+    width: 2.4rem;
+    height: 2.4rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 50%;
-    background: var(--sage-ink);
-  }
-
-  .mock-note {
-    display: flex;
-    align-items: center;
-    gap: 0.45rem;
-    margin: 0;
-    font-size: 0.85rem;
-    color: var(--sage-ink);
-    font-weight: 550;
-  }
-
-  .mock-lesson {
-    margin: 0.9rem 0 0.4rem;
-    font-size: 1.25rem;
-  }
-
-  .mock-bars {
-    display: flex;
-    align-items: flex-end;
-    gap: 6px;
-    height: 100px;
-    padding: 0.5rem 0 0;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .mock-bar {
-    flex: 1;
-    border-radius: 4px 4px 0 0;
-    max-width: 24px;
-  }
-
-  .mock-caption {
-    margin: 0.6rem 0 0;
-    font-size: 0.7rem;
-    color: var(--faint);
-    letter-spacing: 0.06em;
-  }
-
-  .alloc-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.8rem 0;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .alloc-row.dim {
-    opacity: 0.65;
-  }
-
-  .alloc-name {
-    display: block;
-    font-weight: 600;
-    color: var(--ink);
-    font-size: 0.98rem;
-  }
-
-  .alloc-meta {
-    font-size: 0.78rem;
-    color: var(--text-2);
-  }
-
-  .alloc-amount {
-    font-weight: 500;
-    color: var(--ink);
-    background: var(--tint);
-    padding: 0.25rem 0.7rem;
-    border-radius: var(--r-pill);
-    font-size: 0.9rem;
-  }
-
-  .alloc-add {
-    font-size: 0.85rem;
-    font-weight: 550;
+    border: 1px solid var(--line-2);
+    background: var(--surface);
     color: var(--teal);
+    font-size: 0.8rem;
   }
 
-  .alloc-meter {
-    margin-top: 1.25rem;
+  .flow-line {
+    flex: 1;
+    width: 1px;
+    background: linear-gradient(180deg, var(--line-2), var(--line));
   }
 
-  .alloc-meter :global(.meter-ends) {
+  .flow-step:last-child .flow-line {
     display: none;
   }
 
-  .feed-mini {
+  .flow-card {
     display: flex;
-    gap: 0.85rem;
+    gap: 1.1rem;
     align-items: flex-start;
-    padding: 0.85rem 0;
-    border-bottom: 1px solid var(--line);
-    font-size: 0.9rem;
+    margin-bottom: 1.1rem;
+    flex: 1;
   }
 
-  .feed-mini:last-child {
-    border-bottom: 0;
+  .flow-card h2 {
+    margin-bottom: 0.3rem;
   }
 
-  .feed-mini .chip {
+  .flow-card .small {
+    margin: 0;
+    max-width: 52ch;
+  }
+
+  .isnt-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .isnt-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    padding: 0.85rem 1.1rem;
+    border-radius: var(--r-s);
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.015);
+    color: #c3d2dc;
+  }
+
+  .isnt-mark {
     flex: none;
-    width: 34px;
-    height: 34px;
-    border-radius: 10px;
+    width: 22px;
+    height: 22px;
+    margin-top: 0.1rem;
+    border-radius: 50%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
   }
 
-  .chip.sage { background: var(--sage-tint); color: var(--sage-ink); }
-  .chip.sand { background: var(--sand-tint); color: var(--sand-ink); }
-  .chip.teal { background: var(--tint); color: var(--teal-deep); }
-  .chip.red  { background: var(--red-tint); color: var(--red-ink); }
-
-  .feed-mini strong {
-    display: block;
-    color: var(--ink);
-    font-size: 0.92rem;
+  .isnt-row.yes .isnt-mark {
+    background: var(--up-tint);
+    color: var(--up);
   }
 
-  .feed-mini span:not(.chip) {
-    color: var(--text-2);
-    font-size: 0.85rem;
-    line-height: 1.5;
+  .isnt-row.no .isnt-mark {
+    background: var(--down-tint);
+    color: var(--down);
   }
 </style>

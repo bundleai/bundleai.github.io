@@ -16,7 +16,7 @@ const {
   primaryHref = '/waitlist',
   secondaryLabel,
   secondaryHref,
-  note = 'Capital at risk. Bundle is education-first and pre-launch. Joining the waitlist commits you to nothing.',
+  note = 'Capital at risk. Bundle is pre-launch; you invest on the venue that lists the deal. Joining the waitlist commits you to nothing.',
 } = Astro.props;
 ---
 
@@ -48,10 +48,11 @@ const {
 <style>
   .cta-band {
     position: relative;
-    background: var(--ink);
+    background: #0e1727;
+    border: 1px solid var(--line-2);
     border-radius: var(--r-l);
     overflow: hidden;
-    box-shadow: var(--shadow-l);
+    box-shadow: var(--shadow-l), 0 0 90px -40px rgba(31, 210, 192, 0.35);
   }
 
   .cta-band::before {
@@ -69,8 +70,8 @@ const {
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(60% 80% at 85% 15%, rgba(20, 158, 175, 0.4), transparent 70%),
-      radial-gradient(45% 65% at 8% 90%, rgba(55, 169, 140, 0.28), transparent 72%);
+      radial-gradient(60% 80% at 85% 15%, rgba(31, 210, 192, 0.22), transparent 70%),
+      radial-gradient(45% 65% at 8% 90%, rgba(22, 199, 132, 0.16), transparent 72%);
   }
 
   @media (prefers-reduced-motion: no-preference) {
