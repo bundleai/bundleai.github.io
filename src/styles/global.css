@@ -1581,15 +1581,17 @@ body.pointer-live .pointer-glow { opacity: 1; }
 
 /* Keep page content above the glow layer. The glow is fixed with z-index 0,
    which paints over the backgrounds of static elements — so every top-level
-   surface needs its own stacking context, the risk ribbon included. */
+   surface needs its own stacking context, the risk ribbon included.
+
+   The modal is deliberately NOT in this list: it is already position: fixed
+   with z-index 300, and relative here would override that, dropping it into
+   normal flow at the foot of the document. */
 .risk-ribbon,
 .site-header,
 main,
-.site-footer,
-.modal { position: relative; z-index: 1; }
+.site-footer { position: relative; z-index: 1; }
 
 .site-header { z-index: 100; }
-.modal { z-index: 300; }
 
 /* Cards stay clean — no sheen tracks across them. Their opaque surfaces sit
    above the glow, so the light stops at the card edge. */
