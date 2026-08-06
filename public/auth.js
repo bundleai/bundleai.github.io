@@ -1,0 +1,79 @@
+/* Bundle client-side account simulation.
+   Bundle is pre-launch and this site is a static build — there is no server and
+   no real authentication. Everything below lives in localStorage on this device
+   so the product flow can be walked end to end. Nothing is transmitted. */
+(function () {
+  'use strict';
+
+  var UKEY = 'bundle.user';
+  var PKEY = 'bundle.profile';
+  var DKEY = 'bundle.profileDraft';
+  var HKEY = 'bundle.holdings';
+
+  function read(k) {
+    try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; }
+  }
+  function write(k, v) {
+    try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { }
+  }
+
+  var Auth = {
+    user: function () { return read(UKEY); },
+    signedIn: function () { return !!read(UKEY); },
+
+    signIn: function (email, name) {
+      write(UKEY, { email: email, name: name || email.split('@')[0], since: Date.now() });
+      // A profile completed before signing up gets promoted on the way in.
+      var draft = read(DKEY);
+      if (draft && !read(PKEY)) write(PKEY, draft);
+      document.dispatchEvent(new CustomEvent('bundle:auth'));
+      return Auth.user();
+    },
+
+    signOut: function () {
+      try { localStorage.removeItem(UKEY); } catch (e) { }
+      document.dispatchEvent(new CustomEvent('bundle:auth'));
+    },
+
+    profile: function () { return read(PKEY); },
+    saveProfile: function (p) { write(PKEY, p); write(DKEY, p); },
+    saveDraft: function (p) { write(DKEY, p); },
+    draft: function () { return read(DKEY); },
+
+    holdings: function () { return read(HKEY) || []; },
+    addHolding: function (h) {
+      var all = Auth.holdings();
+      if (all.some(function (x) { return x.id === h.id; })) return all;
+      all.push(h);
+      write(HKEY, all);
+      return all;
+    },
+
+    /* Where to send someone after they sign in. */
+    gateTo: function (next) {
+      var url = '/signup?next=' + encodeURIComponent(next || location.pathname + location.search + location.hash);
+      location.href = url;
+    },
+  };
+
+  window.BundleAuth = Auth;
+
+  /* Nav reflects signed-in state on every page. */
+  function paintNav() {
+    var signed = Auth.signedIn();
+    document.querySelectorAll('[data-auth="out"]').forEach(function (el) { el.hidden = signed; });
+    document.querySelectorAll('[data-auth="in"]').forEach(function (el) { el.hidden = !signed; });
+    var u = Auth.user();
+    if (u) {
+      document.querySelectorAll('[data-auth-name]').forEach(function (el) { el.textContent = u.name; });
+    }
+  }
+  document.addEventListener('DOMContentLoaded', paintNav);
+  document.addEventListener('bundle:auth', paintNav);
+  if (document.readyState !== 'loading') paintNav();
+
+  document.addEventListener('click', function (e) {
+    var out = e.target.closest('[data-signout]');
+    if (out) { e.preventDefault(); Auth.signOut(); location.href = '/'; }
+  });
+})();

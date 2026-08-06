@@ -4,7 +4,7 @@ import Icon from './Icon.astro';
 
 const menus = [
   {
-    label: 'Markets',
+    label: 'Investors',
     items: [
       {
         href: '/deals',
@@ -13,74 +13,10 @@ const menus = [
         desc: 'Every live deal, across every venue, one table',
       },
       {
-        href: '/deals?type=crowdfunding',
-        icon: 'seedling',
-        title: 'Crowdfunding',
-        desc: 'Live rounds on Crowdcube, Republic Europe, Wefunder…',
-      },
-      {
-        href: '/deals?type=secondary',
-        icon: 'exchange',
-        title: 'Secondaries',
-        desc: 'Blocks listed on Forge, Hiive, Nasdaq Private Market',
-      },
-      {
-        href: '/deals?type=pre-ipo',
-        icon: 'bars',
-        title: 'Pre-IPO',
-        desc: 'Late-stage names before they hit public markets',
-      },
-    ],
-  },
-  {
-    label: 'Platform',
-    items: [
-      {
-        href: '/how-it-works',
-        icon: 'route',
-        title: 'How it works',
-        desc: 'Discover, compare, execute — in one flow',
-      },
-      {
-        href: '/portfolio-intelligence',
-        icon: 'gauge',
-        title: 'Portfolio Intelligence',
-        desc: 'One P&L across every venue you invest on',
-      },
-      {
-        href: '/ai-engine',
-        icon: 'spark',
-        title: 'The Bundle AI Engine',
-        desc: 'The agents that scan and score the whole market',
-      },
-      {
-        href: '/trust',
-        icon: 'shield',
-        title: 'Trust & Safety',
-        desc: 'How we keep the terminal honest',
-      },
-    ],
-  },
-  {
-    label: 'Learn',
-    items: [
-      {
         href: '/learn',
         icon: 'graduation',
-        title: 'Academy',
-        desc: 'Free lessons on private-market investing',
-      },
-      {
-        href: '/blog',
-        icon: 'doc',
-        title: 'Insights',
-        desc: 'Research and writing from the Bundle team',
-      },
-      {
-        href: '/legal/risk-warning',
-        icon: 'alert',
-        title: 'Risk warnings',
-        desc: 'The honest page. Read it before anything else',
+        title: 'Learn',
+        desc: 'Free lessons, insights and the honest risk pages',
       },
     ],
   },
@@ -122,14 +58,15 @@ const menus = [
           </div>
         ))
       }
+      <a class="nav-link" href="/portfolio">Portfolio</a>
       <a class="nav-link" href="/founders">For Founders</a>
-      <a class="nav-link" href="/pricing">Pricing</a>
-      <a class="nav-link" href="/about">About</a>
     </nav>
 
     <div class="nav-actions">
-      <a href="/login" class="btn btn-ghost btn-sm">Log in</a>
-      <a href="/deals" class="btn btn-primary btn-sm">Start trading</a>
+      <a href="/login" class="btn btn-ghost btn-sm" data-auth="out" hidden>Log in</a>
+      <a href="/portfolio" class="btn btn-primary btn-sm" data-auth="out" hidden>Build my portfolio</a>
+      <a href="/dashboard" class="btn btn-ghost btn-sm" data-auth="in" hidden>Dashboard</a>
+      <button type="button" class="btn btn-primary btn-sm" data-signout data-auth="in" hidden>Sign out</button>
       <button
         type="button"
         class="burger"
@@ -157,12 +94,13 @@ const menus = [
           </details>
         ))
       }
+      <a class="m-solo" href="/portfolio">Portfolio</a>
       <a class="m-solo" href="/founders">For Founders</a>
-      <a class="m-solo" href="/pricing">Pricing</a>
-      <a class="m-solo" href="/about">About</a>
       <div class="m-ctas">
-        <a href="/login" class="btn btn-ghost">Log in</a>
-        <a href="/deals" class="btn btn-primary">Start trading</a>
+        <a href="/login" class="btn btn-ghost" data-auth="out" hidden>Log in</a>
+        <a href="/portfolio" class="btn btn-primary" data-auth="out" hidden>Build my portfolio</a>
+        <a href="/dashboard" class="btn btn-ghost" data-auth="in" hidden>Dashboard</a>
+        <button type="button" class="btn btn-primary" data-signout data-auth="in" hidden>Sign out</button>
       </div>
     </div>
   </div>

@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Build your portfolio"
+  description="Answer a few questions and Bundle builds an investor profile: your eligibility, allocation guardrails, target diversification and the deals that fit."
+>
+  <section class="section pf-hero">
+    <div class="container narrow">
+      <p class="eyebrow reveal">Portfolio</p>
+      <h1 class="h2 reveal" style="--d:.05s">
+        What kind of portfolio are you building?
+      </h1>
+      <p class="lead reveal" style="--d:.1s">
+        Three minutes of questions gives Bundle the guardrails it needs: what
+        you're eligible for, how much of your wealth belongs in private markets,
+        how widely to spread it, and which deals are worth putting in front of
+        you. Nothing here is shared, and you can change all of it later.
+      </p>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container narrow">
+      <div id="pf-wizard" class="reveal"></div>
+      <p class="small muted pf-foot">
+        Capital at risk. Private-market investments are illiquid, are not covered
+        by the FSCS, and you could lose all the money you invest. Bundle is an
+        aggregator: it never holds your money and never gives advice.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .pf-hero {
+    background: linear-gradient(180deg, var(--cream) 0%, var(--bg) 82%);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: clamp(2rem, 4vw, 3rem);
+  }
+
+  .pf-foot {
+    margin: 1.75rem auto 0;
+    max-width: 46rem;
+    text-align: center;
+  }
+</style>
+
+<script>
+  const host = document.getElementById('pf-wizard');
+  if (host) {
+    // @ts-ignore — globals from /wizard.js and /auth.js
+    window.BundleWizard.mount(host, {
+      saveLabel: 'Save my profile',
+      onSave: (state: unknown) => {
+        // @ts-ignore
+        window.BundleAuth.saveDraft(state);
+        // @ts-ignore
+        if (window.BundleAuth.signedIn()) {
+          // @ts-ignore
+          window.BundleAuth.saveProfile(state);
+          location.href = '/dashboard';
+        } else {
+          // @ts-ignore
+          window.BundleAuth.gateTo('/dashboard');
+        }
+      },
+    });
+  }
+</script>

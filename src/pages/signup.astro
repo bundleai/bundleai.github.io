@@ -1,0 +1,178 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Logo from '../components/Logo.astro';
+---
+
+<BaseLayout
+  title="Save your profile"
+  description="Create your Bundle account to save your investor profile, see your guardrails and track your portfolio across every venue."
+  ribbon={false}
+>
+  <section class="section su-section">
+    <div class="container">
+      <div class="card su-card reveal">
+        <div class="su-head">
+          <Logo markOnly size={34} />
+          <h1>Save your profile</h1>
+          <p class="small muted su-lede" id="su-lede">
+            Your answers are ready. Create an account to keep them, see your
+            risk and diversification read-out, and track holdings across venues.
+          </p>
+        </div>
+
+        <div class="su-tabs" role="tablist" aria-label="Account">
+          <button type="button" class="su-tab" data-mode="signup" role="tab" aria-selected="true">
+            Sign up
+          </button>
+          <button type="button" class="su-tab" data-mode="signin" role="tab" aria-selected="false">
+            Sign in
+          </button>
+        </div>
+
+        <form class="su-form" id="su-form" novalidate>
+          <div class="field" id="su-name-field">
+            <label for="su-name">Name</label>
+            <input id="su-name" type="text" name="name" autocomplete="name" placeholder="Your name" />
+          </div>
+          <div class="field">
+            <label for="su-email">Email</label>
+            <input id="su-email" type="email" name="email" autocomplete="email" placeholder="you@example.com" required />
+          </div>
+          <div class="field">
+            <label for="su-password">Password</label>
+            <input id="su-password" type="password" name="password" autocomplete="new-password" placeholder="At least 8 characters" required />
+          </div>
+          <button type="submit" class="btn btn-gold su-submit" id="su-submit">
+            Create account &amp; save <span class="arrow">→</span>
+          </button>
+          <p class="su-err" id="su-err" role="alert"></p>
+        </form>
+
+        <p class="small muted su-note">
+          Bundle is pre-launch. This account is held on this device only so you
+          can walk the product end to end — nothing is transmitted, and no real
+          credentials are stored. Capital at risk.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .su-section { padding-block: clamp(3rem, 7vw, 5.5rem); }
+
+  .su-card {
+    max-width: 28rem;
+    margin-inline: auto;
+    padding: 2.2rem 2rem;
+  }
+
+  .su-head {
+    display: grid;
+    justify-items: center;
+    gap: 0.75rem;
+    text-align: center;
+    margin-bottom: 1.4rem;
+  }
+
+  .su-head h1 { font-size: 1.5rem; margin: 0; }
+  .su-lede { margin: 0; }
+
+  .su-tabs {
+    display: flex;
+    gap: 0.25rem;
+    background: rgba(20, 40, 30, 0.06);
+    border-radius: 9px;
+    padding: 0.22rem;
+    margin-bottom: 1.35rem;
+  }
+
+  .su-tab {
+    flex: 1;
+    border: 0;
+    background: none;
+    color: var(--text);
+    font-size: 0.9rem;
+    font-weight: 550;
+    padding: 0.45rem 0.7rem;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .su-tab[aria-selected='true'] {
+    background: var(--surface);
+    color: var(--ink);
+    box-shadow: var(--shadow-s);
+  }
+
+  .su-form { display: grid; gap: 1rem; }
+  .su-submit { width: 100%; margin-top: 0.35rem; }
+
+  .su-err {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--red-ink);
+  }
+
+  .su-err:empty { display: none; }
+
+  .su-note { margin: 1.4rem 0 0; text-align: center; }
+</style>
+
+<script>
+  const form = document.getElementById('su-form') as HTMLFormElement | null;
+  const err = document.getElementById('su-err');
+  const nameField = document.getElementById('su-name-field');
+  const submit = document.getElementById('su-submit');
+  const lede = document.getElementById('su-lede');
+  const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('.su-tab'));
+  let mode: 'signup' | 'signin' = 'signup';
+
+  const params = new URLSearchParams(location.search);
+  const next = params.get('next') || '/dashboard';
+
+  // @ts-ignore — global from /auth.js
+  if (!window.BundleAuth?.draft() && lede) {
+    lede.textContent =
+      'Create an account to save your investor profile, see your guardrails and track holdings across every venue.';
+  }
+
+  const setMode = (m: 'signup' | 'signin') => {
+    mode = m;
+    tabs.forEach((t) => t.setAttribute('aria-selected', String(t.dataset.mode === m)));
+    if (nameField) nameField.hidden = m === 'signin';
+    if (submit) {
+      submit.innerHTML =
+        m === 'signup'
+          ? 'Create account &amp; save <span class="arrow">→</span>'
+          : 'Sign in <span class="arrow">→</span>';
+    }
+  };
+
+  tabs.forEach((t) =>
+    t.addEventListener('click', () => setMode(t.dataset.mode as 'signup' | 'signin'))
+  );
+  setMode('signup');
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = (document.getElementById('su-email') as HTMLInputElement).value.trim();
+    const pass = (document.getElementById('su-password') as HTMLInputElement).value;
+    const name = (document.getElementById('su-name') as HTMLInputElement).value.trim();
+
+    if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+      if (err) err.textContent = 'Enter a valid email address.';
+      return;
+    }
+    if (pass.length < 8) {
+      if (err) err.textContent = 'Password needs at least 8 characters.';
+      return;
+    }
+    if (err) err.textContent = '';
+
+    // @ts-ignore
+    window.BundleAuth.signIn(email, mode === 'signup' ? name : undefined);
+    location.href = next;
+  });
+</script>

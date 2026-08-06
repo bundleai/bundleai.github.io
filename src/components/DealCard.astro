@@ -18,10 +18,8 @@ const typeLabel =
   d.type === 'crowdfunding' ? 'Crowdfunding' : d.type === 'pre-ipo' ? 'Pre-IPO' : 'Secondary';
 ---
 
-<a
-  href={d.url}
-  target="_blank"
-  rel="noopener noreferrer"
+<div
+  id={d.id}
   class:list={['deal-card', 'card', 'card-hover', className]}
   style={style}
 >
@@ -67,10 +65,21 @@ const typeLabel =
   </div>
 
   <footer class="dc-foot">
-    <span class="dc-cta">Trade on {platformName(d.platform)} <span class="arrow">↗</span></span>
+    <button
+      type="button"
+      class="dc-cta"
+      data-trade
+      data-deal-id={d.id}
+      data-deal-name={d.name}
+      data-deal-venue={platformName(d.platform)}
+      data-deal-sector={d.sector}
+      data-deal-url={d.url}
+    >
+      Trade on {platformName(d.platform)} <span class="arrow">↗</span>
+    </button>
     {d.investors != null && <span class="dc-min px">from {d.minTicket}</span>}
   </footer>
-</a>
+</div>
 
 <style>
   .deal-card {
@@ -189,7 +198,13 @@ const typeLabel =
     font-size: 0.88rem;
     font-weight: 570;
     color: var(--green);
+    border: 0;
+    background: none;
+    padding: 0;
+    cursor: pointer;
   }
+
+  .dc-cta:hover { color: var(--green-deep); }
 
   .dc-cta .arrow {
     transition: transform 0.18s ease;

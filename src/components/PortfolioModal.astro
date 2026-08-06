@@ -1,0 +1,110 @@
+---
+/**
+ * The investor-profile wizard as a modal. Lives in BaseLayout so any page can
+ * open it; deal "Trade" buttons do, carrying the deal they came from so the
+ * user lands back on it after signing in.
+ */
+---
+
+<div class="modal" id="portfolio-modal" hidden role="dialog" aria-modal="true" aria-labelledby="pm-title">
+  <div class="modal-scrim" data-close></div>
+  <div class="modal-panel">
+    <header class="modal-head">
+      <div>
+        <p class="modal-title" id="pm-title">Build your portfolio first</p>
+        <p class="modal-sub" id="pm-sub">A few questions so we can check this deal fits your plan.</p>
+      </div>
+      <button type="button" class="modal-close" data-close aria-label="Close">✕</button>
+    </header>
+    <div class="wz-scroll">
+      <div id="pm-wizard"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const modal = document.getElementById('portfolio-modal');
+  const host = document.getElementById('pm-wizard');
+  const subEl = document.getElementById('pm-sub');
+  const titleEl = document.getElementById('pm-title');
+  let mounted = false;
+  let pendingDeal: Record<string, string> | null = null;
+  let lastFocus: HTMLElement | null = null;
+
+  const openModal = (deal: Record<string, string> | null) => {
+    pendingDeal = deal;
+    lastFocus = document.activeElement as HTMLElement;
+
+    if (deal && titleEl && subEl) {
+      titleEl.textContent = `Before you trade ${deal.name}`;
+      subEl.textContent =
+        'A few questions so we can check this deal fits your plan, then we hand you to ' +
+        deal.venue + ' to execute.';
+    }
+
+    modal!.hidden = false;
+    document.body.style.overflow = 'hidden';
+
+    if (!mounted) {
+      // @ts-ignore — global from /wizard.js
+      window.BundleWizard.mount(host, {
+        compact: true,
+        saveLabel: 'Save & continue',
+        onSave: (state: unknown) => {
+          // @ts-ignore
+          window.BundleAuth.saveDraft(state);
+          // @ts-ignore
+          if (window.BundleAuth.signedIn()) {
+            // @ts-ignore
+            window.BundleAuth.saveProfile(state);
+            if (pendingDeal) {
+              // @ts-ignore
+              window.BundleAuth.addHolding({
+                id: pendingDeal.id, name: pendingDeal.name, venue: pendingDeal.venue,
+                sector: pendingDeal.sector, url: pendingDeal.url, at: Date.now(),
+              });
+            }
+            location.href = '/dashboard';
+          } else {
+            const back = pendingDeal
+              ? `/deals#${pendingDeal.id}`
+              : location.pathname + location.search;
+            // @ts-ignore
+            window.BundleAuth.gateTo(back);
+          }
+        },
+      });
+      mounted = true;
+    }
+    (modal!.querySelector('.modal-close') as HTMLElement)?.focus();
+  };
+
+  const closeModal = () => {
+    modal!.hidden = true;
+    document.body.style.overflow = '';
+    lastFocus?.focus();
+  };
+
+  modal?.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('[data-close]')) closeModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal && !modal.hidden) closeModal();
+  });
+
+  // Any element carrying data-trade opens the wizard instead of leaving the site.
+  document.addEventListener('click', (e) => {
+    const trigger = (e.target as HTMLElement).closest('[data-trade]');
+    if (!trigger) return;
+    e.preventDefault();
+    openModal({
+      id: trigger.getAttribute('data-deal-id') || '',
+      name: trigger.getAttribute('data-deal-name') || 'this deal',
+      venue: trigger.getAttribute('data-deal-venue') || 'the venue',
+      sector: trigger.getAttribute('data-deal-sector') || '',
+      url: trigger.getAttribute('data-deal-url') || '',
+    });
+  });
+
+  document.addEventListener('bundle:open-portfolio', () => openModal(null));
+</script>

@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import PortfolioModal from '../components/PortfolioModal.astro';
 
 interface Props {
   title: string;
@@ -63,6 +64,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     </main>
 
     <Footer />
+
+    <PortfolioModal />
+
+    <script is:inline src="/wizard.js"></script>
+    <script is:inline src="/auth.js"></script>
 
     <style>
       body {

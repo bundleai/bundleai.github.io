@@ -1,0 +1,453 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<BaseLayout
+  title="Your dashboard"
+  description="Your investor profile, portfolio guardrails, risk read-out and holdings across every venue."
+>
+  <section class="section tight">
+    <div class="container">
+      <!-- Signed out -->
+      <div class="db-gate" id="db-gate" hidden>
+        <div class="card db-gate-card">
+          <span class="icon-chip"><Icon name="gauge" size={19} /></span>
+          <h1 class="h2">Your dashboard is behind a sign-in</h1>
+          <p class="lead">
+            Build your investor profile and create an account, and this page fills
+            with your guardrails, your risk read-out and everything you're tracking.
+          </p>
+          <div class="db-gate-actions">
+            <a href="/portfolio" class="btn btn-primary">Build my portfolio <span class="arrow">→</span></a>
+            <a href="/signup?next=/dashboard" class="btn btn-ghost">Sign in</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Signed in, no profile yet -->
+      <div class="db-noprofile" id="db-noprofile" hidden>
+        <div class="card db-gate-card">
+          <span class="icon-chip"><Icon name="sliders" size={19} /></span>
+          <h1 class="h2">Let's build your portfolio plan</h1>
+          <p class="lead">
+            You're signed in, but we don't have your investor profile yet. It takes
+            about three minutes and sets the guardrails for everything else.
+          </p>
+          <div class="db-gate-actions">
+            <a href="/portfolio" class="btn btn-primary">Start the questionnaire <span class="arrow">→</span></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Signed in with a profile -->
+      <div id="db-main" hidden>
+        <header class="db-head">
+          <div>
+            <p class="eyebrow no-rule">Your portfolio plan</p>
+            <h1 class="h2" id="db-greeting">Welcome back</h1>
+          </div>
+          <div class="db-head-actions">
+            <a href="/portfolio" class="btn btn-ghost btn-sm">Edit profile</a>
+            <a href="/deals" class="btn btn-primary btn-sm">Find deals <span class="arrow">→</span></a>
+          </div>
+        </header>
+
+        <!-- Score + headline stats -->
+        <div class="grid cols-4 db-stats" id="db-stats"></div>
+
+        <div class="split wide-left db-split">
+          <div>
+            <h2 class="h3 db-h">What you're building</h2>
+            <div class="card db-plan" id="db-plan"></div>
+
+            <h2 class="h3 db-h">Risks in this plan</h2>
+            <div id="db-risks"></div>
+
+            <h2 class="h3 db-h">How to improve it</h2>
+            <ul class="check-list card db-actions" id="db-actions"></ul>
+          </div>
+
+          <div>
+            <h2 class="h3 db-h">Diversification</h2>
+            <div class="card db-div" id="db-div"></div>
+
+            <h2 class="h3 db-h">Tracking</h2>
+            <div class="card db-hold" id="db-hold"></div>
+          </div>
+        </div>
+
+        <p class="small muted db-foot">
+          Illustrative only. Bundle is pre-launch, holds no client money and gives
+          no advice; these figures reflect the plan you entered, not live positions.
+          Capital at risk — private-market investments are illiquid and not
+          FSCS-protected.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<!-- The dashboard body is rendered by script, so these rules must not be
+     scoped — Astro's scope attribute never lands on JS-injected nodes.
+     Every selector below is namespaced with .db-/#db- to keep it contained. -->
+<style is:global>
+  .db-gate-card {
+    max-width: 34rem;
+    margin: 2rem auto;
+    text-align: center;
+    display: grid;
+    justify-items: center;
+    gap: 0.6rem;
+    padding: 2.5rem 2rem;
+  }
+
+  .db-gate-card .lead { margin: 0; }
+
+  .db-gate-actions {
+    display: flex;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 1.1rem;
+  }
+
+  .db-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.75rem;
+  }
+
+  .db-head h1 { margin: 0; }
+
+  .db-head-actions { display: flex; gap: 0.55rem; flex-wrap: wrap; }
+
+  .db-stats { margin-bottom: 2.5rem; }
+
+  .db-stat {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-l);
+    padding: 1.15rem 1.25rem;
+    box-shadow: var(--shadow-s);
+  }
+
+  .db-stat .k {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--text-2);
+    margin-bottom: 0.4rem;
+  }
+
+  .db-stat .v {
+    font-family: var(--font-display);
+    font-size: 1.9rem;
+    line-height: 1;
+    color: var(--ink);
+  }
+
+  .db-stat .n {
+    font-size: 0.78rem;
+    color: var(--text-2);
+    margin-top: 0.35rem;
+  }
+
+  .db-stat.gold { border-color: var(--gold); }
+
+  .db-split { align-items: start; gap: clamp(1.5rem, 3vw, 2.75rem); }
+
+  .db-h {
+    margin: 2rem 0 0.8rem;
+  }
+
+  .db-split .db-h:first-child { margin-top: 0; }
+
+  .db-plan dl {
+    margin: 0;
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .db-plan dt, .db-plan dd { margin: 0; }
+
+  .db-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .db-row:last-child { border-bottom: 0; padding-bottom: 0; }
+
+  .db-row dt {
+    font-size: 0.88rem;
+    color: var(--text-2);
+  }
+
+  .db-row dd {
+    margin: 0;
+    font-weight: 550;
+    color: var(--ink);
+    text-align: right;
+  }
+
+  .db-risk {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--sand);
+    border-radius: var(--r-m);
+    padding: 1rem 1.15rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .db-risk.bad { border-left-color: var(--red); }
+
+  .db-risk .t {
+    font-weight: 570;
+    color: var(--ink);
+    margin: 0 0 0.2rem;
+  }
+
+  .db-risk .b {
+    margin: 0;
+    font-size: 0.88rem;
+    color: var(--text-2);
+    line-height: 1.55;
+  }
+
+  .db-risk .dot {
+    flex: none;
+    width: 8px;
+    height: 8px;
+    margin-top: 0.45rem;
+    border-radius: 50%;
+    background: var(--sand);
+  }
+
+  .db-risk.bad .dot { background: var(--red); }
+
+  .db-clear {
+    display: flex;
+    gap: 0.7rem;
+    align-items: center;
+    background: var(--sage-tint);
+    border: 1px solid rgba(46, 125, 50, 0.25);
+    border-radius: var(--r-m);
+    padding: 1rem 1.15rem;
+    color: var(--sage-ink);
+    font-size: 0.92rem;
+  }
+
+  .db-actions { padding: 1.35rem 1.5rem; }
+
+  .db-meter {
+    height: 8px;
+    border-radius: 999px;
+    background: var(--chart-track);
+    overflow: hidden;
+    margin: 0.75rem 0 0.5rem;
+  }
+
+  .db-meter span { display: block; height: 100%; border-radius: inherit; }
+
+  .db-bars { display: grid; gap: 0.7rem; margin-top: 0.4rem; }
+
+  .db-bar-row {
+    display: grid;
+    grid-template-columns: minmax(6.5rem, auto) 1fr auto;
+    align-items: center;
+    gap: 0.7rem;
+    font-size: 0.85rem;
+  }
+
+  .db-bar-track {
+    height: 8px;
+    background: var(--chart-track);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .db-bar-track span { display: block; height: 100%; border-radius: inherit; }
+
+  .db-hold-item {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .db-hold-item:last-child { border-bottom: 0; }
+
+  .db-hold-item .nm { font-weight: 550; color: var(--ink); }
+  .db-hold-item .mt { font-size: 0.78rem; color: var(--text-2); }
+
+  .db-empty {
+    text-align: center;
+    color: var(--text-2);
+    font-size: 0.9rem;
+    padding: 0.5rem 0;
+  }
+
+  .db-foot {
+    margin-top: 2.75rem;
+    max-width: 52rem;
+  }
+
+  @media (max-width: 920px) {
+    .db-split { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script>
+  const $ = (id: string) => document.getElementById(id);
+  const esc = (s: unknown) =>
+    String(s).replace(/[&<>"']/g, (c) =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] as string
+    );
+
+  // @ts-ignore — globals from /auth.js and /wizard.js
+  const Auth = window.BundleAuth;
+  // @ts-ignore
+  const Wiz = window.BundleWizard;
+
+  const gate = $('db-gate');
+  const noProfile = $('db-noprofile');
+  const main = $('db-main');
+
+  if (!Auth?.signedIn()) {
+    if (gate) gate.hidden = false;
+  } else if (!Auth.profile()) {
+    if (noProfile) noProfile.hidden = false;
+  } else {
+    render(Auth.profile());
+    if (main) main.hidden = false;
+  }
+
+  function render(p: any) {
+    const a = Wiz.analyse(p);
+    const L = Wiz.labels;
+    const user = Auth.user();
+
+    const greet = $('db-greeting');
+    if (greet) greet.textContent = user?.name ? `Welcome back, ${user.name}` : 'Welcome back';
+
+    const ticketMid: Record<string, number> = { u500: 300, '500-2k': 1250, '2-10k': 6000, '10k+': 15000 };
+    const annualMid: Record<string, number> = { u5k: 3000, '5-25k': 15000, '25-100k': 60000, '100k+': 150000 };
+    const planned = annualMid[p.annual] || 0;
+    const perDeal = ticketMid[p.ticket] || 0;
+    const dealsAYear = perDeal ? Math.max(1, Math.round(planned / perDeal)) : 0;
+    const yearsToTarget = dealsAYear ? Math.ceil(p.holdings / dealsAYear) : 0;
+    const held = Auth.holdings();
+
+    const scoreColour =
+      a.score >= 80 ? 'var(--up)' : a.score >= 55 ? 'var(--sand)' : 'var(--red)';
+
+    // ---- headline stats
+    const stats = $('db-stats');
+    if (stats) {
+      stats.innerHTML = [
+        statCard('Plan health', a.grade, a.score + '/100', true),
+        statCard('Target holdings', String(p.holdings) + (p.holdings === 50 ? '+' : ''), 'companies to build toward'),
+        statCard('Allocation', p.allocation + '%', 'of investable assets'),
+        statCard('Planned per year', planned ? '£' + planned.toLocaleString('en-GB') : '—',
+          dealsAYear ? '≈ ' + dealsAYear + ' deals a year' : 'set a yearly budget'),
+      ].join('');
+    }
+
+    // ---- the plan
+    const plan = $('db-plan');
+    if (plan) {
+      plan.innerHTML = '<dl>' + [
+        row('Investor category', L.LB[p.category] || '—'),
+        row('Risk appetite', L.RISKN[p.risk] || '—'),
+        row('Primary goal', L.LB[p.goal] || '—'),
+        row('Horizon', ({ u3: 'Under 3 years', '3-5': '3 – 5 years', '5-7': '5 – 7 years', '7+': '7 years or more' })[p.horizon] || '—'),
+        row('Typical cheque', ({ u500: 'Under £500', '500-2k': '£500 – £2,000', '2-10k': '£2,000 – £10,000', '10k+': '£10,000+' })[p.ticket] || '—'),
+        row('Involvement', ({ auto: 'Guided', mixed: 'Collaborative', self: 'Self-directed' })[p.involvement] || '—'),
+        row('SEIS / EIS', ({ yes: 'Prioritised', maybe: 'Show where it applies', no: 'Not relevant' })[p.seis] || '—'),
+        yearsToTarget ? row('Time to target', '≈ ' + yearsToTarget + ' year' + (yearsToTarget === 1 ? '' : 's') + ' at this pace') : '',
+      ].join('') + '</dl>';
+    }
+
+    // ---- risks
+    const risks = $('db-risks');
+    if (risks) {
+      risks.innerHTML = a.risks.length
+        ? a.risks.map((r: any) =>
+          '<div class="db-risk ' + (r.level === 'bad' ? 'bad' : '') + '">' +
+          '<span class="dot"></span><div><p class="t">' + esc(r.title) + '</p>' +
+          '<p class="b">' + esc(r.body) + '</p></div></div>'
+        ).join('')
+        : '<div class="db-clear"><span>✓</span><span>No structural warnings on this plan. The market can still lose you money — that risk never leaves.</span></div>';
+    }
+
+    // ---- improvements
+    const actions = $('db-actions');
+    if (actions) {
+      actions.innerHTML = a.actions.map((t: string) =>
+        '<li><span class="tick"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 6.5 4.5 9.5 10.5 2.5"/></svg></span><span>' + esc(t) + '</span></li>'
+      ).join('');
+    }
+
+    // ---- diversification
+    const div = $('db-div');
+    if (div) {
+      const pct = Math.min(100, Math.round((p.holdings / a.spread) * 100));
+      const secs = (p.sectors || []).map((s: string) => L.SECN[s] || s);
+      const stages = (p.stages || []).map((s: string) => L.STG[s] || s);
+      const routes = (p.products || []).map((s: string) => L.PRN[s] || s);
+
+      div.innerHTML =
+        '<p class="small muted" style="margin:0 0 0.2rem">Target spread for a ' +
+        esc((L.RISKN[p.risk] || 'balanced').toLowerCase()) + ' profile is <strong>' + a.spread +
+        '+</strong> positions.</p>' +
+        '<div class="db-meter"><span style="width:' + pct + '%;background:' + scoreColour + '"></span></div>' +
+        '<p class="small muted" style="margin:0 0 1.1rem">' + p.holdings + ' of ' + a.spread + ' target positions (' + pct + '%)</p>' +
+        '<div class="db-bars">' +
+        barRow('Sectors', secs.length, 4, secs.join(', ') || 'None picked') +
+        barRow('Stages', stages.length, 4, stages.join(', ') || 'None picked') +
+        barRow('Routes', routes.length, 4, routes.join(', ') || 'None picked') +
+        '</div>';
+    }
+
+    // ---- holdings
+    const hold = $('db-hold');
+    if (hold) {
+      hold.innerHTML = held.length
+        ? held.map((h: any) =>
+          '<div class="db-hold-item"><div style="min-width:0"><div class="nm">' + esc(h.name) + '</div>' +
+          '<div class="mt">' + esc(h.venue) + (h.sector ? ' · ' + esc(h.sector) : '') + '</div></div>' +
+          (h.url ? '<a class="text-link small" style="margin-left:auto" href="' + esc(h.url) +
+            '" target="_blank" rel="noopener noreferrer">Open ↗</a>' : '') + '</div>'
+        ).join('') +
+        '<p class="small muted" style="margin:1rem 0 0">Positions you started from Bundle. Execution happens on the venue.</p>'
+        : '<p class="db-empty">Nothing tracked yet. Start a deal from the <a href="/deals">screener</a> and it appears here.</p>';
+    }
+
+    function statCard(k: string, v: string, n: string, gold = false) {
+      return '<div class="db-stat' + (gold ? ' gold' : '') + '"><div class="k">' + esc(k) +
+        '</div><div class="v">' + esc(v) + '</div><div class="n">' + esc(n) + '</div></div>';
+    }
+    function row(k: string, v: string) {
+      return '<div class="db-row"><dt>' + esc(k) + '</dt><dd>' + esc(v) + '</dd></div>';
+    }
+    function barRow(label: string, n: number, max: number, detail: string) {
+      const w = Math.min(100, Math.round((n / max) * 100));
+      return '<div class="db-bar-row"><span>' + esc(label) + '</span>' +
+        '<span class="db-bar-track"><span style="width:' + w + '%;background:var(--c1)"></span></span>' +
+        '<span class="mono tabular">' + n + '</span></div>' +
+        '<p class="small muted" style="margin:-0.35rem 0 0.2rem;grid-column:1/-1;font-size:0.76rem">' + esc(detail) + '</p>';
+    }
+  }
+</script>

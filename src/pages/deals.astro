@@ -135,12 +135,16 @@ const typeLabel = (t: string) =>
                   </td>
                   <td class="num">{d.minTicket}</td>
                   <td class="num">
-                    <a
-                      href={d.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button
+                      type="button"
                       class="btn btn-ghost btn-sm trade-btn"
-                    >Trade ↗</a>
+                      data-trade
+                      data-deal-id={d.id}
+                      data-deal-name={d.name}
+                      data-deal-venue={platformName(d.platform)}
+                      data-deal-sector={d.sector}
+                      data-deal-url={d.url}
+                    >Trade ↗</button>
                   </td>
                 </tr>
               ))
@@ -158,8 +162,9 @@ const typeLabel = (t: string) =>
         Indicative data sourced from venue public pages (Forge Global's
         published Forge Price marks, Crowdcube company pages, Wefunder
         listings) as of {dataAsOf} — not live quotes, offers or financial
-        promotions. "Trade" opens the deal on the venue that lists it, under
-        that venue's rules and eligibility; Bundle never holds your money.
+        promotions. "Trade" first builds your investor profile, then opens the
+        deal on the venue that lists it, under that venue's rules and
+        eligibility; Bundle never holds your money.
         Venue names don't imply partnership or endorsement.
         <a href="/legal/risk-warning">Capital at risk.</a>
       </p>
