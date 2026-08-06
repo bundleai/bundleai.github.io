@@ -1,11 +1,14 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import DealsData from '../components/DealsData.astro';
 ---
 
 <BaseLayout
   title="Your portfolio"
   description="Build your investor profile, then see the plan it produces: your guardrails, the risks it carries, how to diversify it and everything you're tracking."
 >
+  <DealsData />
+
   <!-- No saved profile yet: the questionnaire -->
   <div id="pf-intake" hidden>
     <section class="section pf-hero">

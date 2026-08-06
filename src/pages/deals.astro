@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
 import Ticker from '../components/Ticker.astro';
+import DealsData from '../components/DealsData.astro';
 import { deals, dataAsOf, platforms, fmtPrice, fmtChange, platformName } from '../data/deals';
 
 const sectors = [...new Set(deals.map((d) => d.sector))].sort();
@@ -24,6 +25,7 @@ const typeLabel = (t: string) =>
   description="Screen every aggregated private-market deal — crowdfunding rounds, secondary blocks and pre-IPO offers — by sector, venue, price and minimum ticket."
 >
   <Ticker />
+  <DealsData />
 
   <section class="screener section tight">
     <div class="container">
@@ -37,6 +39,12 @@ const typeLabel = (t: string) =>
           </p>
         </div>
       </header>
+
+      <div class="scr-fit" id="scr-fit" hidden>
+        <span class="scr-fit-badge">Matched to your plan</span>
+        <p id="scr-fit-note">Ranked by how well each deal fits the answers you gave, with the ones that widen your spread first.</p>
+        <button type="button" class="btn btn-ghost btn-sm" id="scr-fit-off">Show all deals</button>
+      </div>
 
       <div class="scr-filters panel" id="scr-filters">
         <div class="scr-search">
@@ -449,4 +457,83 @@ const typeLabel = (t: string) =>
     typeBtns.forEach((x) => x.classList.toggle('active', x.dataset.type === seedType));
   }
   if (seedQ || seedType) apply();
+
+  /* ---- ?fit=1: rank the table against the saved investor profile ---- */
+  const fitBar = document.getElementById('scr-fit');
+  const fitNote = document.getElementById('scr-fit-note');
+  const fitOff = document.getElementById('scr-fit-off');
+  const tbody = document.querySelector('#scr-body-table tbody');
+  const originalOrder = rows.slice();
+
+  const clearFit = () => {
+    rows.forEach((r) => {
+      r.classList.remove('fit-row', 'fit-blocked');
+      r.querySelector('.fit-why')?.remove();
+    });
+    originalOrder.forEach((r) => tbody?.insertBefore(r, empty));
+    if (fitBar) fitBar.hidden = true;
+    apply();
+  };
+
+  const applyFit = () => {
+    // @ts-ignore — globals from /auth.js and /match.js
+    const Auth = window.BundleAuth;
+    // @ts-ignore
+    const Match = window.BundleMatch;
+    const profile = Auth?.signedIn() ? Auth.profile() : null;
+
+    if (!profile || !Match) {
+      if (fitBar && fitNote) {
+        fitBar.hidden = false;
+        fitNote.innerHTML =
+          'Build your investor profile and this list reorders itself around it. ' +
+          '<a href="/portfolio">Start the questionnaire</a>.';
+        fitOff?.setAttribute('hidden', '');
+      }
+      return;
+    }
+
+    const ranked = Match.rank(profile, Auth.holdings());
+    const byId = new Map<string, any>(ranked.map((r: any) => [r.deal.id, r]));
+
+    ranked.forEach((r: any) => {
+      const row = rows.find((x) => x.id === r.deal.id);
+      if (!row || !tbody) return;
+      tbody.insertBefore(row, empty);
+      row.classList.add('fit-row');
+      row.classList.toggle('fit-blocked', r.blocked);
+
+      row.querySelector('.fit-why')?.remove();
+      const lead = Match.ordered(r.reasons)[0];
+      if (lead) {
+        const tag = document.createElement('span');
+        tag.className = 'fit-why ' + lead.kind;
+        tag.textContent = lead.text;
+        row.querySelector('.co-id')?.appendChild(tag);
+      }
+    });
+
+    // Anything the profile never scored is already in their tracking list.
+    // It drops to the end, labelled so the position is obvious.
+    rows.filter((r) => !byId.has(r.id)).forEach((r) => {
+      tbody?.insertBefore(r, empty);
+      r.classList.add('fit-row', 'fit-held');
+      r.querySelector('.fit-why')?.remove();
+      const tag = document.createElement('span');
+      tag.className = 'fit-why held';
+      tag.textContent = 'Already in your tracking';
+      r.querySelector('.co-id')?.appendChild(tag);
+    });
+
+    if (fitBar) fitBar.hidden = false;
+    apply();
+  };
+
+  if (params.get('fit') === '1') applyFit();
+  fitOff?.addEventListener('click', () => {
+    clearFit();
+    const u = new URL(location.href);
+    u.searchParams.delete('fit');
+    history.replaceState({}, '', u);
+  });
 </script>

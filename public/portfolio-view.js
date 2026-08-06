@@ -171,6 +171,60 @@
     }).join('');
   }
 
+  /* Suggested deals, ranked by BundleMatch. Diversification reasons lead,
+     because widening the spread is the thing the plan most often needs. */
+  function fitList(p, held) {
+    if (!window.BundleMatch) return '';
+    var ranked = window.BundleMatch.rank(p, held).filter(function (r) { return !r.blocked; }).slice(0, 3);
+    if (!ranked.length) {
+      return '<p class="pv-empty">No open listings match your plan right now. Widen your sectors or routes above and they will appear here.</p>';
+    }
+    var pf = window.BundleMatch.data().platforms;
+    return '<div class="pv-fits">' + ranked.map(function (r) {
+      var d = r.deal;
+      var reasons = window.BundleMatch.ordered(
+        r.reasons.filter(function (x) { return x.kind !== 'warn' && x.kind !== 'block'; })
+      ).slice(0, 2);
+      var warn = r.reasons.filter(function (x) { return x.kind === 'warn'; })[0];
+      return '<article class="pv-fit" data-trade data-deal-id="' + esc(d.id) + '" data-deal-name="' + esc(d.name) +
+        '" data-deal-venue="' + esc(window.BundleMatch.platformName(d.platform, pf)) + '" data-deal-sector="' + esc(d.sector) +
+        '" data-deal-url="' + esc(d.url) + '" role="button" tabindex="0" aria-label="Open ' + esc(d.name) + '">' +
+        '<header class="pv-fit-head">' +
+        '<span class="pv-fit-avatar" style="--h: var(--' + esc(d.hue) + ')">' +
+        esc(d.name.split(/\s+/).map(function (w) { return w[0]; }).join('').slice(0, 2)) + '</span>' +
+        '<span class="pv-fit-id"><span class="pv-fit-name">' + esc(d.name) + '</span>' +
+        '<span class="pv-fit-sub">' + esc(d.sector) + ' · ' + esc(window.BundleMatch.typeLabel(d.type)) + '</span></span>' +
+        '<span class="src-chip">' + esc(window.BundleMatch.platformName(d.platform, pf)) + '</span>' +
+        '</header>' +
+        '<ul class="pv-why">' +
+        reasons.map(function (x) {
+          return '<li class="' + (x.kind === 'diversify' ? 'div' : '') + '">' +
+            '<span class="pv-why-dot"></span>' + esc(x.text) + '</li>';
+        }).join('') +
+        (warn ? '<li class="warn"><span class="pv-why-dot"></span>' + esc(warn.text) + '</li>' : '') +
+        '</ul>' +
+        '<footer class="pv-fit-foot"><span class="pv-fit-cta">Open on ' +
+        esc(window.BundleMatch.platformName(d.platform, pf)) + ' ↗</span>' +
+        '<span class="pv-fit-min mono">' + esc(d.minTicket) + '</span></footer>' +
+        '</article>';
+    }).join('') + '</div>' +
+      '<a class="text-link small pv-fit-all" href="/deals?fit=1">See every deal ranked for your plan <span class="arrow">→</span></a>';
+  }
+
+  /* A plain-language nudge about the biggest gap in the plan. */
+  function gapNudge(p, held) {
+    if (!window.BundleMatch) return '';
+    var g = window.BundleMatch.gaps(p, held);
+    if (!g.length) return '';
+    var names = g.map(function (k) { return L.SECN[k] || k; });
+    var list = names.length === 1 ? names[0]
+      : names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1];
+    return '<div class="pv-nudge"><span class="pv-nudge-icon">◆</span><p>' +
+      'You picked <strong>' + esc(list) + '</strong> but hold nothing there yet. ' +
+      'Filling those gaps spreads your risk faster than adding to a sector you already own.' +
+      '</p></div>';
+  }
+
   /* ---------- main render ---------- */
 
   function render(root, profile, opts) {
@@ -203,7 +257,7 @@
       '<div class="pv-kpi"><span class="pv-kpi-k">Category</span><span class="pv-kpi-v">' + esc(L.LB[p.category] || '—') + '</span></div>' +
       '</div>' +
       '<div class="pv-hero-cta">' +
-      '<a href="/deals" class="btn btn-primary">Find deals that fit <span class="arrow">→</span></a>' +
+      '<a href="/deals?fit=1" class="btn btn-primary">Find deals that fit <span class="arrow">→</span></a>' +
       '<a href="/portfolio?edit=1" class="btn btn-ghost">Retake the questionnaire</a>' +
       '</div>' +
       '</div>' +
@@ -233,6 +287,13 @@
       '<button type="button" class="btn btn-ghost btn-sm" data-pv-reset>Reset</button>' +
       '<button type="button" class="btn btn-primary btn-sm" data-pv-save>Save changes</button>' +
       '</span></div>' +
+      '</section>' +
+
+      '<section class="pv-fit-block" data-pv="fitblock">' +
+      '<div class="pv-fit-head-row"><h3 class="pv-h3">Deals that fit your plan</h3>' +
+      '<span class="badge badge-green">Matched to your answers</span></div>' +
+      '<div data-pv="nudge">' + gapNudge(p, held) + '</div>' +
+      '<div data-pv="fits">' + fitList(p, held) + '</div>' +
       '</section>' +
 
       '<div class="pv-grid">' +
@@ -298,6 +359,8 @@
       q('[data-pv="projection"]').innerHTML = projection(p);
       q('[data-pv="donut"]').innerHTML = sectorDonut(p);
       q('[data-pv="coverage"]').innerHTML = coverage(p);
+      q('[data-pv="nudge"]').innerHTML = gapNudge(p, held);
+      q('[data-pv="fits"]').innerHTML = fitList(p, held);
 
       var dirty = JSON.stringify(p) !== saved;
       q('[data-pv="save-row"]').hidden = !dirty;

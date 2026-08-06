@@ -1,0 +1,20 @@
+---
+/**
+ * Emits the aggregated deal set as JSON so client-side matching can rank it
+ * against a saved investor profile. Included only on pages that match.
+ */
+import { deals, platforms } from '../data/deals';
+
+const payload = JSON.stringify({
+  deals: deals.map((d) => ({
+    id: d.id, name: d.name, code: d.code, sector: d.sector, type: d.type,
+    platform: d.platform, url: d.url, currency: d.currency, price: d.price,
+    change: d.change, valuation: d.valuation, raised: d.raised,
+    investors: d.investors, closes: d.closes, status: d.status,
+    minTicket: d.minTicket, trending: d.trending, hue: d.hue,
+  })),
+  platforms,
+});
+---
+
+<script type="application/json" id="bundle-deals" set:html={payload} />

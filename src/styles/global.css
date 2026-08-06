@@ -2249,3 +2249,181 @@ main,
   .pv-save-btns { margin-left: 0; width: 100%; }
   .pv-save-btns .btn { flex: 1; }
 }
+
+/* --------------------------------------------------------------------------
+   Personalised matching — screener fit mode + portfolio suggestions
+   -------------------------------------------------------------------------- */
+
+.scr-fit {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.85rem 1.1rem;
+  margin-bottom: 1.1rem;
+  background: var(--tint);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--gold);
+  border-radius: var(--r-m);
+}
+
+.scr-fit p { margin: 0; font-size: 0.88rem; color: var(--text); flex: 1 1 18rem; }
+
+.scr-fit-badge {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--gold-soft);
+  border: 1px solid rgba(201, 162, 39, 0.4);
+  border-radius: var(--r-pill);
+  padding: 0.22rem 0.62rem;
+  white-space: nowrap;
+}
+
+.scr-fit .btn { margin-left: auto; }
+
+/* Why a row ranked where it did */
+.fit-why {
+  display: block;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  margin-top: 0.2rem;
+  color: var(--green);
+}
+
+.fit-why.diversify { color: var(--green); font-weight: 550; }
+.fit-why.warn { color: var(--sand-ink); }
+.fit-why.block { color: var(--red-ink); }
+.fit-why.held { color: var(--text-2); }
+
+.scr-row.fit-blocked,
+.scr-row.fit-held { opacity: 0.55; }
+
+/* Portfolio suggestions */
+.pv-fit-block { margin-bottom: 2.25rem; }
+
+.pv-fit-head-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.85rem;
+}
+
+.pv-fit-head-row .pv-h3 { margin: 0; }
+
+.pv-nudge {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  background: var(--gold-soft);
+  border: 1px solid rgba(201, 162, 39, 0.35);
+  border-radius: var(--r-m);
+  padding: 0.9rem 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.pv-nudge p { margin: 0; font-size: 0.9rem; line-height: 1.55; color: var(--text); }
+.pv-nudge strong { color: var(--ink); }
+.pv-nudge-icon { color: var(--gold-deep); font-size: 0.8rem; margin-top: 0.2rem; flex: none; }
+
+.pv-fits {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 900px) { .pv-fits { grid-template-columns: 1fr; } }
+
+.pv-fit {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-l);
+  padding: 1.15rem 1.2rem;
+  box-shadow: var(--shadow-s);
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.2, 0.6, 0.25, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.pv-fit:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-m);
+  border-color: var(--line-2);
+}
+
+.pv-fit-head { display: flex; align-items: center; gap: 0.65rem; min-width: 0; }
+
+.pv-fit-avatar {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--h);
+  background: color-mix(in srgb, var(--h) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--h) 30%, transparent);
+}
+
+.pv-fit-id { min-width: 0; display: grid; }
+
+.pv-fit-name {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.05rem;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pv-fit-sub { font-size: 0.75rem; color: var(--text-2); }
+.pv-fit-head .src-chip { margin-left: auto; }
+
+.pv-why { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.45rem; }
+
+.pv-why li {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--text-2);
+}
+
+.pv-why-dot {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  margin-top: 0.45rem;
+  border-radius: 50%;
+  background: var(--line-2);
+}
+
+.pv-why li.div { color: var(--text); font-weight: 500; }
+.pv-why li.div .pv-why-dot { background: var(--up); }
+.pv-why li.warn { color: var(--sand-ink); }
+.pv-why li.warn .pv-why-dot { background: var(--sand); }
+
+.pv-fit-foot {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  border-top: 1px solid var(--line);
+  padding-top: 0.75rem;
+}
+
+.pv-fit-cta { font-size: 0.85rem; font-weight: 550; color: var(--green); }
+.pv-fit-min { font-size: 0.74rem; color: var(--text-2); }
+.pv-fit-all { margin-top: 1rem; }
