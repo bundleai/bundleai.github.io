@@ -59,10 +59,10 @@
   --chart-deemph: #b7c4b8;  /* de-emphasis series */
 
   /* Type — elegant serif headings, modern sans body, mono for data */
-  --font-display: "Instrument Serif", "Cormorant Garamond", Georgia, serif;
+  --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
   --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
-  --font-serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+  --font-serif: "Playfair Display", Georgia, "Times New Roman", serif;
 
   /* Shape */
   --r-s: 8px;
@@ -102,9 +102,18 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+/* Layered gradient canvas. Fixed so it reads as one continuous field rather
+   than repeating per section — warm cream top-left, soft green top-right,
+   settling into the base tone. */
 body {
   margin: 0;
-  background: var(--bg);
+  background:
+    radial-gradient(1100px 620px at 8% -6%, rgba(239, 233, 220, 0.85), transparent 62%),
+    radial-gradient(950px 560px at 94% 2%, rgba(224, 235, 224, 0.8), transparent 60%),
+    radial-gradient(800px 700px at 50% 106%, rgba(232, 240, 231, 0.7), transparent 64%),
+    linear-gradient(180deg, #fbfcf8 0%, var(--bg) 42%, #f3f5ef 100%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   color: var(--text);
   font-family: var(--font-body);
   font-size: 1.03125rem;
@@ -120,7 +129,7 @@ h1, h2 {
   margin: 0 0 0.5em;
   font-family: var(--font-display);
   color: var(--ink);
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.08;
   letter-spacing: -0.012em;
   text-wrap: balance;
@@ -199,7 +208,7 @@ button {
   font-size: clamp(2.9rem, 5.8vw, 4.9rem);
   line-height: 1.02;
   letter-spacing: -0.018em;
-  font-weight: 400;
+  font-weight: 500;
   color: var(--ink);
 }
 
@@ -218,7 +227,7 @@ button {
   font-size: clamp(2rem, 3.2vw, 2.9rem);
   line-height: 1.08;
   letter-spacing: -0.012em;
-  font-weight: 400;
+  font-weight: 500;
   color: var(--ink);
 }
 
@@ -1518,4 +1527,73 @@ table.table tbody tr:hover {
 .wz-scroll {
   overflow-y: auto;
   padding: 1.25rem;
+}
+
+/* --------------------------------------------------------------------------
+   Pointer response — a soft light that follows the cursor, plus a sheen that
+   tracks across whichever card you are over. Fine pointers only, and disabled
+   entirely under prefers-reduced-motion.
+   -------------------------------------------------------------------------- */
+
+.pointer-glow {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  background:
+    radial-gradient(
+      520px 520px at var(--px, 50%) var(--py, 40%),
+      rgba(33, 64, 46, 0.07),
+      rgba(201, 162, 39, 0.045) 42%,
+      transparent 68%
+    );
+}
+
+body.pointer-live .pointer-glow { opacity: 1; }
+
+/* Keep page content above the glow layer. */
+.site-header,
+main,
+.site-footer,
+.modal { position: relative; z-index: 1; }
+
+.site-header { z-index: 100; }
+.modal { z-index: 300; }
+
+/* Cards pick the light up as the cursor crosses them. */
+.card-hover::after,
+.panel.card-hover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  background: radial-gradient(
+    280px 280px at var(--cx, 50%) var(--cy, 50%),
+    rgba(201, 162, 39, 0.14),
+    rgba(33, 64, 46, 0.05) 45%,
+    transparent 70%
+  );
+}
+
+.card-hover { position: relative; overflow: hidden; }
+
+@media (hover: hover) and (pointer: fine) {
+  .card-hover:hover::after { opacity: 1; }
+}
+
+/* Deal rows in the screener light up the same way. */
+.scr-row { cursor: pointer; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pointer-glow { display: none; }
+  .card-hover::after { display: none; }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .pointer-glow { display: none; }
 }

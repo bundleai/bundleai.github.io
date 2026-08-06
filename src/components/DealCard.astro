@@ -22,6 +22,15 @@ const typeLabel =
   id={d.id}
   class:list={['deal-card', 'card', 'card-hover', className]}
   style={style}
+  role="button"
+  tabindex="0"
+  aria-label={`Trade ${d.name} on ${platformName(d.platform)}`}
+  data-trade
+  data-deal-id={d.id}
+  data-deal-name={d.name}
+  data-deal-venue={platformName(d.platform)}
+  data-deal-sector={d.sector}
+  data-deal-url={d.url}
 >
   <header class="dc-head">
     <span class="dc-avatar" style={`--h: var(--${d.hue})`}>{initials}</span>
@@ -65,18 +74,7 @@ const typeLabel =
   </div>
 
   <footer class="dc-foot">
-    <button
-      type="button"
-      class="dc-cta"
-      data-trade
-      data-deal-id={d.id}
-      data-deal-name={d.name}
-      data-deal-venue={platformName(d.platform)}
-      data-deal-sector={d.sector}
-      data-deal-url={d.url}
-    >
-      Trade on {platformName(d.platform)} <span class="arrow">↗</span>
-    </button>
+    <span class="dc-cta">On {platformName(d.platform)} <span class="arrow">↗</span></span>
     {d.investors != null && <span class="dc-min px">from {d.minTicket}</span>}
   </footer>
 </div>
@@ -88,6 +86,7 @@ const typeLabel =
     gap: 0.95rem;
     padding: 1.15rem 1.2rem 1.05rem;
     color: var(--text);
+    cursor: pointer;
   }
 
   .dc-head {

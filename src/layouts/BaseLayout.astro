@@ -34,12 +34,14 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400..700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..600&family=Inter:wght@400..700&family=IBM+Plex+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
+
+    <div class="pointer-glow" aria-hidden="true"></div>
 
     {
       ribbon && (
@@ -172,6 +174,59 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
         { threshold: 0.5 }
       );
       counters.forEach((el) => cio.observe(el));
+
+      // Pointer response: one rAF-throttled listener drives the page glow and
+      // the sheen on whichever card is under the cursor. Fine pointers only.
+      const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      if (fine && !reduced) {
+        const glow = document.querySelector<HTMLElement>('.pointer-glow');
+        let px = 0;
+        let py = 0;
+        let queued = false;
+        let card: HTMLElement | null = null;
+
+        const paint = () => {
+          queued = false;
+          glow?.style.setProperty('--px', px + 'px');
+          glow?.style.setProperty('--py', py + 'px');
+          if (card) {
+            const r = card.getBoundingClientRect();
+            card.style.setProperty('--cx', px - r.left + 'px');
+            card.style.setProperty('--cy', py - r.top + 'px');
+          }
+        };
+
+        window.addEventListener(
+          'pointermove',
+          (e) => {
+            px = e.clientX;
+            py = e.clientY;
+            const over = (e.target as HTMLElement)?.closest?.('.card-hover') as HTMLElement | null;
+            if (over !== card) card = over;
+            if (!document.body.classList.contains('pointer-live')) {
+              document.body.classList.add('pointer-live');
+            }
+            if (!queued) {
+              queued = true;
+              requestAnimationFrame(paint);
+            }
+          },
+          { passive: true }
+        );
+
+        document.addEventListener('pointerleave', () =>
+          document.body.classList.remove('pointer-live')
+        );
+      }
+
+      // Deal cards and screener rows are the trade trigger; keyboard needs parity.
+      document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        const t = (e.target as HTMLElement)?.closest?.('[data-trade][role="button"]');
+        if (!t) return;
+        e.preventDefault();
+        (t as HTMLElement).click();
+      });
 
       // Generic tabs: [data-tabs] > [role=tablist] buttons + panels by aria-controls
       document.querySelectorAll<HTMLElement>('[data-tabs]').forEach((root) => {

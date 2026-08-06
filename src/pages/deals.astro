@@ -83,7 +83,6 @@ const typeLabel = (t: string) =>
               <th class="num">Move / Status</th>
               <th class="num">Valuation / Raised</th>
               <th class="num">Access</th>
-              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -92,11 +91,20 @@ const typeLabel = (t: string) =>
                 <tr
                   id={d.id}
                   class="scr-row"
+                  tabindex="0"
+                  role="button"
+                  aria-label={`Trade ${d.name} on ${platformName(d.platform)}`}
                   data-name={`${d.name} ${d.code}`.toLowerCase()}
                   data-sector={d.sector}
                   data-venue={d.platform}
                   data-venue-name={platformName(d.platform).toLowerCase()}
                   data-type={d.type}
+                  data-trade
+                  data-deal-id={d.id}
+                  data-deal-name={d.name}
+                  data-deal-venue={platformName(d.platform)}
+                  data-deal-sector={d.sector}
+                  data-deal-url={d.url}
                 >
                   <td>
                     <span class="co">
@@ -134,23 +142,11 @@ const typeLabel = (t: string) =>
                     )}
                   </td>
                   <td class="num">{d.minTicket}</td>
-                  <td class="num">
-                    <button
-                      type="button"
-                      class="btn btn-ghost btn-sm trade-btn"
-                      data-trade
-                      data-deal-id={d.id}
-                      data-deal-name={d.name}
-                      data-deal-venue={platformName(d.platform)}
-                      data-deal-sector={d.sector}
-                      data-deal-url={d.url}
-                    >Trade ↗</button>
-                  </td>
                 </tr>
               ))
             }
             <tr id="scr-empty" hidden>
-              <td colspan="8" class="empty-cell">
+              <td colspan="7" class="empty-cell">
                 No deals match those filters — clear one and rescan.
               </td>
             </tr>
@@ -162,9 +158,7 @@ const typeLabel = (t: string) =>
         Indicative data sourced from venue public pages (Forge Global's
         published Forge Price marks, Crowdcube company pages, Wefunder
         listings) as of {dataAsOf} — not live quotes, offers or financial
-        promotions. "Trade" first builds your investor profile, then opens the
-        deal on the venue that lists it, under that venue's rules and
-        eligibility; Bundle never holds your money.
+        promotions. Selecting a deal first builds your investor profile, then opens that deal on the venue that lists it, under the venue's rules and eligibility; Bundle never holds your money.
         Venue names don't imply partnership or endorsement.
         <a href="/legal/risk-warning">Capital at risk.</a>
       </p>
@@ -381,18 +375,7 @@ const typeLabel = (t: string) =>
     text-align: left;
   }
 
-  .trade-btn {
-    padding: 0.34rem 0.85rem;
-    font-size: 0.82rem;
-  }
-
-  .trade-btn:hover {
-    background: var(--up-tint);
-    border-color: var(--up);
-    color: var(--up);
-  }
-
-  .empty-cell {
+      .empty-cell {
     text-align: center;
     color: var(--text-2);
     padding-block: 2.25rem;
