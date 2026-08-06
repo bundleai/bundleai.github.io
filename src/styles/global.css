@@ -1535,18 +1535,44 @@ table.table tbody tr:hover {
    entirely under prefers-reduced-motion.
    -------------------------------------------------------------------------- */
 
+/* Reads as a light source rather than a tint: a bright core that lifts the
+   surface, a warm gold ring, then a faint green falloff. Lifting rather than
+   darkening matters — the glow passes behind body copy in transparent
+   sections, and a dark tint there eats text contrast. Alphas are capped at
+   the point where --text-2 (#5F705F) still clears 4.5:1: gold 0.12 over the
+   raw page, green 0.04 at the edge. The white core only improves it. */
 .pointer-glow {
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.45s ease;
+  /* Layer order matters: the first background layer paints on top, so gold
+     sits above the white lift rather than under it. */
   background:
+    /* Gold body. 0.16 only inside the lifted zone below (4.54:1 for --text-2);
+       it drops to 0.06 by 58%, past which the lift is gone and 0.12 would be
+       the raw-page cap. */
     radial-gradient(
       520px 520px at var(--px, 50%) var(--py, 40%),
-      rgba(33, 64, 46, 0.07),
-      rgba(201, 162, 39, 0.045) 42%,
+      rgba(201, 162, 39, 0.135) 10%,
+      rgba(201, 162, 39, 0.128) 40%,
+      rgba(201, 162, 39, 0.06) 58%,
+      transparent 80%
+    ),
+    /* Luminance lift, sized to cover the gold peak. Raising the surface is
+       what buys the contrast headroom for the stronger gold above it. */
+    radial-gradient(
+      480px 480px at var(--px, 50%) var(--py, 40%),
+      rgba(255, 255, 255, 0.96),
+      rgba(255, 255, 255, 0.9) 45%,
+      rgba(255, 255, 255, 0.34) 62%,
+      rgba(255, 255, 255, 0) 80%
+    ),
+    radial-gradient(
+      1000px 1000px at var(--px, 50%) var(--py, 40%),
+      rgba(33, 64, 46, 0.04),
       transparent 68%
     );
 }
@@ -1573,10 +1599,11 @@ main,
   opacity: 0;
   transition: opacity 0.35s ease;
   background: radial-gradient(
-    280px 280px at var(--cx, 50%) var(--cy, 50%),
-    rgba(201, 162, 39, 0.14),
-    rgba(33, 64, 46, 0.05) 45%,
-    transparent 70%
+    320px 320px at var(--cx, 50%) var(--cy, 50%),
+    rgba(255, 255, 255, 0.5),
+    rgba(201, 162, 39, 0.2) 30%,
+    rgba(33, 64, 46, 0.06) 58%,
+    transparent 76%
   );
 }
 
