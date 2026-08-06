@@ -202,6 +202,10 @@
       '<div class="pv-kpi"><span class="pv-kpi-k">Per position</span><span class="pv-kpi-v" data-pv="each">' + money(budget() / p.holdings) + '</span></div>' +
       '<div class="pv-kpi"><span class="pv-kpi-k">Category</span><span class="pv-kpi-v">' + esc(L.LB[p.category] || '—') + '</span></div>' +
       '</div>' +
+      '<div class="pv-hero-cta">' +
+      '<a href="/deals" class="btn btn-primary">Find deals that fit <span class="arrow">→</span></a>' +
+      '<a href="/portfolio?edit=1" class="btn btn-ghost">Retake the questionnaire</a>' +
+      '</div>' +
       '</div>' +
       '</section>' +
 
@@ -233,20 +237,20 @@
 
       '<div class="pv-grid">' +
       '<div class="pv-col">' +
-      '<h3 class="pv-h3">Build-out at your pace</h3>' +
-      '<div class="card pv-card" data-pv="projection">' + projection(p) + '</div>' +
+      '<h3 class="pv-h3">Coverage</h3>' +
+      '<div class="card pv-card" data-pv="coverage">' + coverage(p) + '</div>' +
       '<h3 class="pv-h3">Risks in this plan</h3>' +
       '<div data-pv="risks">' + riskList(analyse()) + '</div>' +
       '<h3 class="pv-h3">How to improve it</h3>' +
       '<ul class="check-list card pv-card" data-pv="actions">' + actionList(analyse()) + '</ul>' +
-      '<h3 class="pv-h3">Coverage</h3>' +
-      '<div class="card pv-card" data-pv="coverage">' + coverage(p) + '</div>' +
       '</div>' +
 
       '<div class="pv-col">' +
       '<h3 class="pv-h3">Target sector split</h3>' +
       '<div class="card pv-card pv-donut-card" data-pv="donut">' + sectorDonut(p) + '</div>' +
       '<p class="pv-cap">An even starting split across the sectors you picked — a guardrail, not a recommendation.</p>' +
+      '<h3 class="pv-h3">Build-out at your pace</h3>' +
+      '<div class="card pv-card" data-pv="projection">' + projection(p) + '</div>' +
       '<h3 class="pv-h3">The rest of your plan</h3>' +
       '<div class="card pv-card"><dl class="pv-dl">' +
       row('Primary goal', L.LB[p.goal] || '—') +
@@ -260,10 +264,6 @@
       '</div>' +
       '</div>' +
 
-      '<div class="pv-foot">' +
-      '<a href="/portfolio?edit=1" class="btn btn-ghost" data-pv-retake>Retake the questionnaire</a>' +
-      '<a href="/deals" class="btn btn-primary">Find deals that fit <span class="arrow">→</span></a>' +
-      '</div>' +
       '</div>';
 
     function row(k, v) {
@@ -299,7 +299,10 @@
       q('[data-pv="donut"]').innerHTML = sectorDonut(p);
       q('[data-pv="coverage"]').innerHTML = coverage(p);
 
-      q('[data-pv="save-row"]').hidden = JSON.stringify(p) === saved;
+      var dirty = JSON.stringify(p) !== saved;
+      q('[data-pv="save-row"]').hidden = !dirty;
+      var shell = root.querySelector('.pv');
+      if (shell) shell.classList.toggle('pv--dirty', dirty);
     }
 
     root.addEventListener('input', function (e) {

@@ -63,6 +63,33 @@
 
   window.BundleAuth = Auth;
 
+  var HINT = 'bundle.navHintSeen';
+
+  /* Point a newly signed-in person at the Portfolio menu item, once ever.
+     Clears on click, on reaching /portfolio, or after ten seconds. */
+  function navHint() {
+    if (!Auth.signedIn()) return;
+    try { if (localStorage.getItem(HINT)) return; } catch (e) { return; }
+
+    if (location.pathname.replace(/\/$/, '') === '/portfolio') return dismiss();
+
+    var links = document.querySelectorAll('[data-nav-portfolio]');
+    if (!links.length) return;
+    links.forEach(function (el) { el.classList.add('nav-hint'); });
+
+    links.forEach(function (el) {
+      el.addEventListener('click', dismiss, { once: true });
+    });
+    setTimeout(dismiss, 10000);
+  }
+
+  function dismiss() {
+    try { localStorage.setItem(HINT, '1'); } catch (e) { }
+    document.querySelectorAll('.nav-hint').forEach(function (el) {
+      el.classList.remove('nav-hint');
+    });
+  }
+
   /* Nav reflects signed-in state on every page. */
   function paintNav() {
     var signed = Auth.signedIn();
@@ -72,7 +99,10 @@
     if (u) {
       document.querySelectorAll('[data-auth-name]').forEach(function (el) { el.textContent = u.name; });
     }
+    navHint();
   }
+
+  Auth.dismissNavHint = dismiss;
   document.addEventListener('DOMContentLoaded', paintNav);
   document.addEventListener('bundle:auth', paintNav);
   if (document.readyState !== 'loading') paintNav();

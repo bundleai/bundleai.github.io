@@ -100,18 +100,31 @@
     if (e.key === 'Escape' && modal && !modal.hidden) closeModal();
   });
 
-  // Any element carrying data-trade opens the wizard instead of leaving the site.
+  // Any element carrying data-trade routes into a deal. Someone who has
+  // already built a plan goes straight to the venue — the questionnaire is
+  // only a gate for people who have not answered it yet.
   document.addEventListener('click', (e) => {
     const trigger = (e.target as HTMLElement).closest('[data-trade]');
     if (!trigger) return;
     e.preventDefault();
-    openModal({
+
+    const deal = {
       id: trigger.getAttribute('data-deal-id') || '',
       name: trigger.getAttribute('data-deal-name') || 'this deal',
       venue: trigger.getAttribute('data-deal-venue') || 'the venue',
       sector: trigger.getAttribute('data-deal-sector') || '',
       url: trigger.getAttribute('data-deal-url') || '',
-    });
+    };
+
+    // @ts-ignore — global from /auth.js
+    const Auth = window.BundleAuth;
+    if (Auth?.signedIn() && Auth.profile()) {
+      Auth.addHolding({ ...deal, at: Date.now() });
+      if (deal.url) window.open(deal.url, '_blank', 'noopener');
+      return;
+    }
+
+    openModal(deal);
   });
 
   document.addEventListener('bundle:open-portfolio', () => openModal(null));
