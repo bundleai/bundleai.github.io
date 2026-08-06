@@ -3,68 +3,124 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout
-  title="Build your portfolio"
-  description="Answer a few questions and Bundle builds an investor profile: your eligibility, allocation guardrails, target diversification and the deals that fit."
+  title="Your portfolio"
+  description="Build your investor profile, then see the plan it produces: your guardrails, the risks it carries, how to diversify it and everything you're tracking."
 >
-  <section class="section pf-hero">
-    <div class="container narrow">
-      <p class="eyebrow reveal">Portfolio</p>
-      <h1 class="h2 reveal" style="--d:.05s">
-        What kind of portfolio are you building?
-      </h1>
-      <p class="lead reveal" style="--d:.1s">
-        Three minutes of questions gives Bundle the guardrails it needs: what
-        you're eligible for, how much of your wealth belongs in private markets,
-        how widely to spread it, and which deals are worth putting in front of
-        you. Nothing here is shared, and you can change all of it later.
-      </p>
-    </div>
-  </section>
+  <!-- No saved profile yet: the questionnaire -->
+  <div id="pf-intake" hidden>
+    <section class="section pf-hero">
+      <div class="container narrow">
+        <p class="eyebrow reveal">Portfolio</p>
+        <h1 class="h2 reveal" style="--d:.05s">
+          What kind of portfolio are you building?
+        </h1>
+        <p class="lead reveal" style="--d:.1s">
+          Three minutes of questions gives Bundle the guardrails it needs: what
+          you're eligible for, how much of your wealth belongs in private markets,
+          how widely to spread it, and which deals are worth putting in front of
+          you. Nothing here is shared, and you can change all of it later.
+        </p>
+      </div>
+    </section>
 
-  <section class="section tight">
-    <div class="container narrow">
-      <div id="pf-wizard" class="reveal"></div>
+    <section class="section tight">
+      <div class="container narrow">
+        <div id="pf-wizard" class="reveal"></div>
+        <p class="small muted pf-foot">
+          Capital at risk. Private-market investments are illiquid, are not covered
+          by the FSCS, and you could lose all the money you invest. Bundle is an
+          aggregator: it never holds your money and never gives advice.
+        </p>
+      </div>
+    </section>
+  </div>
+
+  <!-- Saved profile: the live plan -->
+  <section class="section tight" id="pf-view-wrap" hidden>
+    <div class="container">
+      <header class="pf-head">
+        <div>
+          <p class="eyebrow no-rule">Portfolio</p>
+          <h1 class="h2" id="pf-greeting">Your plan</h1>
+        </div>
+        <a href="/deals" class="btn btn-ghost btn-sm">Deal screener</a>
+      </header>
+      <div id="pf-view"></div>
       <p class="small muted pf-foot">
-        Capital at risk. Private-market investments are illiquid, are not covered
-        by the FSCS, and you could lose all the money you invest. Bundle is an
-        aggregator: it never holds your money and never gives advice.
+        Illustrative only. Bundle is pre-launch, holds no client money and gives no
+        advice; these figures reflect the plan you entered, not live positions.
+        Capital at risk — private-market investments are illiquid and not
+        FSCS-protected.
       </p>
     </div>
   </section>
 </BaseLayout>
 
-<style>
+<style is:global>
   .pf-hero {
     background: linear-gradient(180deg, var(--cream) 0%, var(--bg) 82%);
     border-bottom: 1px solid var(--line);
     padding-bottom: clamp(2rem, 4vw, 3rem);
   }
 
+  .pf-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.75rem;
+  }
+
+  .pf-head h1 { margin: 0; }
+
   .pf-foot {
     margin: 1.75rem auto 0;
-    max-width: 46rem;
+    max-width: 52rem;
     text-align: center;
   }
 </style>
 
 <script>
-  const host = document.getElementById('pf-wizard');
-  if (host) {
-    // @ts-ignore — globals from /wizard.js and /auth.js
-    window.BundleWizard.mount(host, {
-      saveLabel: 'Save my profile',
-      onSave: (state: unknown) => {
-        // @ts-ignore
-        window.BundleAuth.saveDraft(state);
-        // @ts-ignore
-        const signedIn = window.BundleAuth.signedIn();
-        // @ts-ignore
-        if (signedIn) window.BundleAuth.saveProfile(state);
-        // @ts-ignore
-        const next = signedIn ? '/dashboard' : window.BundleAuth.gateUrl('/dashboard');
-        // @ts-ignore
-        window.BundleHandoff.run(next);
+  // @ts-ignore — globals from /auth.js, /wizard.js, /portfolio-view.js
+  const Auth = window.BundleAuth;
+  const intake = document.getElementById('pf-intake');
+  const viewWrap = document.getElementById('pf-view-wrap');
+  const view = document.getElementById('pf-view');
+
+  // ?edit=1 forces the questionnaire back up even with a saved profile.
+  const forceEdit = new URLSearchParams(location.search).has('edit');
+  const profile = Auth?.signedIn() ? Auth.profile() : null;
+
+  if (profile && !forceEdit) {
+    const greet = document.getElementById('pf-greeting');
+    const user = Auth.user();
+    if (greet && user?.name) greet.textContent = `${user.name}'s plan`;
+    if (viewWrap) viewWrap.hidden = false;
+    // @ts-ignore
+    window.BundlePortfolio.render(view, profile, {
+      holdings: Auth.holdings(),
+      onSave: (next: unknown) => {
+        Auth.saveProfile(next);
       },
     });
+  } else {
+    if (intake) intake.hidden = false;
+    const host = document.getElementById('pf-wizard');
+    if (host) {
+      // @ts-ignore
+      window.BundleWizard.mount(host, {
+        state: forceEdit && profile ? profile : undefined,
+        saveLabel: 'Save my profile',
+        onSave: (state: unknown) => {
+          Auth.saveDraft(state);
+          const signedIn = Auth.signedIn();
+          if (signedIn) Auth.saveProfile(state);
+          const next = signedIn ? '/portfolio' : Auth.gateUrl('/portfolio');
+          // @ts-ignore
+          window.BundleHandoff.run(next);
+        },
+      });
+    }
   }
 </script>

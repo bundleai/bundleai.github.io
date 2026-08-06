@@ -130,7 +130,7 @@ import Logo from '../components/Logo.astro';
   let mode: 'signup' | 'signin' = 'signup';
 
   const params = new URLSearchParams(location.search);
-  const next = params.get('next') || '/dashboard';
+  const next = params.get('next') || '/portfolio';
 
   // @ts-ignore — global from /auth.js
   if (!window.BundleAuth?.draft() && lede) {
