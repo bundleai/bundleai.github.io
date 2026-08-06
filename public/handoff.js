@@ -1,6 +1,6 @@
 /* Bundle hand-off overlay.
    Sits between finishing the investor-profile questionnaire and the next page
-   (sign-up, or the dashboard if already signed in). Runs ~3.6s, stepping
+   (sign-up, or the dashboard if already signed in). Runs ~7.5s, stepping
    through what Bundle is doing with the answers, then navigates.
 
    Usage:  BundleHandoff.run('/signup?next=/dashboard') */
@@ -25,7 +25,8 @@
 
   function run(next) {
     var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var stepMs = reduced ? 260 : 700;
+    // 5 steps × 1400ms ≈ 7.0s, plus the fade in/out ≈ 7.5s end to end.
+    var stepMs = reduced ? 420 : 1400;
     var total = STEPS.length * stepMs;
 
     var el = document.createElement('div');

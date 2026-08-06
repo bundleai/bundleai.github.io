@@ -204,13 +204,34 @@
         '<span class="wz-tick"></span><span class="wz-body"><b>I confirm the statement above is true.</b></span></button>' : '');
   }
 
+  /* Slider display is derived in one place so the initial render and the live
+     in-place update during a drag can never disagree. */
+  var SLIDERS = {
+    allocation: {
+      fill: function (s) { return (s.allocation / 50 * 100).toFixed(2); },
+      value: function (s) { return s.allocation + '%'; },
+      note: function (s) {
+        return s.allocation <= 10 ? 'Conservative — in line with the everyday-investor cap.'
+          : s.allocation <= 25 ? 'Moderate weighting toward private markets.'
+            : 'A high concentration. Make sure the rest of your wealth is well diversified.';
+      },
+      warn: function (s) { return s.category === 'restricted' && s.allocation > 10; },
+    },
+    holdings: {
+      fill: function (s) { return ((s.holdings - 1) / 49 * 100).toFixed(2); },
+      value: function (s) { return s.holdings + (s.holdings === 50 ? '+' : ''); },
+      note: function (s) {
+        return s.holdings < 10 ? 'Concentrated. In early-stage investing most bets fail, so a handful of positions leans heavily on being right.'
+          : s.holdings < 20 ? 'Reasonable spread. More positions further reduces reliance on any single outcome.'
+            : 'Broad and disciplined. Wide diversification is how you survive the losers to catch the winners.';
+      },
+      warn: function () { return false; },
+    },
+  };
+
   function sWealth(ctx) {
     var s = ctx.state;
-    var fill = (s.allocation / 50 * 100).toFixed(0);
-    var over = s.category === 'restricted' && s.allocation > 10;
-    var note = s.allocation <= 10 ? 'Conservative — in line with the everyday-investor cap.'
-      : s.allocation <= 25 ? 'Moderate weighting toward private markets.'
-        : 'A high concentration. Make sure the rest of your wealth is well diversified.';
+    var S = SLIDERS.allocation;
 
     return '<h2 class="wz-h">Your position, roughly.</h2>' +
       '<div class="wz-q">Your investable assets — cash and investments you could deploy, excluding your home and pension.</div>' +
@@ -222,10 +243,12 @@
       '<div class="wz-q">Of that, how much are you comfortable putting into private markets?</div>' +
       '<div class="wz-hint">A guardrail, not a target. Private markets should be one slice of a wider portfolio.</div>' +
       '<div class="wz-slider">' +
-      '<input type="range" min="1" max="50" value="' + s.allocation + '" style="--fill:' + fill + '%" data-slider="allocation" aria-label="Share of investable assets in private markets">' +
-      '<div class="wz-slval"><b>' + s.allocation + '%</b><span class="wz-note">' + note + '</span></div>' +
+      '<input type="range" min="1" max="50" value="' + s.allocation + '" style="--fill:' + S.fill(s) + '%" data-slider="allocation" aria-label="Share of investable assets in private markets">' +
+      '<div class="wz-slval"><b data-slider-value="allocation">' + S.value(s) + '</b>' +
+      '<span class="wz-note" data-slider-note="allocation">' + S.note(s) + '</span></div>' +
       '<div class="wz-scale"><span>1%</span><span>25%</span><span>50%</span></div></div>' +
-      (over ? '<div class="wz-notice warn"><b>Heads up.</b> As a restricted investor you\'ve self-certified to a 10% cap on high-risk investments. We\'ll hold you to that when you allocate.</div>' : '') +
+      '<div class="wz-notice warn" data-slider-warn="allocation"' + (S.warn(s) ? '' : ' hidden') +
+      '><b>Heads up.</b> As a restricted investor you\'ve self-certified to a 10% cap on high-risk investments. We\'ll hold you to that when you allocate.</div>' +
       '<div class="wz-q">Interested in SEIS / EIS tax relief on qualifying deals?</div>' +
       optRows(ctx, 'seis', [
         { v: 'yes', t: 'Yes, prioritise it' }, { v: 'maybe', t: 'Show me where it applies' },
@@ -270,17 +293,15 @@
 
   function sPortfolio(ctx) {
     var s = ctx.state;
-    var fill = ((s.holdings - 1) / 49 * 100).toFixed(0);
-    var guide = s.holdings < 10 ? 'Concentrated. In early-stage investing most bets fail, so a handful of positions leans heavily on being right.'
-      : s.holdings < 20 ? 'Reasonable spread. More positions further reduces reliance on any single outcome.'
-        : 'Broad and disciplined. Wide diversification is how you survive the losers to catch the winners.';
+    var S = SLIDERS.holdings;
 
     return '<h2 class="wz-h">Shape of your portfolio.</h2>' +
       '<div class="wz-q">How many companies would you like to build toward holding?</div>' +
       '<div class="wz-hint">Breadth is the discipline that does the heavy lifting — no single deal should make or break you.</div>' +
       '<div class="wz-slider">' +
-      '<input type="range" min="1" max="50" value="' + s.holdings + '" style="--fill:' + fill + '%" data-slider="holdings" aria-label="Target number of companies">' +
-      '<div class="wz-slval"><b>' + s.holdings + (s.holdings === 50 ? '+' : '') + '</b><span class="wz-note">' + guide + '</span></div>' +
+      '<input type="range" min="1" max="50" value="' + s.holdings + '" style="--fill:' + S.fill(s) + '%" data-slider="holdings" aria-label="Target number of companies">' +
+      '<div class="wz-slval"><b data-slider-value="holdings">' + S.value(s) + '</b>' +
+      '<span class="wz-note" data-slider-note="holdings">' + S.note(s) + '</span></div>' +
       '<div class="wz-scale"><span>1</span><span>25</span><span>50+</span></div></div>' +
       '<div class="wz-q">Typical amount per deal</div>' +
       optRows(ctx, 'ticket', [
@@ -422,11 +443,33 @@
       }
     });
 
+    /* Patch the slider's readouts in place. A full draw() here would replace
+       root.innerHTML — destroying the very <input> being dragged, which is
+       what made these sliders stutter and drop the drag. */
     root.addEventListener('input', function (e) {
       var sl = e.target.closest('[data-slider]');
       if (!sl) return;
-      ctx.state[sl.getAttribute('data-slider')] = +sl.value;
-      draw();
+
+      var field = sl.getAttribute('data-slider');
+      var S = SLIDERS[field];
+      ctx.state[field] = +sl.value;
+      if (!S) return;
+
+      sl.style.setProperty('--fill', S.fill(ctx.state) + '%');
+
+      var val = root.querySelector('[data-slider-value="' + field + '"]');
+      if (val) val.textContent = S.value(ctx.state);
+
+      var note = root.querySelector('[data-slider-note="' + field + '"]');
+      if (note) note.textContent = S.note(ctx.state);
+
+      var warn = root.querySelector('[data-slider-warn="' + field + '"]');
+      if (warn) warn.hidden = !S.warn(ctx.state);
+    });
+
+    // Persist once the drag settles, not on every pixel.
+    root.addEventListener('change', function (e) {
+      if (e.target.closest('[data-slider]')) persistDraft();
     });
 
     function scrollTop() {
