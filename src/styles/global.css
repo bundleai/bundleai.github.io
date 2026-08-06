@@ -1579,7 +1579,10 @@ table.table tbody tr:hover {
 
 body.pointer-live .pointer-glow { opacity: 1; }
 
-/* Keep page content above the glow layer. */
+/* Keep page content above the glow layer. The glow is fixed with z-index 0,
+   which paints over the backgrounds of static elements — so every top-level
+   surface needs its own stacking context, the risk ribbon included. */
+.risk-ribbon,
 .site-header,
 main,
 .site-footer,
@@ -1588,37 +1591,13 @@ main,
 .site-header { z-index: 100; }
 .modal { z-index: 300; }
 
-/* Cards pick the light up as the cursor crosses them. */
-.card-hover::after,
-.panel.card-hover::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.35s ease;
-  background: radial-gradient(
-    320px 320px at var(--cx, 50%) var(--cy, 50%),
-    rgba(255, 255, 255, 0.5),
-    rgba(201, 162, 39, 0.2) 30%,
-    rgba(33, 64, 46, 0.06) 58%,
-    transparent 76%
-  );
-}
+/* Cards stay clean — no sheen tracks across them. Their opaque surfaces sit
+   above the glow, so the light stops at the card edge. */
 
-.card-hover { position: relative; overflow: hidden; }
-
-@media (hover: hover) and (pointer: fine) {
-  .card-hover:hover::after { opacity: 1; }
-}
-
-/* Deal rows in the screener light up the same way. */
 .scr-row { cursor: pointer; }
 
 @media (prefers-reduced-motion: reduce) {
   .pointer-glow { display: none; }
-  .card-hover::after { display: none; }
 }
 
 @media (hover: none), (pointer: coarse) {

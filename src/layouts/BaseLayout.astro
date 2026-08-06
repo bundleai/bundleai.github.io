@@ -175,25 +175,19 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       );
       counters.forEach((el) => cio.observe(el));
 
-      // Pointer response: one rAF-throttled listener drives the page glow and
-      // the sheen on whichever card is under the cursor. Fine pointers only.
+      // Pointer response: one rAF-throttled listener moves the page glow.
+      // Fine pointers only.
       const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
       if (fine && !reduced) {
         const glow = document.querySelector<HTMLElement>('.pointer-glow');
         let px = 0;
         let py = 0;
         let queued = false;
-        let card: HTMLElement | null = null;
 
         const paint = () => {
           queued = false;
           glow?.style.setProperty('--px', px + 'px');
           glow?.style.setProperty('--py', py + 'px');
-          if (card) {
-            const r = card.getBoundingClientRect();
-            card.style.setProperty('--cx', px - r.left + 'px');
-            card.style.setProperty('--cy', py - r.top + 'px');
-          }
         };
 
         window.addEventListener(
@@ -201,8 +195,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
           (e) => {
             px = e.clientX;
             py = e.clientY;
-            const over = (e.target as HTMLElement)?.closest?.('.card-hover') as HTMLElement | null;
-            if (over !== card) card = over;
             if (!document.body.classList.contains('pointer-live')) {
               document.body.classList.add('pointer-live');
             }
