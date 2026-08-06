@@ -1605,3 +1605,161 @@ main,
 @media (hover: none), (pointer: coarse) {
   .pointer-glow { display: none; }
 }
+
+/* --------------------------------------------------------------------------
+   Hand-off overlay — questionnaire → sign-up / dashboard
+   -------------------------------------------------------------------------- */
+
+.handoff {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background: var(--ink);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.handoff.in  { opacity: 1; }
+.handoff.out { opacity: 0; }
+
+.handoff-inner {
+  width: min(30rem, 100%);
+  text-align: left;
+  transform: translateY(10px);
+  transition: transform 0.5s cubic-bezier(0.2, 0.6, 0.25, 1);
+}
+
+.handoff.in .handoff-inner { transform: none; }
+
+.handoff-mark {
+  display: inline-flex;
+  margin-bottom: 1.35rem;
+}
+
+/* The four bars breathe like a live tape while the work happens. */
+@media (prefers-reduced-motion: no-preference) {
+  .handoff-mark .hb {
+    transform-origin: 50% 100%;
+    animation: hb-pulse 1.15s ease-in-out infinite;
+  }
+  .handoff-mark .hb2 { animation-delay: 0.12s; }
+  .handoff-mark .hb3 { animation-delay: 0.24s; }
+  .handoff-mark .hb4 { animation-delay: 0.36s; }
+}
+
+@keyframes hb-pulse {
+  0%, 100% { transform: scaleY(1); }
+  50%      { transform: scaleY(0.62); }
+}
+
+.handoff-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.6rem, 3.4vw, 2.1rem);
+  line-height: 1.12;
+  color: #ffffff;
+  margin: 0 0 0.35rem;
+}
+
+.handoff-sub {
+  color: #a8bba8;
+  font-size: 0.95rem;
+  margin: 0 0 1.9rem;
+}
+
+.handoff-steps {
+  list-style: none;
+  margin: 0 0 1.9rem;
+  padding: 0;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.handoff-steps li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.97rem;
+  color: rgba(255, 255, 255, 0.32);
+  transform: translateX(-6px);
+  transition: color 0.4s ease, transform 0.4s ease, opacity 0.4s ease;
+}
+
+.handoff-steps li.active,
+.handoff-steps li.done {
+  transform: none;
+}
+
+.handoff-steps li.active { color: #ffffff; }
+.handoff-steps li.done   { color: #a8bba8; }
+
+.hs-dot {
+  flex: none;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  position: relative;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.handoff-steps li.active .hs-dot {
+  border-color: var(--gold);
+}
+
+/* Active step gets a rotating arc so it reads as in-progress. */
+.handoff-steps li.active .hs-dot::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  border-top-color: var(--gold);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .handoff-steps li.active .hs-dot::before {
+    animation: hs-spin 0.75s linear infinite;
+  }
+}
+
+@keyframes hs-spin {
+  to { transform: rotate(360deg); }
+}
+
+.handoff-steps li.done .hs-dot {
+  background: var(--gold);
+  border-color: var(--gold);
+}
+
+/* Tick, drawn with two borders */
+.handoff-steps li.done .hs-dot::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 4px;
+  height: 8px;
+  border-right: 1.8px solid var(--ink);
+  border-bottom: 1.8px solid var(--ink);
+  transform: rotate(45deg);
+}
+
+.handoff-bar {
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.handoff-bar > span {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: var(--grad-gold);
+  transition: width linear;
+}

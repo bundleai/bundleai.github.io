@@ -50,9 +50,14 @@
     },
 
     /* Where to send someone after they sign in. */
+    gateUrl: function (next) {
+      return '/signup?next=' + encodeURIComponent(
+        next || location.pathname + location.search + location.hash
+      );
+    },
+
     gateTo: function (next) {
-      var url = '/signup?next=' + encodeURIComponent(next || location.pathname + location.search + location.hash);
-      location.href = url;
+      location.href = Auth.gateUrl(next);
     },
   };
 

@@ -54,7 +54,10 @@
           // @ts-ignore
           window.BundleAuth.saveDraft(state);
           // @ts-ignore
-          if (window.BundleAuth.signedIn()) {
+          const signedIn = window.BundleAuth.signedIn();
+          let next: string;
+
+          if (signedIn) {
             // @ts-ignore
             window.BundleAuth.saveProfile(state);
             if (pendingDeal) {
@@ -64,14 +67,19 @@
                 sector: pendingDeal.sector, url: pendingDeal.url, at: Date.now(),
               });
             }
-            location.href = '/dashboard';
+            next = '/dashboard';
           } else {
             const back = pendingDeal
               ? `/deals#${pendingDeal.id}`
               : location.pathname + location.search;
             // @ts-ignore
-            window.BundleAuth.gateTo(back);
+            next = window.BundleAuth.gateUrl(back);
           }
+
+          // Close the dialog first so the hand-off owns the screen.
+          closeModal();
+          // @ts-ignore
+          window.BundleHandoff.run(next);
         },
       });
       mounted = true;

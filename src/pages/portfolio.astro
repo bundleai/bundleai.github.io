@@ -57,14 +57,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         // @ts-ignore
         window.BundleAuth.saveDraft(state);
         // @ts-ignore
-        if (window.BundleAuth.signedIn()) {
-          // @ts-ignore
-          window.BundleAuth.saveProfile(state);
-          location.href = '/dashboard';
-        } else {
-          // @ts-ignore
-          window.BundleAuth.gateTo('/dashboard');
-        }
+        const signedIn = window.BundleAuth.signedIn();
+        // @ts-ignore
+        if (signedIn) window.BundleAuth.saveProfile(state);
+        // @ts-ignore
+        const next = signedIn ? '/dashboard' : window.BundleAuth.gateUrl('/dashboard');
+        // @ts-ignore
+        window.BundleHandoff.run(next);
       },
     });
   }
