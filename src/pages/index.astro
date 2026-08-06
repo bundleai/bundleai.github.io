@@ -347,12 +347,12 @@ const edges = [
   }
 
   .hero-search:focus-within {
-    border-color: var(--teal);
-    box-shadow: 0 0 0 3px rgba(31, 210, 192, 0.14);
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(33, 64, 46, 0.12);
   }
 
   .hero-search svg {
-    color: var(--faint);
+    color: var(--text-2);
     flex: none;
   }
 
@@ -367,7 +367,7 @@ const edges = [
   }
 
   .hero-search input::placeholder {
-    color: var(--faint);
+    color: var(--text-2);
   }
 
   .hero-search input:focus {
@@ -407,7 +407,7 @@ const edges = [
   }
 
   .hero-stats strong {
-    color: var(--teal);
+    color: var(--green);
     font-weight: 500;
     font-size: 1rem;
   }
@@ -415,7 +415,7 @@ const edges = [
   /* Market board */
   .board {
     overflow: hidden;
-    box-shadow: var(--shadow-l), 0 0 80px -30px rgba(31, 210, 192, 0.25);
+    box-shadow: var(--shadow-m);
   }
 
   .board-head {
@@ -426,7 +426,7 @@ const edges = [
     flex-wrap: wrap;
     padding: 0.8rem 1rem;
     border-bottom: 1px solid var(--line);
-    background: #0b111c;
+    background: var(--tint);
   }
 
   .board-live {
@@ -443,8 +443,7 @@ const edges = [
   .board-tabs {
     display: flex;
     gap: 0.25rem;
-    background: var(--bg);
-    border: 1px solid var(--line);
+    background: rgba(20, 40, 30, 0.06);
     border-radius: 9px;
     padding: 0.2rem;
   }
@@ -452,7 +451,7 @@ const edges = [
   .board-tabs [role='tab'] {
     border: 0;
     background: none;
-    color: var(--text-2);
+    color: var(--text);
     font-size: 0.8rem;
     font-weight: 550;
     padding: 0.32rem 0.7rem;
@@ -462,8 +461,9 @@ const edges = [
   }
 
   .board-tabs [role='tab'][aria-selected='true'] {
-    background: var(--tint);
+    background: var(--surface);
     color: var(--ink);
+    box-shadow: var(--shadow-s);
   }
 
   .board-rows {
@@ -488,7 +488,7 @@ const edges = [
   }
 
   .board-row:hover {
-    background: rgba(31, 210, 192, 0.045);
+    background: var(--tint);
   }
 
   .br-avatar {
@@ -521,7 +521,7 @@ const edges = [
 
   .br-src {
     font-size: 0.7rem;
-    color: var(--faint);
+    color: var(--text-2);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -557,20 +557,20 @@ const edges = [
   }
 
   .br-change.flat {
-    color: var(--faint);
+    color: var(--text-2);
   }
 
   .board-foot {
     padding: 0.7rem 1rem;
     border-top: 1px solid var(--line);
-    background: #0b111c;
+    background: var(--tint);
     font-size: 0.88rem;
   }
 
   .board-caption {
     margin-top: 0.7rem;
     font-size: 0.72rem;
-    color: var(--faint);
+    color: var(--text-2);
     text-align: right;
   }
 
@@ -607,7 +607,7 @@ const edges = [
   }
 
   .rail-head h2 :global(svg) {
-    color: var(--teal);
+    color: var(--green);
   }
 
   /* Venues */
@@ -631,13 +631,13 @@ const edges = [
   }
 
   .venue-card:hover {
-    border-color: rgba(31, 210, 192, 0.4);
-    background: rgba(31, 210, 192, 0.04);
+    border-color: var(--green);
+    background: var(--tint);
   }
 
   .venue-name {
     font-family: var(--font-display);
-    font-weight: 600;
+    font-weight: 400;
     color: #fff;
     font-size: 0.98rem;
     letter-spacing: -0.01em;
@@ -647,7 +647,7 @@ const edges = [
     font-size: 0.66rem;
     letter-spacing: 0.07em;
     text-transform: uppercase;
-    color: var(--text-2);
+    color: #a8bba8;
   }
 
   @media (max-width: 1000px) {

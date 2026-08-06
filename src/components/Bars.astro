@@ -1,7 +1,7 @@
 ---
 /**
  * Horizontal exposure bars. mode="single" = one series, slot-1 hue.
- * mode="ramp" = ordered categories (stage/tier) on the validated ordinal teal ramp.
+ * mode="ramp" = ordered categories (stage/tier) on the validated ordinal green ramp.
  */
 interface Item {
   label: string;
@@ -16,7 +16,8 @@ interface Props {
 }
 
 const { items, mode = 'single', class: className } = Astro.props;
-const RAMP = ['#85b9c3', '#4a9aa7', '#0d7e8a', '#094f58'];
+// Validated ordinal green ramp (--ramp1..--ramp4): monotone L, light end 2.12:1.
+const RAMP = ['#95bba2', '#679c7a', '#3c7455', '#21402e'];
 const max = Math.max(...items.map((i) => i.value));
 ---
 
@@ -29,7 +30,7 @@ const max = Math.max(...items.map((i) => i.value));
           <span
             class="bar-fill"
             style={`width:${(item.value / max) * 100}%;background:${
-              mode === 'ramp' ? RAMP[Math.min(i, RAMP.length - 1)] : '#0090a3'
+              mode === 'ramp' ? RAMP[Math.min(i, RAMP.length - 1)] : '#1f7a54'
             }`}
           />
         </span>

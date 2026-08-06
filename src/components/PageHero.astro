@@ -15,8 +15,8 @@ const hasVisual = Astro.slots.has('visual');
 
 <section class:list={['page-hero bg-grid aurora grain', { center, 'has-visual': hasVisual }]}>
   <svg class="hero-rings" viewBox="0 0 640 640" aria-hidden="true">
-    <circle cx="320" cy="320" r="150" fill="none" stroke="var(--teal)" stroke-opacity="0.1" stroke-width="1.5"></circle>
-    <circle cx="320" cy="320" r="220" fill="none" stroke="var(--teal)" stroke-opacity="0.08" stroke-width="1.5"></circle>
+    <circle cx="320" cy="320" r="150" fill="none" stroke="var(--green)" stroke-opacity="0.1" stroke-width="1.5"></circle>
+    <circle cx="320" cy="320" r="220" fill="none" stroke="var(--green)" stroke-opacity="0.08" stroke-width="1.5"></circle>
     <circle cx="320" cy="320" r="290" fill="none" stroke="var(--sage)" stroke-opacity="0.1" stroke-width="1.5" stroke-dasharray="3 14" stroke-linecap="round" class="ring-spin"></circle>
   </svg>
   <div class="container">
@@ -45,9 +45,7 @@ const hasVisual = Astro.slots.has('visual');
   .page-hero {
     padding-block: clamp(3.5rem, 8vw, 6.5rem) clamp(2.5rem, 6vw, 5rem);
     border-bottom: 1px solid var(--line);
-    background:
-      radial-gradient(60% 60% at 82% 0%, rgba(31, 210, 192, 0.07), transparent 65%),
-      linear-gradient(180deg, #0a111c 0%, var(--bg) 55%);
+    background: linear-gradient(180deg, var(--cream) 0%, var(--bg) 78%);
   }
 
   .hero-rings {
@@ -88,11 +86,7 @@ const hasVisual = Astro.slots.has('visual');
 
   .hero-copy h1 :global(.serif-aside),
   .hero-copy h1 :global(em) {
-    background: var(--grad-text);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: var(--teal-deep);
+    color: var(--gold-deep);
   }
 
   .hero-grid {

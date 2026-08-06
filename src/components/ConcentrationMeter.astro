@@ -35,10 +35,10 @@ const t = Math.max(0, Math.min(1, initialScore / 100));
 
 const zone = (s: number) =>
   s < 34
-    ? { color: '#c6543d', ink: 'var(--red-ink)', word: 'Concentrated' }
+    ? { color: '#d32f2f', ink: 'var(--red-ink)', word: 'Concentrated' }
     : s < 67
-      ? { color: '#e4b363', ink: 'var(--sand-ink)', word: 'Diversifying' }
-      : { color: '#0d7e8a', ink: 'var(--teal-deep)', word: 'Diversified' };
+      ? { color: '#f59e0b', ink: 'var(--sand-ink)', word: 'Diversifying' }
+      : { color: '#2e7d32', ink: 'var(--sage-ink)', word: 'Diversified' };
 
 const z = zone(initialScore);
 const angle = Math.PI * (1 - t);
@@ -171,7 +171,7 @@ const largest = (n: number) => Math.min(100, Math.ceil((100 / n) * 1.35));
   }
 
   .meter-fill {
-    filter: drop-shadow(0 4px 8px rgba(11, 46, 51, 0.22));
+    filter: drop-shadow(0 3px 6px rgba(20, 40, 30, 0.14));
   }
 
   .meter-halo {
@@ -203,7 +203,7 @@ const largest = (n: number) => Math.min(100, Math.ceil((100 / n) * 1.35));
     bottom: 4%;
     transform: translateX(-50%);
     font-family: var(--font-display);
-    font-weight: 600;
+    font-weight: 400;
     font-size: 1.45em;
     letter-spacing: -0.02em;
     line-height: 1;
@@ -222,7 +222,7 @@ const largest = (n: number) => Math.min(100, Math.ceil((100 / n) * 1.35));
     font-size: 0.62em;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--faint);
+    color: var(--text-2);
   }
 
   .meter-sub {
@@ -252,7 +252,7 @@ const largest = (n: number) => Math.min(100, Math.ceil((100 / n) * 1.35));
     display: flex;
     justify-content: space-between;
     font-size: 0.68rem;
-    color: var(--faint);
+    color: var(--text-2);
   }
 
   input[type='range'] {
@@ -273,7 +273,7 @@ const largest = (n: number) => Math.min(100, Math.ceil((100 / n) * 1.35));
     height: 22px;
     border-radius: 50%;
     background: var(--surface);
-    border: 2px solid var(--teal);
+    border: 2px solid var(--green);
     box-shadow: var(--shadow-s);
     transition: transform 0.15s ease;
   }
@@ -287,7 +287,7 @@ const largest = (n: number) => Math.min(100, Math.ceil((100 / n) * 1.35));
     height: 22px;
     border-radius: 50%;
     background: var(--surface);
-    border: 2px solid var(--teal);
+    border: 2px solid var(--green);
     box-shadow: var(--shadow-s);
   }
 </style>
@@ -300,10 +300,10 @@ const largest = (n: number) => Math.min(100, Math.ceil((100 / n) * 1.35));
 
   const zone = (s: number) =>
     s < 34
-      ? { color: '#c6543d', ink: '#a84631', word: 'Concentrated' }
+      ? { color: '#d32f2f', ink: '#a32020', word: 'Concentrated' }
       : s < 67
-        ? { color: '#e4b363', ink: '#8a6420', word: 'Diversifying' }
-        : { color: '#0d7e8a', ink: '#0a5e68', word: 'Diversified' };
+        ? { color: '#f59e0b', ink: '#92400e', word: 'Diversifying' }
+        : { color: '#2e7d32', ink: '#1f5c23', word: 'Diversified' };
 
   document.querySelectorAll<HTMLElement>('[data-meter="demo"]').forEach((root) => {
     const range = root.querySelector<HTMLInputElement>('input[type="range"]');

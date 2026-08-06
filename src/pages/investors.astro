@@ -104,7 +104,7 @@ const alerts = [
 <style>
   .alerts-panel {
     overflow: hidden;
-    box-shadow: var(--shadow-l), 0 0 70px -28px rgba(31, 210, 192, 0.3);
+    box-shadow: var(--shadow-m);
   }
 
   .ap-head {
@@ -113,7 +113,7 @@ const alerts = [
     justify-content: space-between;
     padding: 0.8rem 1.1rem;
     border-bottom: 1px solid var(--line);
-    background: #0b111c;
+    background: var(--tint);
   }
 
   .ap-title {
@@ -128,9 +128,9 @@ const alerts = [
 
   .ap-badge {
     font-size: 0.68rem;
-    color: var(--teal);
-    background: rgba(31, 210, 192, 0.1);
-    border: 1px solid rgba(31, 210, 192, 0.25);
+    color: var(--green);
+    background: var(--green-soft);
+    border: 1px solid var(--line-2);
     border-radius: 999px;
     padding: 0.12rem 0.55rem;
   }
@@ -177,17 +177,17 @@ const alerts = [
 
   .ap-meta {
     font-size: 0.74rem;
-    color: var(--faint);
+    color: var(--text-2);
   }
 
   .ap-foot {
     padding: 0.55rem 1.1rem;
     border-top: 1px solid var(--line);
-    background: #0b111c;
+    background: var(--tint);
     font-size: 0.64rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--faint);
+    color: var(--text-2);
   }
 
   .honesty {
@@ -198,7 +198,7 @@ const alerts = [
   }
 
   .honesty :global(svg) {
-    color: var(--teal);
+    color: var(--green);
     flex: none;
     margin-top: 0.15rem;
   }

@@ -24,7 +24,8 @@ const {
   class: className,
 } = Astro.props;
 
-const COLORS = ['#0090a3', '#c08a2e', '#5578c4', '#2e9d80', '#a2609a', '#c97a50'];
+// Validated categorical palette (--c1..--c6), fixed order, never cycled.
+const COLORS = ['#1f7a54', '#a8871f', '#2a6fb0', '#c2643c', '#0e9384', '#7a5aa6'];
 const R = 42;
 const C = 2 * Math.PI * R; // ≈ 263.9
 const GAP = 2.5;
@@ -113,8 +114,8 @@ const arcs = segments.slice(0, 6).map((seg, i) => {
 
   .donut-title {
     font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 1.25em;
+    font-weight: 400;
+    font-size: 1.45em;
     color: var(--ink);
     letter-spacing: -0.02em;
     line-height: 1;

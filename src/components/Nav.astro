@@ -173,34 +173,18 @@ const menus = [
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(7, 11, 18, 0.72);
-    backdrop-filter: blur(18px) saturate(1.4);
-    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    background: rgba(247, 248, 244, 0.88);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
     border-bottom: 1px solid transparent;
     transition: border-color 0.25s ease, box-shadow 0.25s ease,
       background-color 0.25s ease;
   }
 
   .site-header.scrolled {
-    background: rgba(7, 11, 18, 0.85);
+    background: rgba(247, 248, 244, 0.96);
     border-bottom-color: var(--line);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
-  }
-
-  .site-header.scrolled::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -1px;
-    height: 1px;
-    background: linear-gradient(
-      90deg,
-      transparent 8%,
-      rgba(13, 126, 138, 0.35) 50%,
-      transparent 92%
-    );
-    pointer-events: none;
+    box-shadow: var(--shadow-s);
   }
 
   .nav-row {
@@ -243,11 +227,11 @@ const menus = [
 
   .nav-link:hover {
     color: var(--ink);
-    background: rgba(31, 210, 192, 0.07);
+    background: var(--tint);
   }
 
   .chev {
-    color: var(--faint);
+    color: var(--text-2);
     transition: transform 0.2s ease;
     margin-top: 1px;
   }

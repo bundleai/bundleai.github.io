@@ -24,7 +24,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="theme-color" content="#070b12" />
+    <meta name="theme-color" content="#f7f8f4" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
@@ -32,14 +32,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta name="twitter:card" content="summary" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://api.fontshare.com" />
-    <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
     <link
-      href="https://api.fontshare.com/v2/css?f[]=general-sans@500,600,700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@1,8..60,400..600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400..700&family=IBM+Plex+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
   </head>
@@ -78,9 +72,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       }
 
       .risk-ribbon {
-        background: #0b1220;
-        border-bottom: 1px solid var(--line);
-        color: var(--text-2);
+        background: var(--ink);
+        color: #b4c4b4;
       }
 
       .risk-ribbon p {
@@ -94,12 +87,12 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       }
 
       .risk-ribbon strong {
-        color: var(--ink);
+        color: #ffffff;
         font-weight: 600;
       }
 
       .risk-ribbon a {
-        color: var(--teal);
+        color: var(--gold);
         text-decoration: underline;
         text-underline-offset: 2px;
         margin-left: 0.35rem;

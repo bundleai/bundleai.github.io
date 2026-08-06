@@ -105,7 +105,7 @@ const lessons = [
               <a href={l.href} class="card card-hover lesson-card reveal" style={`--d:${(i % 4) * 0.06}s`}>
                 <div class="lc-top">
                   <span class="icon-chip"><Icon name={l.icon} size={19} /></span>
-                  <span class="badge badge-teal">{l.category}</span>
+                  <span class="badge badge-green">{l.category}</span>
                 </div>
                 <h3 class="lc-name">{l.title}</h3>
                 <p class="small muted lc-desc">{l.desc}</p>
@@ -154,12 +154,12 @@ const lessons = [
     font-size: 0.68rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--teal-deep);
+    color: var(--green-deep);
   }
 
   .ps-v {
     font-family: var(--font-display);
-    font-weight: 600;
+    font-weight: 400;
     color: var(--ink);
     font-size: 1.05rem;
   }
@@ -221,6 +221,6 @@ const lessons = [
     font-size: 0.7rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--faint);
+    color: var(--text-2);
   }
 </style>

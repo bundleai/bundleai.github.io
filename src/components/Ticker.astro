@@ -35,7 +35,7 @@ const tape = deals.filter((d) => d.price != null);
 <style>
   .ticker {
     border-bottom: 1px solid var(--line);
-    background: #060a10;
+    background: var(--surface);
     overflow: hidden;
     position: relative;
   }
@@ -53,12 +53,12 @@ const tape = deals.filter((d) => d.price != null);
 
   .ticker::before {
     left: 0;
-    background: linear-gradient(90deg, #060a10, transparent);
+    background: linear-gradient(90deg, var(--surface), transparent);
   }
 
   .ticker::after {
     right: 0;
-    background: linear-gradient(-90deg, #060a10, transparent);
+    background: linear-gradient(-90deg, var(--surface), transparent);
   }
 
   .tape {
@@ -87,12 +87,12 @@ const tape = deals.filter((d) => d.price != null);
   }
 
   .tape-run li a:hover {
-    background: rgba(31, 210, 192, 0.05);
+    background: var(--tint);
   }
 
   .t-code {
     font-size: 0.72rem;
-    color: var(--faint);
+    color: var(--text-2);
     letter-spacing: 0.06em;
   }
 
@@ -106,12 +106,12 @@ const tape = deals.filter((d) => d.price != null);
   }
 
   .t-change.flat {
-    color: var(--faint);
+    color: var(--text-2);
   }
 
   .t-src {
     font-size: 0.7rem;
-    color: var(--faint);
+    color: var(--text-2);
   }
 
   @media (prefers-reduced-motion: no-preference) {

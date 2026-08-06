@@ -44,7 +44,7 @@ const risks = [
 >
   <section class="rw-hero">
     <div class="container narrow">
-      <p class="eyebrow reveal" style="color:#e9c98a">The honest page</p>
+      <p class="eyebrow reveal" style="color:var(--gold)">The honest page</p>
       <h1 class="display reveal" style="--d:.05s">
         Don't invest unless you're prepared to lose all the money you invest.
       </h1>
@@ -109,7 +109,7 @@ const risks = [
 
 <style>
   .rw-hero {
-    background: #0e1624;
+    background: var(--ink);
     border-bottom: 1px solid var(--line);
     padding: clamp(3.5rem, 8vw, 6rem) 0 clamp(2.75rem, 6vw, 4.5rem);
   }
@@ -120,7 +120,7 @@ const risks = [
   }
 
   .rw-hero .lead {
-    color: #b8cdd1;
+    color: #b4c4b4;
   }
 
   .rw-list {
@@ -164,7 +164,7 @@ const risks = [
     margin-top: 3rem;
     padding: clamp(1.5rem, 3.5vw, 2.25rem);
     background: var(--tint);
-    border: 1px solid rgba(13, 126, 138, 0.16);
+    border: 1px solid var(--line);
     border-radius: var(--r-l);
   }
 
@@ -176,6 +176,6 @@ const risks = [
   }
 
   .rw-hero :global(.eyebrow::before) {
-    background: #e9c98a;
+    background: var(--gold);
   }
 </style>

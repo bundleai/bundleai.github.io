@@ -67,7 +67,7 @@ const cols = [
 
   <div class="container footer-main">
     <div class="footer-brand">
-      <a href="/" aria-label="Bundle.ai home"><Logo size={26} /></a>
+      <a href="/" aria-label="Bundle.ai home"><Logo size={26} tone="white" /></a>
       <p class="tagline">
         Every private-market deal — crowdfunding, secondaries and pre-IPO — on
         one screen. Compare across venues, then invest where the deal lives.
@@ -132,31 +132,17 @@ const cols = [
 </footer>
 
 <style>
+  /* Primary Dark surface — the anchor at the bottom of every page. */
   .site-footer {
     position: relative;
     margin-top: auto;
-    background: linear-gradient(180deg, var(--bg), #0a1019);
-    border-top: 1px solid var(--line);
-  }
-
-  .site-footer::before {
-    content: "";
-    position: absolute;
-    top: -1px;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(
-      90deg,
-      transparent 5%,
-      rgba(31, 210, 192, 0.4) 50%,
-      transparent 95%
-    );
+    background: var(--ink);
+    color: #c9d6c9;
   }
 
   .risk-band {
-    background: var(--sand-tint);
-    border-bottom: 1px solid rgba(232, 180, 81, 0.18);
+    background: rgba(201, 162, 39, 0.12);
+    border-bottom: 1px solid rgba(201, 162, 39, 0.22);
   }
 
   .risk-band p {
@@ -164,11 +150,15 @@ const cols = [
     padding: 0.85rem 0;
     font-size: 0.9rem;
     line-height: 1.55;
-    color: var(--ink);
+    color: #e6ecdf;
+  }
+
+  .risk-band strong {
+    color: #ffffff;
   }
 
   .risk-band a {
-    color: var(--sand-ink);
+    color: var(--gold);
     text-decoration: underline;
     text-underline-offset: 2px;
     font-weight: 550;
@@ -184,14 +174,26 @@ const cols = [
   .tagline {
     margin-top: 1.1rem;
     font-size: 0.92rem;
-    color: var(--text-2);
+    color: #a8bba8;
     max-width: 24rem;
   }
 
   .made-in {
     font-size: 0.85rem;
-    color: var(--text-2);
+    color: #a8bba8;
     line-height: 1.9;
+  }
+
+  .made-in a {
+    color: var(--gold);
+  }
+
+  .made-in a:hover {
+    color: #ddbb4f;
+  }
+
+  .footer-legal .hr {
+    border-top-color: rgba(255, 255, 255, 0.12);
   }
 
   .footer-cols {
@@ -206,7 +208,7 @@ const cols = [
     font-weight: 500;
     letter-spacing: 0.13em;
     text-transform: uppercase;
-    color: var(--text-2);
+    color: #8fa48f;
     margin-bottom: 0.9rem;
   }
 
@@ -219,12 +221,12 @@ const cols = [
   }
 
   .footer-col a {
-    color: var(--text);
+    color: #c9d6c9;
     font-size: 0.92rem;
   }
 
   .footer-col a:hover {
-    color: var(--teal);
+    color: #ffffff;
   }
 
   .footer-legal {
@@ -235,7 +237,7 @@ const cols = [
     padding-top: 1.75rem;
     font-size: 0.8rem;
     line-height: 1.65;
-    color: var(--text-2);
+    color: #8fa48f;
     max-width: 68rem;
   }
 
@@ -245,7 +247,7 @@ const cols = [
     gap: 1rem;
     flex-wrap: wrap;
     font-size: 0.82rem;
-    color: var(--text-2);
+    color: #8fa48f;
   }
 
   .legal-links {
@@ -254,11 +256,11 @@ const cols = [
   }
 
   .legal-links a {
-    color: var(--text-2);
+    color: #a8bba8;
   }
 
   .legal-links a:hover {
-    color: var(--teal);
+    color: #ffffff;
   }
 
   @media (max-width: 1024px) {

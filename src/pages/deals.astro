@@ -194,7 +194,7 @@ const typeLabel = (t: string) =>
 
   #scr-count {
     font-family: var(--font-mono);
-    color: var(--teal);
+    color: var(--green);
   }
 
   /* Filter bar */
@@ -213,19 +213,19 @@ const typeLabel = (t: string) =>
     align-items: center;
     gap: 0.55rem;
     padding: 0.5rem 0.85rem;
-    background: #0a101a;
+    background: var(--surface);
     border: 1px solid var(--line-2);
     border-radius: 9px;
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
 
   .scr-search:focus-within {
-    border-color: var(--teal);
-    box-shadow: 0 0 0 3px rgba(31, 210, 192, 0.14);
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(33, 64, 46, 0.12);
   }
 
   .scr-search svg {
-    color: var(--faint);
+    color: var(--text-2);
     flex: none;
   }
 
@@ -244,13 +244,13 @@ const typeLabel = (t: string) =>
   }
 
   .scr-search input::placeholder {
-    color: var(--faint);
+    color: var(--text-2);
   }
 
   .scr-types {
     display: flex;
     gap: 0.25rem;
-    background: #0a101a;
+    background: var(--surface);
     border: 1px solid var(--line);
     border-radius: 9px;
     padding: 0.22rem;
@@ -275,7 +275,7 @@ const typeLabel = (t: string) =>
 
   .scr-filters select {
     padding: 0.52rem 0.75rem;
-    background: #0a101a;
+    background: var(--surface);
     border: 1px solid var(--line-2);
     border-radius: 9px;
     color: var(--text);
@@ -286,7 +286,7 @@ const typeLabel = (t: string) =>
 
   .scr-filters select:focus {
     outline: none;
-    border-color: var(--teal);
+    border-color: var(--green);
   }
 
   /* Table cells — 8 columns, keep them on one screen at desktop */
@@ -361,7 +361,7 @@ const typeLabel = (t: string) =>
   }
 
   .flat {
-    color: var(--faint);
+    color: var(--text-2);
   }
 
   .round-cell {
@@ -383,7 +383,7 @@ const typeLabel = (t: string) =>
 
   .trade-btn:hover {
     background: var(--up-tint);
-    border-color: rgba(22, 199, 132, 0.5);
+    border-color: var(--up);
     color: var(--up);
   }
 
@@ -400,11 +400,11 @@ const typeLabel = (t: string) =>
 
   /* Highlight a row arrived at via #anchor */
   .scr-row:target {
-    background: rgba(31, 210, 192, 0.07);
+    background: var(--tint);
   }
 
   .scr-row:target td {
-    border-bottom-color: rgba(31, 210, 192, 0.3);
+    border-bottom-color: var(--green);
   }
 </style>
 

@@ -7,8 +7,8 @@ interface Props {
 }
 
 const { size = 26, tone = 'default', markOnly = false } = Astro.props;
-const ink = tone === 'white' ? '#ffffff' : '#1fd2c0';
-const alt = tone === 'white' ? 'rgba(255,255,255,.72)' : '#16c784';
+const ink = tone === 'white' ? '#ffffff' : '#21402e';
+const alt = tone === 'white' ? '#c9a227' : '#c9a227';
 ---
 
 <span class:list={['logo', tone]} style={`--logo-size:${size}px`}>
@@ -38,16 +38,15 @@ const alt = tone === 'white' ? 'rgba(255,255,255,.72)' : '#16c784';
 
   .word {
     font-family: var(--font-display);
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    font-size: calc(var(--logo-size) * 0.82);
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    font-size: calc(var(--logo-size) * 0.95);
     color: var(--ink);
     transform: translateY(-1px);
   }
 
   .ai {
-    color: var(--teal);
-    font-weight: 500;
+    color: var(--gold-deep);
   }
 
   .logo.white .word {
@@ -55,6 +54,6 @@ const alt = tone === 'white' ? 'rgba(255,255,255,.72)' : '#16c784';
   }
 
   .logo.white .ai {
-    color: rgba(255, 255, 255, 0.72);
+    color: var(--gold);
   }
 </style>

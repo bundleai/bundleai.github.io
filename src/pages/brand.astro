@@ -4,23 +4,31 @@ import PageHero from '../components/PageHero.astro';
 import Logo from '../components/Logo.astro';
 
 const palette = [
-  { name: 'Terminal navy', hex: '#070B12', varName: '--bg' },
-  { name: 'Panel', hex: '#0D131D', varName: '--surface' },
-  { name: 'Signal teal', hex: '#1FD2C0', varName: '--teal', light: true },
-  { name: 'Market up', hex: '#16C784', varName: '--up', light: true },
-  { name: 'Market down', hex: '#F6465D', varName: '--down' },
-  { name: 'Sand', hex: '#E8B451', varName: '--sand', light: true },
-  { name: 'Ink (text)', hex: '#EEF4F8', varName: '--ink', light: true },
-  { name: 'Body grey', hex: '#A9B6C2', varName: '--text', light: true },
+  { name: 'Background', hex: '#F7F8F4', varName: '--bg', light: true },
+  { name: 'Surface', hex: '#FFFFFF', varName: '--surface', light: true },
+  { name: 'Primary dark', hex: '#14281E', varName: '--ink' },
+  { name: 'Primary green', hex: '#21402E', varName: '--green' },
+  { name: 'Primary light', hex: '#EDF2EC', varName: '--tint', light: true },
+  { name: 'Neutral cream', hex: '#EFE9DC', varName: '--cream', light: true },
+  { name: 'Accent gold', hex: '#C9A227', varName: '--gold' },
+  { name: 'Border', hex: '#D9E2DB', varName: '--line', light: true },
 ];
 
 const chart = [
-  { name: 'Chart 1', hex: '#27BFD4' },
-  { name: 'Chart 2', hex: '#DFA63F' },
-  { name: 'Chart 3', hex: '#7F9FE6' },
-  { name: 'Chart 4', hex: '#3FC79A' },
-  { name: 'Chart 5', hex: '#C583BB' },
-  { name: 'Chart 6', hex: '#E2906A' },
+  { name: 'Chart 1', hex: '#1F7A54' },
+  { name: 'Chart 2', hex: '#A8871F' },
+  { name: 'Chart 3', hex: '#2A6FB0' },
+  { name: 'Chart 4', hex: '#C2643C' },
+  { name: 'Chart 5', hex: '#0E9384' },
+  { name: 'Chart 6', hex: '#7A5AA6' },
+];
+
+// 65% background · 20% white cards · 10% greens · 5% gold
+const ratio = [
+  { name: 'Background', hex: '#F7F8F4', pct: 65 },
+  { name: 'White cards', hex: '#FFFFFF', pct: 20 },
+  { name: 'Greens', hex: '#21402E', pct: 10 },
+  { name: 'Gold', hex: '#C9A227', pct: 5 },
 ];
 ---
 
@@ -31,7 +39,7 @@ const chart = [
   <PageHero
     eyebrow="Brand"
     title='Many small pieces, <em class="serif-aside">one disciplined whole</em>'
-    lead="The Bundle mark is four positions of varied weight on a shared baseline, an allocation on a shared baseline. It now lives on a terminal-dark canvas: market energy, honestly earned."
+    lead="The Bundle mark is four positions of varied weight on a shared baseline, an allocation on a shared baseline. It sits on a calm, light canvas: deep green for structure, gold for the one thing that matters most on a page."
   />
 
   <section class="section">
@@ -68,7 +76,7 @@ const chart = [
 
       <div class="section-head" style="margin-top:4rem">
         <p class="eyebrow reveal">Colour</p>
-        <h2 class="h2 reveal" style="--d:.05s">Dark canvas, signal teal, direction colours reserved for prices</h2>
+        <h2 class="h2 reveal" style="--d:.05s">Light canvas, deep green structure, gold used once</h2>
       </div>
       <div class="swatch-grid reveal">
         {
@@ -81,9 +89,35 @@ const chart = [
           ))
         }
       </div>
-      <p class="small muted reveal" style="margin:1.25rem 0 0">
+      <div class="ratio reveal">
+        <p class="spec-label mono" style="margin-bottom:0.65rem">Usage ratio</p>
+        <div class="ratio-bar">
+          {
+            ratio.map((r) => (
+              <span
+                class="ratio-seg"
+                style={`flex:${r.pct};background:${r.hex}`}
+                title={`${r.name} ${r.pct}%`}
+              />
+            ))
+          }
+        </div>
+        <ul class="ratio-key">
+          {
+            ratio.map((r) => (
+              <li>
+                <span class="key-chip" style={`background:${r.hex}`} />
+                {r.name}
+                <span class="mono tabular">{r.pct}%</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <p class="small muted reveal" style="margin:2.5rem 0 0">
         Data visualisation uses a separate six-hue categorical palette, validated
-        for colour-vision-deficiency separation and ≥3:1 contrast on white, charts never borrow status colours, and status colours never play series.
+        for colour-vision-deficiency separation and ≥3:1 contrast on white. Charts never borrow status colours, and status colours never play series. Brand gold sits at 2.42:1 on white, so charts use a darker gold step and the gold CTA carries a dark-green label rather than white.
       </p>
       <div class="swatch-grid chart-grid reveal">
         {
@@ -98,12 +132,12 @@ const chart = [
 
       <div class="section-head" style="margin-top:4rem">
         <p class="eyebrow reveal">Type</p>
-        <h2 class="h2 reveal" style="--d:.05s">Confident headings, humane body, honest numbers</h2>
+        <h2 class="h2 reveal" style="--d:.05s">Elegant serif headings, humane body, honest numbers</h2>
       </div>
       <div class="grid cols-3">
         <div class="card type-card reveal">
-          <p class="spec-label mono">Display, General Sans</p>
-          <p class="type-demo display" style="font-size:2.2rem">Discipline by design</p>
+          <p class="spec-label mono">Display, Instrument Serif</p>
+          <p class="type-demo display" style="font-size:2.4rem">Discipline by design</p>
         </div>
         <div class="card type-card reveal" style="--d:.07s">
           <p class="spec-label mono">Body, Inter</p>
@@ -116,7 +150,7 @@ const chart = [
       </div>
 
       <div class="card serif-card reveal" style="margin-top:1.25rem">
-        <p class="spec-label mono">Editorial accent, Source Serif 4 italic</p>
+        <p class="spec-label mono">Editorial accent, Instrument Serif italic</p>
         <p class="serif-aside" style="font-size:1.6rem; margin:0">
           “One bet is a gamble. Twenty is a strategy.”
         </p>
@@ -150,7 +184,7 @@ const chart = [
   }
 
   .spec-stage.dark {
-    background: #0e1727;
+    background: var(--ink);
     border-color: var(--line-2);
   }
 
@@ -204,6 +238,46 @@ const chart = [
   .sw-hex {
     font-size: 0.7rem;
     color: var(--text-2);
+  }
+
+  .ratio {
+    margin-top: 2.5rem;
+  }
+
+  .ratio-bar {
+    display: flex;
+    height: 42px;
+    border-radius: var(--r-s);
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+
+  .ratio-seg {
+    display: block;
+  }
+
+  .ratio-key {
+    list-style: none;
+    margin: 0.85rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    font-size: 0.82rem;
+    color: var(--text-2);
+  }
+
+  .ratio-key li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .key-chip {
+    width: 0.72rem;
+    height: 0.72rem;
+    border-radius: 3px;
+    border: 1px solid var(--line-2);
   }
 
   @media (max-width: 900px) {
