@@ -6,9 +6,9 @@ import FAQ from '../components/FAQ.astro';
 import CTABand from '../components/CTABand.astro';
 
 const benefits = [
-  { icon: 'eye', name: 'Demand you didn’t have to buy', desc: 'Your round appears in front of investors screening the whole market — not just the audience of the platform you chose.' },
+  { icon: 'eye', name: 'Demand you didn’t have to buy', desc: 'Your round appears in front of investors screening the whole market, not just the audience of the platform you chose.' },
   { icon: 'doc-check', name: 'A claimed, enriched listing', desc: 'Verify your company, correct the data, add context. A claimed listing outranks a scraped one in completeness, never in commission.' },
-  { icon: 'bell', name: 'Watchlist demand signals', desc: 'See how many Bundle investors follow your company or sector — real interest data before and during your raise.' },
+  { icon: 'bell', name: 'Watchlist demand signals', desc: 'See how many Bundle investors follow your company or sector, real interest data before and during your raise.' },
   { icon: 'exchange', name: 'Secondary-market visibility', desc: 'Post-raise, employees and early backers can see real venues for liquidity, and investors can see your paper actually trades.' },
 ];
 
@@ -22,7 +22,7 @@ const tools = [
 const faqs = [
   {
     q: 'Does Bundle host my raise?',
-    a: 'No — you raise on the venue you choose (Crowdcube, Republic Europe, Wefunder, or anywhere else we track). Bundle is the aggregation layer that makes sure investors screening the whole market see your round, wherever it lives.',
+    a: 'No. You raise on the venue you choose (Crowdcube, Republic Europe, Wefunder, or anywhere else we track). Bundle is the aggregation layer that makes sure investors screening the whole market see your round, wherever it lives.',
   },
   {
     q: 'What does claiming my listing cost?',
@@ -34,19 +34,19 @@ const faqs = [
   },
   {
     q: 'My round isn’t showing. Why?',
-    a: 'Coverage rolls out venue by venue. If you’re raising on a platform we track and can’t find your round, tell us — missing coverage is a bug, and founder reports are how we catch it fastest.',
+    a: 'Coverage rolls out venue by venue. If you’re raising on a platform we track and can’t find your round, tell us, missing coverage is a bug, and founder reports are how we catch it fastest.',
   },
 ];
 ---
 
 <BaseLayout
   title="For Founders"
-  description="Raising on Crowdcube, Republic Europe or Wefunder? Bundle puts your round in front of investors screening the whole private market — and gives you free AI raise tools."
+  description="Raising on Crowdcube, Republic Europe or Wefunder? Bundle puts your round in front of investors screening the whole private market, and gives you free AI raise tools."
 >
   <PageHero
     eyebrow="For founders"
     title='Raise where you like. <em class="serif-aside">Be seen everywhere.</em>'
-    lead="Your round lives on one platform, but the investors you want screen the whole market. Bundle aggregates every venue's deal flow — claim your listing so yours shows up sharp."
+    lead="Your round lives on one platform, but the investors you want screen the whole market. Bundle aggregates every venue's deal flow, claim your listing so yours shows up sharp."
   >
     <Fragment slot="actions">
       <a href="#health-check" class="btn btn-primary btn-lg">Free AI Pitch Health Check <span class="arrow">→</span></a>
@@ -91,7 +91,7 @@ const faqs = [
             else sees them.
           </p>
           <div class="hero-actions reveal" style="--d:.15s;display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1.5rem">
-            <a href="/waitlist" class="btn btn-primary">Get the Health Check <span class="arrow">→</span></a>
+            <a href="/contact" class="btn btn-primary">Get the Health Check <span class="arrow">→</span></a>
           </div>
         </div>
         <div class="grid cols-2 tools-grid reveal" style="--d:.12s">
@@ -125,8 +125,8 @@ const faqs = [
     sub="Claim your listing, run the free Health Check, and meet demand from across the market."
     primaryLabel="Claim your listing"
     primaryHref="/contact"
-    secondaryLabel="Get early access"
-    secondaryHref="/waitlist"
+    secondaryLabel="Build my portfolio"
+    secondaryHref="/portfolio"
   />
 </BaseLayout>
 

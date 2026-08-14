@@ -9,7 +9,7 @@ const steps = [
     num: '01',
     icon: 'search',
     title: 'Scan',
-    body: 'Bundle continuously scans the venues where private-market deals actually live — crowdfunding platforms, secondary marketplaces, pre-IPO desks. New listings hit your screen the moment they hit the market.',
+    body: 'Bundle continuously scans the venues where private-market deals actually live: crowdfunding platforms, secondary marketplaces, pre-IPO desks. New listings hit your screen the moment they hit the market.',
   },
   {
     num: '02',
@@ -21,7 +21,7 @@ const steps = [
     num: '03',
     icon: 'scale',
     title: 'Compare',
-    body: 'The same company often trades in more than one place at more than one price. Bundle lines up price, fees, minimums, share class and access requirements — so you route the order to the best venue.',
+    body: 'The same company often trades in more than one place at more than one price. Bundle lines up price, fees, minimums, share class and access requirements, so you route the order to the best venue.',
   },
   {
     num: '04',
@@ -33,17 +33,17 @@ const steps = [
     num: '05',
     icon: 'pie',
     title: 'Track',
-    body: 'Positions across every venue sync into one portfolio — one P&L, revaluations as new rounds price, and alerts when liquidity opens up for something you hold.',
+    body: 'Positions across every venue sync into one portfolio: one P&L, revaluations as new rounds price, and alerts when liquidity opens up for something you hold.',
   },
 ];
 
 const isnt = [
-  { is: true, text: 'A screener for the entire private market — crowdfunding, secondaries, pre-IPO' },
+  { is: true, text: 'A screener for the entire private market: crowdfunding, secondaries, pre-IPO' },
   { is: true, text: 'A comparison layer: price, fees, minimums and access, venue by venue' },
   { is: true, text: 'A single portfolio and alert engine across every venue you use' },
-  { is: false, text: 'A broker or exchange — trades execute on the venue that lists the deal' },
-  { is: false, text: 'A custodian — Bundle never holds your money or your shares' },
-  { is: false, text: 'An adviser — we show the whole market, we don’t tell you what to buy' },
+  { is: false, text: 'A broker or exchange. Trades execute on the venue that lists the deal' },
+  { is: false, text: 'A custodian. Bundle never holds your money or your shares' },
+  { is: false, text: 'An adviser. We show the whole market, we don’t tell you what to buy' },
 ];
 ---
 
@@ -54,10 +54,10 @@ const isnt = [
   <PageHero
     eyebrow="How it works"
     title="From scattered venues to <em>one order flow.</em>"
-    lead="The deals were always out there — spread across a dozen tabs, logins and mailing lists. Bundle collapses them into a single screen and gets you from discovery to execution in minutes."
+    lead="The deals were always out there, spread across a dozen tabs, logins and mailing lists. Bundle collapses them into a single screen and gets you from discovery to execution in minutes."
   >
     <a slot="actions" href="/deals" class="btn btn-primary btn-lg">Open the screener <span class="arrow">→</span></a>
-    <a slot="actions" href="/waitlist" class="btn btn-ghost btn-lg">Get early access</a>
+    <a slot="actions" href="/portfolio" class="btn btn-ghost btn-lg">Build my portfolio</a>
   </PageHero>
 
   <!-- Steps -->
@@ -90,7 +90,7 @@ const isnt = [
     <div class="container narrow">
       <div class="section-head">
         <p class="eyebrow reveal">No small-print surprises</p>
-        <h2 class="h2 reveal" style="--d:.05s">What Bundle is — and what it refuses to be</h2>
+        <h2 class="h2 reveal" style="--d:.05s">What Bundle is, and what it refuses to be</h2>
       </div>
       <ul class="isnt-list reveal" style="--d:.08s">
         {
@@ -114,9 +114,9 @@ const isnt = [
 
   <CTABand
     title="See the whole market <em>before everyone else.</em>"
-    sub="Early access opens in order of sign-up — screener, watchlists and alerts from day one."
-    primaryLabel="Get early access"
-    primaryHref="/waitlist"
+    sub="The screener is live, the plan takes three minutes, and the deal is executed on the venue that lists it."
+    primaryLabel="Build my portfolio"
+    primaryHref="/portfolio"
     secondaryLabel="Browse live deals"
     secondaryHref="/deals"
   />

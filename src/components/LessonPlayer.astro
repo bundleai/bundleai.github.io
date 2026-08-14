@@ -1,0 +1,29 @@
+---
+/**
+ * Shell for one Academy explainer. The lesson is serialised into the page and
+ * picked up by /lesson-player.js, which draws the scenes and runs the timeline.
+ * Without JS the shell stays empty and the prose version below it still reads,
+ * which is why the transcript is never optional.
+ */
+import type { Lesson } from '../data/lessons';
+import { lessons } from '../data/lessons';
+
+interface Props {
+  lesson: Lesson;
+}
+
+const { lesson } = Astro.props;
+const i = lessons.findIndex((l) => l.slug === lesson.slug);
+const next = i >= 0 && i < lessons.length - 1 ? lessons[i + 1] : null;
+
+const payload = {
+  ...lesson,
+  next: next ? { slug: next.slug, title: next.title } : null,
+};
+---
+
+<div class="lp" data-slug={lesson.slug}>
+  <script type="application/json" set:html={JSON.stringify(payload)} is:inline />
+</div>
+
+<script is:inline src="/lesson-player.js"></script>

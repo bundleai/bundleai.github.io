@@ -1,0 +1,153 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import CTABand from '../../components/CTABand.astro';
+import LessonPlayer from '../../components/LessonPlayer.astro';
+import { lessons, lessonMeta } from '../../data/lessons';
+
+/** why-diversification-matters keeps its own long-form page, so it is served
+ *  from there rather than from this template. */
+export function getStaticPaths() {
+  return lessons
+    .filter((l) => l.slug !== 'why-diversification-matters')
+    .map((lesson) => ({ params: { slug: lesson.slug }, props: { lesson } }));
+}
+
+const { lesson } = Astro.props;
+const i = lessons.findIndex((l) => l.slug === lesson.slug);
+const next = i < lessons.length - 1 ? lessons[i + 1] : null;
+---
+
+<BaseLayout title={lesson.title} description={lesson.blurb}>
+  <section class="section tight lesson-top">
+    <div class="container narrow">
+      <a href="/learn" class="lesson-back small">← The Academy</a>
+      <div class="lesson-head">
+        <span class="icon-chip"><Icon name={lesson.icon} size={20} /></span>
+        <div>
+          <span class="badge badge-green">{lesson.category}</span>
+          <h1 class="h2 lesson-title">{lesson.title}</h1>
+          <p class="small muted lesson-meta mono">
+            {lessonMeta(lesson)} · watch or read
+          </p>
+        </div>
+      </div>
+      <p class="lead lesson-lede">{lesson.blurb}</p>
+
+      <LessonPlayer lesson={lesson} />
+
+      <h2 class="h3 lesson-h">The same thing, in words</h2>
+      <div class="prose lesson-prose">
+        {lesson.text.map((p) => <p>{p}</p>)}
+      </div>
+
+      <div class="card lesson-take">
+        <h3 class="h3">What to take away</h3>
+        <ul>
+          {lesson.takeaways.map((t) => <li>{t}</li>)}
+        </ul>
+      </div>
+
+      <div class="lesson-next">
+        {
+          next ? (
+            <a href={`/learn/${next.slug}`} class="card card-hover lesson-next-card">
+              <span class="small muted">Next in the path</span>
+              <span class="lesson-next-t">{next.title}</span>
+              <span class="small muted">{lessonMeta(next)}</span>
+            </a>
+          ) : (
+            <a href="/learn" class="card card-hover lesson-next-card">
+              <span class="small muted">That is the last one</span>
+              <span class="lesson-next-t">Back to the Academy</span>
+              <span class="small muted">Check your path progress</span>
+            </a>
+          )
+        }
+        <a href="/portfolio" class="card card-hover lesson-next-card">
+          <span class="small muted">Put it to work</span>
+          <span class="lesson-next-t">Build your portfolio</span>
+          <span class="small muted">Three minutes, then deals that fit it</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <CTABand
+    title="Learn it, then <em class='serif-aside'>build it.</em>"
+    sub="Your plan turns these lessons into guardrails: an allocation cap, a target spread and deals ranked against both."
+    secondaryLabel="Browse live deals"
+    secondaryHref="/deals"
+  />
+</BaseLayout>
+
+<style is:global>
+  .lesson-top { padding-top: clamp(1.5rem, 3vw, 2.5rem); }
+
+  .lesson-back {
+    display: inline-block;
+    color: var(--text-2);
+    margin-bottom: 1.25rem;
+  }
+
+  .lesson-back:hover { color: var(--green); }
+
+  .lesson-head {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .lesson-head .icon-chip {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    flex: none;
+  }
+
+  .lesson-title { margin: 0.55rem 0 0.3rem; }
+  .lesson-meta { margin: 0; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.7rem; }
+  .lesson-lede { margin: 1.1rem 0 1.6rem; }
+  .lesson-h { margin: 2.75rem 0 0.9rem; }
+  .lesson-prose p { margin-bottom: 1rem; }
+
+  .lesson-take {
+    padding: 1.5rem 1.6rem;
+    margin-top: 2rem;
+    background: var(--tint);
+  }
+
+  .lesson-take .h3 { margin-bottom: 0.8rem; }
+
+  .lesson-take ul {
+    margin: 0;
+    padding-left: 1.1rem;
+    display: grid;
+    gap: 0.45rem;
+    color: var(--text-2);
+    font-size: 0.94rem;
+  }
+
+  .lesson-next {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .lesson-next-card {
+    display: grid;
+    gap: 0.25rem;
+    padding: 1.25rem 1.35rem;
+  }
+
+  .lesson-next-t {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    color: var(--ink);
+  }
+
+  @media (max-width: 720px) {
+    .lesson-next { grid-template-columns: 1fr; }
+  }
+</style>

@@ -30,14 +30,14 @@ const whys = [
   {
     icon: 'bell',
     title: 'Alerts on the names you track',
-    body: 'Follow a company once, and get pinged whenever a block lists, a tender opens, or a UK PISCES window is announced for it — on any venue.',
+    body: 'Follow a company once, and get pinged whenever a block lists, a tender opens, or a UK PISCES window is announced for it, on any venue.',
   },
 ];
 ---
 
 <BaseLayout
   title="Secondaries"
-  description="Track secondary blocks and tenders in pre-IPO companies across Forge, Hiive, EquityZen, Nasdaq Private Market and UK PISCES venues — one tape, one watchlist."
+  description="Track secondary blocks and tenders in pre-IPO companies across Forge, Hiive, EquityZen, Nasdaq Private Market and UK PISCES venues: one tape, one watchlist."
 >
   <PageHero
     eyebrow="Markets · Secondaries"
@@ -45,7 +45,7 @@ const whys = [
     lead="Employee blocks, fund tenders and structured liquidity windows trade every week across half a dozen marketplaces. Bundle puts them on one screen, priced against the last round."
   >
     <a slot="actions" href="/deals?type=secondary" class="btn btn-primary btn-lg">Watch the tape <span class="arrow">→</span></a>
-    <a slot="actions" href="/waitlist" class="btn btn-ghost btn-lg">Get early access</a>
+    <a slot="actions" href="/portfolio" class="btn btn-ghost btn-lg">Build my portfolio</a>
   </PageHero>
 
   <!-- Live rail -->
@@ -59,7 +59,7 @@ const whys = [
         {secondaries.slice(0, 6).map((d, i) => <DealCard deal={d} class="reveal" style={`--d:${(i % 3) * 0.06}s`} />)}
       </div>
       <p class="small muted" style="margin-top:0.9rem">
-        Indicative marks from venue public pages, as of 19 July 2026 — not live quotes or offers.
+        Indicative marks from venue public pages, as of 19 July 2026, not live quotes or offers.
       </p>
     </div>
   </section>
@@ -123,7 +123,7 @@ const whys = [
         </table>
       </div>
       <p class="small muted reveal" style="margin-top:1rem">
-        Indicative summaries, not offers or endorsements — always check the
+        Indicative summaries, not offers or endorsements, always check the
         venue's current terms. Eligibility, fees and minimums change.
       </p>
     </div>
@@ -136,7 +136,7 @@ const whys = [
       <h2 class="h2 reveal" style="--d:.05s">PISCES turned UK private liquidity into a real market</h2>
       <p class="reveal" style="--d:.1s">
         Since 2026, the UK's PISCES framework lets approved venues run
-        regulated, intermittent trading windows in private-company shares —
+        regulated, intermittent trading windows in private-company shares -
         scheduled auctions with refreshed disclosure, rather than a continuous
         ticker. As companies opt in, those windows appear on Bundle's tape next
         to everything else, with the venue's own eligibility rules attached.
@@ -151,9 +151,9 @@ const whys = [
 
   <CTABand
     title="Never miss <em>a block again.</em>"
-    sub="Watchlists and listing alerts across every secondary venue, from day one of early access."
-    primaryLabel="Get early access"
-    primaryHref="/waitlist"
+    sub="Watchlists and listing alerts across every secondary venue we track."
+    primaryLabel="Build my portfolio"
+    primaryHref="/portfolio"
     secondaryLabel="Browse the tape"
     secondaryHref="/deals?type=secondary"
   />

@@ -3,81 +3,25 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/PageHero.astro';
 import Icon from '../../components/Icon.astro';
 import CTABand from '../../components/CTABand.astro';
+import { lessons, lessonMeta } from '../../data/lessons';
 
-const lessons = [
-  {
-    href: '/learn/why-diversification-matters',
-    icon: 'pie',
-    title: 'Why diversification matters',
-    desc: 'Power laws, failure rates, and why professionals build portfolios instead of picking winners.',
-    meta: '8 min · Level 1',
-    live: true,
-    category: 'Core path',
-  },
-  {
-    icon: 'pulse',
-    title: 'Why startups fail',
-    desc: 'The honest base rates, and what “most startups fail” should change about your behaviour.',
-    meta: '7 min · Level 1',
-    category: 'Core path',
-  },
-  {
-    icon: 'split',
-    title: 'What dilution means for you',
-    desc: 'Your 0.5% won’t stay 0.5%. How later rounds shrink your slice, and when that’s good news.',
-    meta: '9 min · Level 2',
-    category: 'Core path',
-  },
-  {
-    icon: 'timer',
-    title: 'Illiquidity: the decade-long deal',
-    desc: 'Why you can’t sell startup shares like stocks, what PISCES windows change, and what they don’t.',
-    meta: '6 min · Level 1',
-    category: 'Core path',
-  },
-  {
-    icon: 'award',
-    title: 'SEIS & EIS, without the mythology',
-    desc: 'What the reliefs actually do, what they never protect you from, and the paperwork that matters.',
-    meta: '10 min · Level 2',
-    category: 'Tax & structure',
-  },
-  {
-    icon: 'clock',
-    title: 'Realistic exit timelines',
-    desc: 'Acquisitions, IPOs, failures and zombies: when private investments actually return money.',
-    meta: '7 min · Level 2',
-    category: 'Core path',
-  },
-  {
-    icon: 'sliders',
-    title: 'How to build a startup portfolio',
-    desc: 'Position sizing, sector spread, stage balance and pacing, the craft, end to end.',
-    meta: '12 min · Level 3',
-    category: 'Portfolio craft',
-  },
-  {
-    icon: 'search',
-    title: 'Reading a pitch like a sceptic',
-    desc: 'Traction theatre, TAM fiction and valuation tells, the questions that cut through.',
-    meta: '11 min · Level 3',
-    category: 'Portfolio craft',
-  },
-];
+const totalMinutes = lessons.reduce((a, l) => a + l.minutes, 0);
 ---
 
 <BaseLayout
   title="Academy"
-  description="Free, plain-English lessons on startup portfolio investing: diversification, failure rates, dilution, illiquidity, SEIS/EIS and portfolio craft. Education is the front door at Bundle."
+  description="Free, plain-English lessons on startup portfolio investing, each one a short interactive explainer you can watch or read: diversification, failure rates, dilution, illiquidity, SEIS/EIS and portfolio craft."
 >
   <PageHero
     eyebrow="The Academy"
     title='Learn startup investing <em class="serif-aside">before</em> you risk a pound'
-    lead="Free, plain-English, and honest about the failure rates. The Academy is Bundle's front door: most people arrive to learn, and the discipline follows. No sign-up needed to read."
+    lead={`Eight short explainers, ${totalMinutes} minutes end to end. Each one plays like a video, pauses where you want to think, and reads as text underneath. Free, honest about the failure rates, no sign-up needed to watch.`}
   >
     <Fragment slot="actions">
-      <a href="/learn/why-diversification-matters" class="btn btn-primary btn-lg">Start lesson one <span class="arrow">→</span></a>
-      <a href="/waitlist" class="btn btn-ghost btn-lg">Join the waitlist</a>
+      <a href={`/learn/${lessons[0].slug}`} class="btn btn-primary btn-lg" id="lp-start">
+        Start lesson one <span class="arrow">→</span>
+      </a>
+      <a href="/portfolio" class="btn btn-ghost btn-lg">Build my portfolio</a>
     </Fragment>
   </PageHero>
 
@@ -85,58 +29,60 @@ const lessons = [
     <div class="container">
       <div class="path-strip panel-tint reveal">
         <div class="ps-item">
-          <span class="mono ps-k">The core path</span>
-          <span class="ps-v">6 lessons · ~45 minutes</span>
+          <span class="mono ps-k">The full path</span>
+          <span class="ps-v" id="ps-count">{lessons.length} lessons · ~{totalMinutes} minutes</span>
         </div>
-        <div class="ps-progress" aria-hidden="true">
-          {
-            [true, false, false, false, false, false].map((done) => (
-              <span class:list={['ps-dot', { done }]} />
-            ))
-          }
+        <div class="ps-progress" id="ps-progress" aria-label="Path progress">
+          {lessons.map((l) => <span class="ps-dot" data-slug={l.slug} />)}
         </div>
-        <span class="ps-note">Completing the core path counts toward the appropriateness journey when investing opens.</span>
+        <span class="ps-note" id="ps-note">
+          Your progress is kept on this device. Sign in and it follows you.
+        </span>
       </div>
 
       <div class="grid cols-4" style="margin-top:2rem">
         {
-          lessons.map((l, i) =>
-            l.live ? (
-              <a href={l.href} class="card card-hover lesson-card reveal" style={`--d:${(i % 4) * 0.06}s`}>
-                <div class="lc-top">
-                  <span class="icon-chip"><Icon name={l.icon} size={19} /></span>
-                  <span class="badge badge-green">{l.category}</span>
-                </div>
-                <h3 class="lc-name">{l.title}</h3>
-                <p class="small muted lc-desc">{l.desc}</p>
-                <span class="lc-meta mono">{l.meta}</span>
-              </a>
-            ) : (
-              <div class="card lesson-card soon reveal" style={`--d:${(i % 4) * 0.06}s`}>
-                <div class="lc-top">
-                  <span class="icon-chip"><Icon name={l.icon} size={19} /></span>
-                  <span class="badge badge-line">Coming soon</span>
-                </div>
-                <h3 class="lc-name">{l.title}</h3>
-                <p class="small muted lc-desc">{l.desc}</p>
-                <span class="lc-meta mono">{l.meta}</span>
+          lessons.map((l, i) => (
+            <a
+              href={`/learn/${l.slug}`}
+              class="card card-hover lesson-card reveal"
+              data-lesson-card={l.slug}
+              style={`--d:${(i % 4) * 0.06}s`}
+            >
+              <div class="lc-top">
+                <span class="icon-chip">
+                  <Icon name={l.icon} size={19} />
+                </span>
+                <span class="badge badge-green">{l.category}</span>
               </div>
-            )
-          )
+              <h3 class="lc-name">{l.title}</h3>
+              <p class="small muted lc-desc">{l.blurb}</p>
+              <span class="lc-foot">
+                <span class="lc-meta mono">{lessonMeta(l)}</span>
+                <span class="lc-play">
+                  <span class="lc-play-i">▶</span> Watch
+                </span>
+              </span>
+              <span class="lc-done" hidden>✓ Complete</span>
+            </a>
+          ))
         }
       </div>
 
       <p class="small muted reveal" style="margin-top:1.5rem; max-width:52rem">
-        The full Academy, with adaptive lessons from the Investor Education Agent,
-        comprehension checks and progress tracking, opens with early access.
-        Lessons published here stay free, forever.
+        Every lesson is an interactive explainer: scrub it, step through the
+        chapters, drag the controls where a scene has one, or skip the player and
+        read the text version. Figures are illustrative teaching numbers drawn
+        from published ranges, never live data and never a forecast.
       </p>
     </div>
   </section>
 
   <CTABand
     title="Education is the front door. <em class='serif-aside'>Walk in.</em>"
-    sub="Join the waitlist and the Academy's adaptive version, the one that notices what you got wrong, is yours at launch."
+    sub="Finish a lesson and your progress saves. Build your plan and the same principles become guardrails: an allocation cap, a target spread, and deals ranked against both."
+    secondaryLabel="Browse live deals"
+    secondaryHref="/deals"
   />
 </BaseLayout>
 
@@ -174,10 +120,11 @@ const lessons = [
     height: 8px;
     border-radius: 999px;
     background: var(--chart-track);
+    transition: background-color 0.2s ease;
   }
 
   .ps-dot.done {
-    background: var(--sage);
+    background: var(--sage, var(--green));
   }
 
   .ps-note {
@@ -191,10 +138,7 @@ const lessons = [
     display: flex;
     flex-direction: column;
     padding: 1.5rem;
-  }
-
-  .lesson-card.soon {
-    opacity: 0.72;
+    position: relative;
   }
 
   .lc-top {
@@ -216,11 +160,115 @@ const lessons = [
     margin-bottom: 1rem;
   }
 
-  .lc-meta {
+  .lc-foot {
     margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    border-top: 1px solid var(--line);
+    padding-top: 0.8rem;
+  }
+
+  .lc-meta {
     font-size: 0.7rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--text-2);
   }
+
+  .lc-play {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.84rem;
+    font-weight: 570;
+    color: var(--green);
+  }
+
+  .lc-play-i {
+    display: grid;
+    place-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--tint);
+    font-size: 0.6rem;
+    padding-left: 2px;
+    transition: background-color 0.16s ease, color 0.16s ease;
+  }
+
+  .lesson-card:hover .lc-play-i {
+    background: var(--green);
+    color: #fff;
+  }
+
+  .lc-done {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: var(--up-tint);
+    color: var(--up-ink);
+    border-radius: var(--r-pill);
+    padding: 0.2rem 0.6rem;
+    font-size: 0.7rem;
+    font-weight: 570;
+  }
+
+  .lesson-card.done .badge {
+    visibility: hidden;
+  }
 </style>
+
+<script>
+  // Progress lives in localStorage (see /auth.js) so the path reflects what this
+  // browser has actually watched, signed in or not.
+  const paint = () => {
+    // @ts-ignore, global from /auth.js
+    const done: string[] = window.BundleAuth?.lessonsDone?.() || [];
+    const cards = document.querySelectorAll<HTMLElement>('[data-lesson-card]');
+
+    cards.forEach((card) => {
+      const isDone = done.includes(card.dataset.lessonCard || '');
+      card.classList.toggle('done', isDone);
+      const tick = card.querySelector<HTMLElement>('.lc-done');
+      if (tick) tick.hidden = !isDone;
+      const play = card.querySelector<HTMLElement>('.lc-play');
+      if (play && isDone) play.innerHTML = '<span class="lc-play-i">▶</span> Watch again';
+    });
+
+    document.querySelectorAll<HTMLElement>('.ps-dot').forEach((d) => {
+      d.classList.toggle('done', done.includes(d.dataset.slug || ''));
+    });
+
+    const count = document.getElementById('ps-count');
+    const note = document.getElementById('ps-note');
+    const start = document.getElementById('lp-start');
+    const all = cards.length;
+
+    if (done.length && count) {
+      count.textContent = `${done.length} of ${all} complete`;
+    }
+
+    // @ts-ignore
+    const signedIn = !!window.BundleAuth?.signedIn?.();
+    if (note) {
+      note.textContent = done.length
+        ? signedIn
+          ? 'Progress saved to your account.'
+          : 'Progress is kept on this device. Sign in to save it for good.'
+        : 'Your progress is kept on this device. Sign in and it follows you.';
+    }
+
+    // Point the hero button at the first lesson still outstanding.
+    const nextUp = Array.from(cards).find((c) => !done.includes(c.dataset.lessonCard || ''));
+    if (start && nextUp && done.length) {
+      start.setAttribute('href', nextUp.getAttribute('href') || '/learn');
+      start.innerHTML = 'Continue the path <span class="arrow">→</span>';
+    }
+  };
+
+  paint();
+  document.addEventListener('bundle:lessons', paint);
+  document.addEventListener('bundle:auth', paint);
+</script>

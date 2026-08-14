@@ -11,7 +11,7 @@ const agents = [
     icon: 'search',
     name: 'Market Scanner Agent',
     tagline: 'The crawler that never sleeps',
-    does: 'Continuously scans crowdfunding platforms, secondary marketplaces and pre-IPO desks, normalising every listing — price, structure, minimums, deadlines, documents — into one comparable schema.',
+    does: 'Continuously scans crowdfunding platforms, secondary marketplaces and pre-IPO desks, normalising every listing, price, structure, minimums, deadlines, documents, into one comparable schema.',
     outputs: ['New-listing feed', 'Normalised deal records', 'Deadline tracking'],
   },
   {
@@ -39,7 +39,7 @@ const agents = [
     icon: 'bell',
     name: 'Alert Agent',
     tagline: 'Your screens keep running without you',
-    does: 'Watches your saved screens and watchlists across all venues, and fires alerts on new listings, price moves, funding milestones and closing deadlines — minutes after they happen.',
+    does: 'Watches your saved screens and watchlists across all venues, and fires alerts on new listings, price moves, funding milestones and closing deadlines, minutes after they happen.',
     outputs: ['Listing alerts', 'Price-move alerts', 'Deadline warnings'],
   },
   {
@@ -54,7 +54,7 @@ const agents = [
 const governance = [
   { icon: 'eye', title: 'Human-in-the-loop', body: 'Agents flag and draft; humans review anything consequential. No agent publishes a risk flag or delists a venue alone.' },
   { icon: 'doc', title: 'Explainable outputs', body: 'Every summary and flag arrives with its reasoning and its sources. If we can’t explain it, we don’t ship it.' },
-  { icon: 'lock', title: 'Every output logged', body: 'AI-assisted assessments are recorded and auditable — by us, and by regulators when asked.' },
+  { icon: 'lock', title: 'Every output logged', body: 'AI-assisted assessments are recorded and auditable, by us, and by regulators when asked.' },
   { icon: 'scale', title: 'No advice, ever', body: 'The engine describes the market. It never scores “buy”, never ranks by what pays us, and never tells you what to do.' },
 ];
 
@@ -76,12 +76,12 @@ const faqs = [
 
 <BaseLayout
   title="The Bundle AI Engine"
-  description="Six agents that scan, normalise, price, summarise and monitor the whole private market — with human oversight, explainable outputs and no investment advice."
+  description="Six agents that scan, normalise, price, summarise and monitor the whole private market, with human oversight, explainable outputs and no investment advice."
 >
   <PageHero
     eyebrow="The AI Engine"
     title="Agents watch the market <em>so you can trade it.</em>"
-    lead="Aggregating a fragmented market is a reading problem at industrial scale — thousands of listings, documents and price points across venues. That's what the engine does all day. Zero of it is investment advice."
+    lead="Aggregating a fragmented market is a reading problem at industrial scale, thousands of listings, documents and price points across venues. That's what the engine does all day. Zero of it is investment advice."
   >
     <a slot="actions" href="/deals" class="btn btn-primary btn-lg">See the output <span class="arrow">→</span></a>
     <a slot="actions" href="/trust" class="btn btn-ghost btn-lg">Governance & safety</a>
@@ -131,9 +131,9 @@ const faqs = [
 
   <CTABand
     title="Let the agents do <em>the reading.</em>"
-    sub="Screener, summaries and alerts — free for investors in early access."
-    primaryLabel="Get early access"
-    primaryHref="/waitlist"
+    sub="Screener, summaries and alerts, free for investors."
+    primaryLabel="Build my portfolio"
+    primaryHref="/portfolio"
     secondaryLabel="Browse live deals"
     secondaryHref="/deals"
   />

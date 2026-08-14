@@ -1,4 +1,4 @@
-// Interaction QA: exercises nav dropdown, mobile menu, meter slider, quiz, waitlist form.
+// Interaction QA: exercises nav dropdown, mobile menu, meter slider, quiz, lesson player, login.
 import { chromium } from 'playwright-core';
 
 const browser = await chromium.launch({
@@ -38,15 +38,20 @@ await shot(desktop, 'meter-12');
 await setMeter(24);
 await shot(desktop, 'meter-24');
 
-// 3. Waitlist submit
-await desktop.goto('http://localhost:4321/waitlist', { waitUntil: 'networkidle' });
-await desktop.evaluate(() =>
-  document.querySelectorAll('.reveal').forEach((el) => el.classList.add('in'))
-);
-await desktop.fill('input[type="email"]', 'test@example.com');
-await desktop.click('[data-waitlist] button[type="submit"]');
-await desktop.waitForTimeout(400);
-await shot(desktop, 'waitlist-done');
+// 3. Lesson player: play, then jump to a chapter with a drag control
+await desktop.goto('http://localhost:4321/learn/how-to-build-a-startup-portfolio', {
+  waitUntil: 'networkidle',
+});
+await desktop.click('.lp-veil');
+await desktop.evaluate(() => document.querySelectorAll('.lp-chapters button')[1].click());
+await desktop.waitForTimeout(1200);
+await desktop.evaluate(() => {
+  const r = document.querySelector('.lp-knob input');
+  r.value = '35';
+  r.dispatchEvent(new Event('input', { bubbles: true }));
+});
+await desktop.waitForTimeout(600);
+await shot(desktop, 'lesson-knob');
 
 // 4. Lesson quiz: wrong answer feedback
 await desktop.goto(
@@ -64,7 +69,7 @@ await desktop.evaluate(() =>
 await desktop.waitForTimeout(300);
 await shot(desktop, 'quiz-wrong');
 
-// 5. Login pre-launch notice
+// 5. Login validation notice
 await desktop.goto('http://localhost:4321/login', { waitUntil: 'networkidle' });
 await desktop.evaluate(() =>
   document.querySelectorAll('.reveal').forEach((el) => el.classList.add('in'))

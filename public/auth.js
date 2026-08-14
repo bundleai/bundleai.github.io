@@ -1,7 +1,7 @@
 /* Bundle client-side account simulation.
-   Bundle is pre-launch and this site is a static build — there is no server and
-   no real authentication. Everything below lives in localStorage on this device
-   so the product flow can be walked end to end. Nothing is transmitted. */
+   This site is a static build: there is no server and no real authentication.
+   Everything below lives in localStorage on this device so the product flow can
+   be walked end to end. Nothing is transmitted. */
 (function () {
   'use strict';
 
@@ -9,6 +9,7 @@
   var PKEY = 'bundle.profile';
   var DKEY = 'bundle.profileDraft';
   var HKEY = 'bundle.holdings';
+  var LSKEY = 'bundle.lessons';
 
   function read(k) {
     try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; }
@@ -39,6 +40,20 @@
     saveProfile: function (p) { write(PKEY, p); write(DKEY, p); },
     saveDraft: function (p) { write(DKEY, p); },
     draft: function () { return read(DKEY); },
+
+    /* Academy progress. Completions are recorded on this device either way;
+       signing in is what makes them portable, which is what the player says. */
+    lessonsDone: function () { return read(LSKEY) || []; },
+    lessonDone: function (slug) { return Auth.lessonsDone().indexOf(slug) >= 0; },
+    completeLesson: function (slug) {
+      var all = Auth.lessonsDone();
+      if (all.indexOf(slug) < 0) {
+        all.push(slug);
+        write(LSKEY, all);
+        document.dispatchEvent(new CustomEvent('bundle:lessons'));
+      }
+      return all;
+    },
 
     holdings: function () { return read(HKEY) || []; },
     addHolding: function (h) {

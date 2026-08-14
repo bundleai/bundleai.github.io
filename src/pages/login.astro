@@ -5,7 +5,7 @@ import Logo from '../components/Logo.astro';
 
 <BaseLayout
   title="Log in"
-  description="Log in to Bundle. We’re pre-launch, accounts open with early access, so join the waitlist for now."
+  description="Log in to Bundle to pick up your plan, your guardrails and everything you are tracking across venues."
   ribbon={false}
 >
   <section class="section login-section">
@@ -44,7 +44,8 @@ import Logo from '../components/Logo.astro';
         </form>
 
         <p class="small muted login-alt">
-          Bundle is pre-launch. Accounts open with early access, <a href="/waitlist">join the waitlist</a> instead.
+          No account yet? <a href="/portfolio">Build your portfolio</a> and we'll
+          save it as you go.
         </p>
       </div>
     </div>
@@ -114,22 +115,34 @@ import Logo from '../components/Logo.astro';
 </style>
 
 <script>
-  // No auth is live yet, intercept and explain, calmly.
-  const form = document.getElementById('login-form');
+  // Accounts live on this device (see /auth.js), so a log in restores whatever
+  // plan, holdings and lesson progress this browser already holds.
+  const form = document.getElementById('login-form') as HTMLFormElement | null;
   const btn = document.getElementById('login-btn');
   const note = document.getElementById('login-note');
+  const next = new URLSearchParams(location.search).get('next') || '/portfolio';
 
-  const showNote = () => {
-    if (note && !note.textContent) {
-      note.innerHTML =
-        'Accounts aren’t live yet, you haven’t missed anything. ' +
-        '<a href="/waitlist">Join the waitlist</a> and we’ll invite you in order.';
+  const attempt = () => {
+    const email = (document.getElementById('login-email') as HTMLInputElement).value.trim();
+    const pass = (document.getElementById('login-password') as HTMLInputElement).value;
+
+    if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+      if (note) note.textContent = 'Enter a valid email address.';
+      return;
     }
+    if (pass.length < 8) {
+      if (note) note.textContent = 'Password needs at least 8 characters.';
+      return;
+    }
+    if (note) note.textContent = '';
+    // @ts-ignore, global from /auth.js
+    window.BundleAuth.signIn(email);
+    location.href = next;
   };
 
-  btn?.addEventListener('click', showNote);
+  btn?.addEventListener('click', attempt);
   form?.addEventListener('submit', (e) => {
     e.preventDefault();
-    showNote();
+    attempt();
   });
 </script>

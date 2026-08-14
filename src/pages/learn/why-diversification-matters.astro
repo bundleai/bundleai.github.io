@@ -1,5 +1,9 @@
 ---
 import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import LessonPlayer from '../../components/LessonPlayer.astro';
+import { lessonBySlug } from '../../data/lessons';
+
+const lesson = lessonBySlug('why-diversification-matters')!;
 ---
 
 <ArticleLayout
@@ -7,7 +11,7 @@ import ArticleLayout from '../../layouts/ArticleLayout.astro';
   title="Why diversification matters"
   description="Venture outcomes follow a power law: most startups fail, a few return everything. Lesson one in the Bundle Academy core path, why professionals build portfolios instead of picking winners."
   category="Core path"
-  meta="Lesson 01 · 8 min · Level 1"
+  meta="Lesson 01 · 3 min to watch · 8 min to read · Level 1"
   takeaways={[
     'Most early-stage startups fail, this is normal, not a scandal.',
     'Returns follow a power law: a small number of companies produce almost all the gains.',
@@ -16,8 +20,12 @@ import ArticleLayout from '../../layouts/ArticleLayout.astro';
     'Diversification reduces concentration risk. It does not remove the risk of losing money.',
   ]}
   nextLabel="Why startups fail"
-  nextHref="/learn"
+  nextHref="/learn/why-startups-fail"
 >
+  <h2 class="wdm-watch-h">Watch it first, in three minutes</h2>
+  <LessonPlayer lesson={lesson} />
+
+  <h2>The same argument, in full</h2>
   <p>
     Here is the uncomfortable arithmetic every professional startup investor
     accepts before breakfast: <strong>most of the companies they back will

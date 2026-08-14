@@ -4,7 +4,7 @@
    carries and how to improve it.
 
    The controls re-run BundleWizard.analyse on every change, so the score,
-   risks and suggestions here are the same logic the questionnaire uses — the
+   risks and suggestions here are the same logic the questionnaire uses: the
    two can't drift apart.
 
    Usage: BundlePortfolio.render(rootEl, profile, { onSave, holdings }) */
@@ -35,7 +35,7 @@
     });
   }
   function money(n) {
-    if (!n) return '—';
+    if (!n) return '-';
     return '£' + Math.round(n).toLocaleString('en-GB');
   }
 
@@ -65,7 +65,7 @@
   function sectorDonut(p) {
     var secs = (p.sectors || []).slice(0, 6);
     if (!secs.length) {
-      return '<p class="pv-empty">No sectors picked yet — add some below and the split appears here.</p>';
+      return '<p class="pv-empty">No sectors picked yet. Add some below and the split appears here.</p>';
     }
     var R = 42, C = 2 * Math.PI * R, GAP = 2.5;
     var share = 100 / secs.length;
@@ -120,7 +120,7 @@
       }).join('') +
       '</div>' +
       '<p class="pv-note">About <strong>' + perYear + '</strong> deal' + (perYear === 1 ? '' : 's') +
-      ' a year at ' + esc(TICKET[p.ticket] || '—') + ' — roughly <strong>' + years + ' year' +
+      ' a year at ' + esc(TICKET[p.ticket] || '-') + ', roughly <strong>' + years + ' year' +
       (years === 1 ? '' : 's') + '</strong> to reach ' + p.holdings + ' positions.</p>';
   }
 
@@ -142,7 +142,7 @@
   function riskList(a) {
     if (!a.risks.length) {
       return '<div class="pv-clear"><span class="pv-clear-tick">✓</span>' +
-        '<span>No structural warnings on this plan. Market risk never goes away — you can still lose everything you put in.</span></div>';
+        '<span>No structural warnings on this plan. Market risk never goes away. You can still lose everything you put in.</span></div>';
     }
     return a.risks.map(function (r) {
       return '<div class="pv-risk ' + (r.level === 'bad' ? 'bad' : '') + '">' +
@@ -250,11 +250,11 @@
       '<p class="eyebrow no-rule">Your portfolio plan</p>' +
       '<h2 class="h2 pv-h2">' + esc(L.RISKN[p.risk] || 'Balanced') + ', across <span data-pv="hcount">' +
       p.holdings + '</span> companies</h2>' +
-      '<p class="pv-lede">Drag the controls to test a different shape. Everything below — the score, the risks, the suggestions — updates as you go.</p>' +
+      '<p class="pv-lede">Drag the controls to test a different shape. Everything below, the score, the risks, the suggestions, updates as you go.</p>' +
       '<div class="pv-kpis">' +
       '<div class="pv-kpi"><span class="pv-kpi-k">Private-markets budget</span><span class="pv-kpi-v" data-pv="budget">' + money(budget()) + '</span></div>' +
       '<div class="pv-kpi"><span class="pv-kpi-k">Per position</span><span class="pv-kpi-v" data-pv="each">' + money(budget() / p.holdings) + '</span></div>' +
-      '<div class="pv-kpi"><span class="pv-kpi-k">Category</span><span class="pv-kpi-v">' + esc(L.LB[p.category] || '—') + '</span></div>' +
+      '<div class="pv-kpi"><span class="pv-kpi-k">Category</span><span class="pv-kpi-v">' + esc(L.LB[p.category] || '-') + '</span></div>' +
       '</div>' +
       '<div class="pv-hero-cta">' +
       '<a href="/deals?fit=1" class="btn btn-primary">Find deals that fit <span class="arrow">→</span></a>' +
@@ -265,12 +265,16 @@
 
       '<section class="pv-controls card">' +
       '<div class="pv-ctl">' +
-      '<label for="pv-holdings">Target companies <b data-pv="holdings-val">' + p.holdings + (p.holdings === 50 ? '+' : '') + '</b></label>' +
+      '<label for="pv-holdings">Target companies</label>' +
       '<input id="pv-holdings" type="range" min="1" max="50" value="' + p.holdings + '" data-pv-slider="holdings">' +
+      '<div class="pv-ctl-val"><b data-pv="holdings-val">' + p.holdings + (p.holdings === 50 ? '+' : '') + '</b>' +
+      '<span class="pv-ctl-scale">1 to 50+ companies</span></div>' +
       '</div>' +
       '<div class="pv-ctl">' +
-      '<label for="pv-alloc">Share of investable assets <b data-pv="alloc-val">' + p.allocation + '%</b></label>' +
+      '<label for="pv-alloc">Share of investable assets</label>' +
       '<input id="pv-alloc" type="range" min="1" max="50" value="' + p.allocation + '" data-pv-slider="allocation">' +
+      '<div class="pv-ctl-val"><b data-pv="alloc-val">' + p.allocation + '%</b>' +
+      '<span class="pv-ctl-scale">1% to 50% of investable assets</span></div>' +
       '</div>' +
       '<div class="pv-ctl pv-ctl-wide">' +
       '<span class="pv-ctl-label">Sectors you want to see</span>' +
@@ -309,16 +313,16 @@
       '<div class="pv-col">' +
       '<h3 class="pv-h3">Target sector split</h3>' +
       '<div class="card pv-card pv-donut-card" data-pv="donut">' + sectorDonut(p) + '</div>' +
-      '<p class="pv-cap">An even starting split across the sectors you picked — a guardrail, not a recommendation.</p>' +
+      '<p class="pv-cap">An even starting split across the sectors you picked: a guardrail, not a recommendation.</p>' +
       '<h3 class="pv-h3">Build-out at your pace</h3>' +
       '<div class="card pv-card" data-pv="projection">' + projection(p) + '</div>' +
       '<h3 class="pv-h3">The rest of your plan</h3>' +
       '<div class="card pv-card"><dl class="pv-dl">' +
-      row('Primary goal', L.LB[p.goal] || '—') +
-      row('Horizon', HORIZON[p.horizon] || '—') +
-      row('Typical cheque', TICKET[p.ticket] || '—') +
-      row('Involvement', INVOLVE[p.involvement] || '—') +
-      row('SEIS / EIS', SEIS[p.seis] || '—') +
+      row('Primary goal', L.LB[p.goal] || '-') +
+      row('Horizon', HORIZON[p.horizon] || '-') +
+      row('Typical cheque', TICKET[p.ticket] || '-') +
+      row('Involvement', INVOLVE[p.involvement] || '-') +
+      row('SEIS / EIS', SEIS[p.seis] || '-') +
       '</dl></div>' +
       '<h3 class="pv-h3">Tracking</h3>' +
       '<div class="card pv-card" data-pv="holdings">' + holdingsList(held) + '</div>' +
@@ -333,8 +337,19 @@
 
     var q = function (sel) { return root.querySelector(sel); };
 
-    /* live recompute — cheap, patches only what changed */
-    function refresh() {
+    /* live recompute, cheap, patches only what changed */
+    /* Paint the filled part of a slider track from its own value, so the
+       track keeps up with the thumb frame for frame while dragging. */
+    function paintFill(sl) {
+      var lo = +sl.min || 0, hi = +sl.max || 100;
+      sl.style.setProperty('--fill', ((sl.value - lo) / (hi - lo)) * 100 + '%');
+    }
+
+    /* Dragging fires input on every pixel. Only the cheap patches (numbers,
+       ring, track fill) run on each tick; the innerHTML rebuilds below are
+       coalesced and deferred until the drag settles, which is what keeps the
+       slider smooth. */
+    function refresh(light) {
       var a = analyse();
       var col = scoreColour(a.score);
       var R = 52, C = 2 * Math.PI * R;
@@ -354,6 +369,13 @@
       q('[data-pv="budget"]').textContent = money(budget());
       q('[data-pv="each"]').textContent = money(budget() / p.holdings);
 
+      var dirtyNow = JSON.stringify(p) !== saved;
+      q('[data-pv="save-row"]').hidden = !dirtyNow;
+      var shellNow = root.querySelector('.pv');
+      if (shellNow) shellNow.classList.toggle('pv--dirty', dirtyNow);
+
+      if (light) return;
+
       q('[data-pv="risks"]').innerHTML = riskList(a);
       q('[data-pv="actions"]').innerHTML = actionList(a);
       q('[data-pv="projection"]').innerHTML = projection(p);
@@ -362,18 +384,40 @@
       q('[data-pv="nudge"]').innerHTML = gapNudge(p, held);
       q('[data-pv="fits"]').innerHTML = fitList(p, held);
 
-      var dirty = JSON.stringify(p) !== saved;
-      q('[data-pv="save-row"]').hidden = !dirty;
-      var shell = root.querySelector('.pv');
-      if (shell) shell.classList.toggle('pv--dirty', dirty);
+    }
+
+    var lightFrame = 0, heavyTimer = 0;
+
+    function scheduleLight() {
+      if (lightFrame) return;
+      lightFrame = requestAnimationFrame(function () {
+        lightFrame = 0;
+        refresh(true);
+      });
+    }
+
+    function scheduleHeavy() {
+      clearTimeout(heavyTimer);
+      heavyTimer = setTimeout(function () { refresh(); }, 110);
     }
 
     root.addEventListener('input', function (e) {
       var sl = e.target.closest('[data-pv-slider]');
       if (!sl) return;
       p[sl.getAttribute('data-pv-slider')] = +sl.value;
+      paintFill(sl);
+      scheduleLight();
+      scheduleHeavy();
+    });
+
+    /* Drag end (or a keyboard step) settles everything immediately. */
+    root.addEventListener('change', function (e) {
+      if (!e.target.closest('[data-pv-slider]')) return;
+      clearTimeout(heavyTimer);
       refresh();
     });
+
+    root.querySelectorAll('[data-pv-slider]').forEach(paintFill);
 
     root.addEventListener('click', function (e) {
       var chip = e.target.closest('[data-pv-sector]');
@@ -393,8 +437,8 @@
       }
       if (e.target.closest('[data-pv-reset]')) {
         p = JSON.parse(saved);
-        var hs = q('[data-pv-slider="holdings"]'); if (hs) hs.value = p.holdings;
-        var as = q('[data-pv-slider="allocation"]'); if (as) as.value = p.allocation;
+        var hs = q('[data-pv-slider="holdings"]'); if (hs) { hs.value = p.holdings; paintFill(hs); }
+        var as = q('[data-pv-slider="allocation"]'); if (as) { as.value = p.allocation; paintFill(as); }
         root.querySelectorAll('[data-pv-sector]').forEach(function (c) {
           c.classList.toggle('sel', (p.sectors || []).indexOf(c.getAttribute('data-pv-sector')) >= 0);
         });

@@ -4,7 +4,7 @@ import DealsData from '../components/DealsData.astro';
 ---
 
 <BaseLayout
-  title="Your portfolio"
+  title="Dashboard"
   description="Build your investor profile, then see the plan it produces: your guardrails, the risks it carries, how to diversify it and everything you're tracking."
 >
   <DealsData />
@@ -15,13 +15,21 @@ import DealsData from '../components/DealsData.astro';
       <div class="container narrow">
         <p class="eyebrow reveal">Portfolio</p>
         <h1 class="h2 reveal" style="--d:.05s">
-          What kind of portfolio are you building?
+          One deal is a bet. <em class="serif-aside">Twenty is a portfolio.</em>
         </h1>
         <p class="lead reveal" style="--d:.1s">
-          Three minutes of questions gives Bundle the guardrails it needs: what
-          you're eligible for, how much of your wealth belongs in private markets,
-          how widely to spread it, and which deals are worth putting in front of
-          you. Nothing here is shared, and you can change all of it later.
+          Bundle turns that into something you can hold yourself to: an allocation
+          cap you set once, a target spread, and a screener that ranks every live
+          deal against both.
+        </p>
+        <ul class="pf-why reveal" style="--d:.14s">
+          <li><b>Spread</b> so no single failure decides your outcome</li>
+          <li><b>A cap</b> so private markets stay one slice of your wealth</li>
+          <li><b>Pacing</b> so you own several vintages, not one</li>
+        </ul>
+        <p class="small muted reveal" style="--d:.18s">
+          The case for it is below, then about three minutes of questions. Nothing
+          here is shared, and you can change all of it later.
         </p>
       </div>
     </section>
@@ -43,16 +51,15 @@ import DealsData from '../components/DealsData.astro';
     <div class="container">
       <header class="pf-head">
         <div>
-          <p class="eyebrow no-rule">Portfolio</p>
+          <p class="eyebrow no-rule">Dashboard</p>
           <h1 class="h2" id="pf-greeting">Your plan</h1>
         </div>
         <a href="/deals" class="btn btn-ghost btn-sm">Deal screener</a>
       </header>
       <div id="pf-view"></div>
       <p class="small muted pf-foot">
-        Illustrative only. Bundle is pre-launch, holds no client money and gives no
-        advice; these figures reflect the plan you entered, not live positions.
-        Capital at risk — private-market investments are illiquid and not
+        Illustrative only. Bundle holds no client money and gives no advice; these figures reflect the plan you entered, not live positions.
+        Capital at risk, private-market investments are illiquid and not
         FSCS-protected.
       </p>
     </div>
@@ -77,6 +84,29 @@ import DealsData from '../components/DealsData.astro';
 
   .pf-head h1 { margin: 0; }
 
+  .pf-why {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    padding: 0;
+    margin: 1.1rem 0 1.1rem;
+  }
+
+  .pf-why li {
+    padding: 0.45rem 0.9rem;
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    background: var(--surface);
+    font-size: 0.86rem;
+    color: var(--text-2);
+  }
+
+  .pf-why b {
+    color: var(--ink);
+    font-weight: 570;
+  }
+
   .pf-foot {
     margin: 1.75rem auto 0;
     max-width: 52rem;
@@ -85,7 +115,7 @@ import DealsData from '../components/DealsData.astro';
 </style>
 
 <script>
-  // @ts-ignore — globals from /auth.js, /wizard.js, /portfolio-view.js
+  // @ts-ignore, globals from /auth.js, /wizard.js, /portfolio-view.js
   const Auth = window.BundleAuth;
   const intake = document.getElementById('pf-intake');
   const viewWrap = document.getElementById('pf-view-wrap');

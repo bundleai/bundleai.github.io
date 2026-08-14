@@ -1,10 +1,10 @@
-# Bundle.ai — marketing & product website
+# Bundle.ai: marketing & product website
 
 Production-quality marketing site for **Bundle.ai**, the UK's portfolio-first,
 FCA-conscious startup investing platform. Built with [Astro](https://astro.build)
-as a fully static, component-driven site — light mode, calm, institutional-modern.
+as a fully static, component-driven site, light mode, calm, institutional-modern.
 
-**Live:** https://bundleai.github.io — deployed automatically from `main` by
+**Live:** https://bundleai.github.io, deployed automatically from `main` by
 `.github/workflows/deploy.yml` (GitHub Pages, Actions build).
 
 ## Run it
@@ -51,7 +51,7 @@ Terms · 404
 - **Copy voice.** Calm, plain-English, UK spelling. Never promissory language;
   opportunity is always paired with risk/illiquidity context. Forward-looking
   features use "designed to / where permitted / subject to FCA permissions."
-- **Charts** follow the dataviz rules in `STYLEGUIDE.md` — the categorical and
+- **Charts** follow the dataviz rules in `STYLEGUIDE.md`: the categorical and
   ordinal palettes are CVD-validated; don't improvise chart colours.
 - **Every page** carries the risk ribbon (BaseLayout) and the footer risk band.
 
@@ -66,4 +66,4 @@ node scripts/interact.mjs                               # interactive states
 ```
 
 Screenshots land in `/tmp/bundle-shots/`. Requires Google Chrome installed
-(no browser download — playwright-core drives the system Chrome).
+(no browser download, playwright-core drives the system Chrome).

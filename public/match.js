@@ -1,6 +1,6 @@
 /* Bundle deal matching.
    Ranks the aggregated deal set against a saved investor profile, favouring
-   the sectors and routes someone actually asked for and — deliberately — the
+   the sectors and routes someone actually asked for and, deliberately, the
    ones that widen their spread rather than deepen it.
 
    This is a filter over public listings, not advice: every reason it gives is
@@ -51,18 +51,18 @@
     var blocked = false;
     var heldSectors = held.map(function (h) { return h.sector; });
 
-    /* Eligibility first — an inaccessible deal is not a match at any score. */
+    /* Eligibility first: an inaccessible deal is not a match at any score. */
     if (/accredited/i.test(deal.minTicket || '')) {
       if (profile.category === 'hnw' || profile.category === 'soph') {
         s += 1;
-        reasons.push({ kind: 'access', text: 'Accredited access — your ' + (CATEGORY[profile.category] || '').toLowerCase() + ' category qualifies' });
+        reasons.push({ kind: 'access', text: 'Accredited access: your ' + (CATEGORY[profile.category] || '').toLowerCase() + ' category qualifies' });
       } else {
         blocked = true;
-        reasons.push({ kind: 'block', text: 'Accredited investors only — you self-certified as ' + (CATEGORY[profile.category] || 'ineligible').toLowerCase() });
+        reasons.push({ kind: 'block', text: 'Accredited investors only. You self-certified as ' + (CATEGORY[profile.category] || 'ineligible').toLowerCase() });
       }
     } else {
       s += 2;
-      reasons.push({ kind: 'access', text: deal.minTicket + ' minimum — inside your usual cheque' });
+      reasons.push({ kind: 'access', text: deal.minTicket + ' minimum, inside your usual cheque' });
     }
 
     /* Sectors they asked for */
@@ -71,8 +71,8 @@
       reasons.push({
         kind: 'sector',
         text: openToAny && wants.indexOf(deal.sector) < 0
-          ? deal.sector + ' — you said you were open to anything'
-          : deal.sector + ' — one of the sectors you picked',
+          ? deal.sector + '. You said you were open to anything'
+          : deal.sector + ': one of the sectors you picked',
       });
     }
 
@@ -82,19 +82,19 @@
       reasons.push({
         kind: 'diversify',
         text: held.length
-          ? 'Widens your spread — nothing in ' + deal.sector + ' yet'
+          ? 'Widens your spread. Nothing in ' + deal.sector + ' yet'
           : 'Would be your first position, in ' + deal.sector,
       });
     } else {
       s -= 2.5;
-      reasons.push({ kind: 'warn', text: 'You already hold ' + deal.sector + ' — this concentrates rather than spreads' });
+      reasons.push({ kind: 'warn', text: 'You already hold ' + deal.sector + ', this concentrates rather than spreads' });
     }
 
     /* Routes they picked */
     var route = ROUTE_OF[deal.type];
     if ((profile.products || []).indexOf(route) >= 0) {
       s += 2;
-      reasons.push({ kind: 'route', text: TYPE_LABEL[deal.type] + ' — a route you asked to see' });
+      reasons.push({ kind: 'route', text: TYPE_LABEL[deal.type] + ': a route you asked to see' });
     }
 
     if (deal.closes) reasons.push({ kind: 'warn', text: 'Closing in ' + deal.closes });
@@ -121,7 +121,7 @@
       });
   }
 
-  /* Which of their chosen sectors they hold nothing in — the gap worth filling. */
+  /* Which of their chosen sectors they hold nothing in: the gap worth filling. */
   function gaps(profile, held) {
     var heldSectors = (held || []).map(function (h) { return h.sector; });
     var out = [];

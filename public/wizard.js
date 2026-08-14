@@ -102,16 +102,16 @@
       });
     }
     if (s.sectors.length && s.sectors.length < 3 && s.sectors.indexOf('other') === -1) {
-      actions.push('Widen beyond ' + s.sectors.length + ' sector' + (s.sectors.length === 1 ? '' : 's') + ' — sector shocks hit correlated holdings together.');
+      actions.push('Widen beyond ' + s.sectors.length + ' sector' + (s.sectors.length === 1 ? '' : 's') + '. Sector shocks hit correlated holdings together.');
     }
     if (s.stages.length === 1) {
       actions.push('Mix stages: pairing earlier bets with later-stage or pre-IPO names smooths the risk curve.');
     }
     if (s.products.length === 1) {
-      actions.push('Consider more than one route in — primaries, secondaries and syndicates carry different fees and liquidity.');
+      actions.push('Consider more than one route in: primaries, secondaries and syndicates carry different fees and liquidity.');
     }
     if (s.seis === 'no' && s.ukTax === 'yes') {
-      actions.push('You are UK tax resident but skipping SEIS/EIS — worth checking what relief you are leaving on the table.');
+      actions.push('You are UK tax resident but skipping SEIS/EIS, worth checking what relief you are leaving on the table.');
     }
     if (!actions.length) actions.push('Your plan looks well spread. Keep position sizes even as you add names.');
 
@@ -160,11 +160,18 @@
     { key: 'Your profile', valid: function () { return true; }, render: sResult, terminal: true },
   ];
 
+  /* The case for the whole approach, before a single question. Short on
+     purpose: three reasons, then straight into the profile. */
   function sWelcome(ctx) {
-    return '<h2 class="wz-h">Let\'s build your investor profile.</h2>' +
-      '<p class="wz-lede">A few questions so we can confirm your eligibility, match deals to how you actually invest, and keep you inside sensible guardrails. Takes about three minutes.</p>' +
-      '<div class="wz-notice warn"><b>Before you start.</b> Investing in early-stage and private companies is high risk. You could lose all the money you put in, these holdings are hard to sell, and they are not protected by the Financial Services Compensation Scheme. Bundle helps you stay diversified and disciplined — it does not remove the risk.</div>' +
-      '<p class="wz-lede" style="margin-bottom:0">Our job isn\'t to predict winners. It\'s to give you the discipline the professionals use — spread, allocation control, and a cool head — and let you decide the rest.</p>';
+    return '<h2 class="wz-h">Why a portfolio, not a punt.</h2>' +
+      '<p class="wz-lede">Most startups return nothing. A handful return everything. Nobody reliably picks which is which, so professionals own enough of the market to be holding the winners when they land.</p>' +
+      '<ul class="wz-why">' +
+      '<li><b>Spread does the work.</b> At 20+ positions, no single failure decides your outcome. At three, one does.</li>' +
+      '<li><b>A cap keeps you safe.</b> Private markets are one slice of your wealth, sized deliberately rather than deal by deal.</li>' +
+      '<li><b>Pacing beats timing.</b> A few deals a year across several years spreads you over vintages instead of betting on one.</li>' +
+      '</ul>' +
+      '<div class="wz-notice warn"><b>Before you start.</b> Investing in early-stage and private companies is high risk. You could lose all the money you put in, these holdings are hard to sell, and they are not protected by the Financial Services Compensation Scheme. A portfolio approach spreads that risk. It does not remove it.</div>' +
+      '<p class="wz-lede" style="margin-bottom:0">Next, about three minutes of questions turns that into your plan: what you are eligible for, how much belongs here, and which deals fit.</p>';
   }
 
   function sAbout(ctx) {
@@ -191,11 +198,11 @@
     var showConfirm = s.category && s.category !== 'none';
 
     return '<h2 class="wz-h">Are you eligible to invest?</h2>' +
-      '<p class="wz-lede">UK rules mean we can only show high-risk private-market deals to investors in one of the categories below. Pick the one that fits you. You self-certify — nothing here is shared publicly.</p>' +
+      '<p class="wz-lede">UK rules mean we can only show high-risk private-market deals to investors in one of the categories below. Pick the one that fits you. You self-certify. Nothing here is shared publicly.</p>' +
       optRows(ctx, 'category', [
         { v: 'hnw', t: 'High-net-worth investor', d: 'Income of £100,000+ last year, or net assets of £250,000+ (excluding home, pension and life cover).' },
         { v: 'soph', t: 'Sophisticated investor', d: "You've been in an angel syndicate 6+ months, worked in private-equity or SME finance in the last 2 years, or been a director of a company turning over £1m+." },
-        { v: 'restricted', t: 'Restricted (everyday) investor', d: "Neither of the above — you'll cap high-risk investments at 10% of your net assets over the next 12 months." },
+        { v: 'restricted', t: 'Restricted (everyday) investor', d: "Neither of the above. You'll cap high-risk investments at 10% of your net assets over the next 12 months." },
         { v: 'none', t: 'None of these apply to me', d: "Let's see where that leaves you." },
       ]) +
       (s.category === 'none' ? '<div class="wz-notice warn"><b>You may not be eligible yet.</b> Access to these investments is restricted for good reason. You\'re welcome to explore Bundle\'s learning materials and watchlists, and revisit once one of the categories fits.</div>' : '') +
@@ -211,7 +218,7 @@
       fill: function (s) { return (s.allocation / 50 * 100).toFixed(2); },
       value: function (s) { return s.allocation + '%'; },
       note: function (s) {
-        return s.allocation <= 10 ? 'Conservative — in line with the everyday-investor cap.'
+        return s.allocation <= 10 ? 'Conservative, in line with the everyday-investor cap.'
           : s.allocation <= 25 ? 'Moderate weighting toward private markets.'
             : 'A high concentration. Make sure the rest of your wealth is well diversified.';
       },
@@ -234,7 +241,7 @@
     var S = SLIDERS.allocation;
 
     return '<h2 class="wz-h">Your position, roughly.</h2>' +
-      '<div class="wz-q">Your investable assets — cash and investments you could deploy, excluding your home and pension.</div>' +
+      '<div class="wz-q">Your investable assets, cash and investments you could deploy, excluding your home and pension.</div>' +
       optRows(ctx, 'assets', [
         { v: 'u25', t: 'Under £25,000' }, { v: '25-100', t: '£25,000 – £100,000' },
         { v: '100-250', t: '£100,000 – £250,000' }, { v: '250-1m', t: '£250,000 – £1m' },
@@ -259,7 +266,7 @@
   function sApprop(ctx) {
     var yn = [{ v: 'yes', t: 'Yes' }, { v: 'no', t: 'No' }];
     return '<h2 class="wz-h">Quick check on the risks.</h2>' +
-      '<p class="wz-lede">No trick questions — just confirming the important stuff is clear before you invest.</p>' +
+      '<p class="wz-lede">No trick questions, just confirming the important stuff is clear before you invest.</p>' +
       '<div class="wz-q">Could you lose all the money you invest in a private company?</div>' + optRows(ctx, 'a1', yn, { cols: 2 }) +
       '<div class="wz-q">Can you usually sell these shares quickly, whenever you want?</div>' + optRows(ctx, 'a2', yn, { cols: 2 }) +
       '<div class="wz-q">Are these investments protected by the FSCS if the company fails?</div>' + optRows(ctx, 'a3', yn, { cols: 2 }) +
@@ -297,7 +304,7 @@
 
     return '<h2 class="wz-h">Shape of your portfolio.</h2>' +
       '<div class="wz-q">How many companies would you like to build toward holding?</div>' +
-      '<div class="wz-hint">Breadth is the discipline that does the heavy lifting — no single deal should make or break you.</div>' +
+      '<div class="wz-hint">Breadth is the discipline that does the heavy lifting, no single deal should make or break you.</div>' +
       '<div class="wz-slider">' +
       '<input type="range" min="1" max="50" value="' + s.holdings + '" style="--fill:' + S.fill(s) + '%" data-slider="holdings" aria-label="Target number of companies">' +
       '<div class="wz-slval"><b data-slider-value="holdings">' + S.value(s) + '</b>' +
@@ -330,7 +337,7 @@
         { v: 'growth', t: 'Growth / late stage' }, { v: 'preipo', t: 'Pre-IPO' },
       ]) +
       '<div class="wz-q">Which routes into deals interest you?</div>' +
-      '<div class="wz-hint">Bundle indexes across all of these — pick any that appeal.</div>' +
+      '<div class="wz-hint">Bundle indexes across all of these. Pick any that appeal.</div>' +
       multiChips(ctx, 'products', [
         { v: 'primary', t: 'Primary raises' }, { v: 'secondary', t: 'Secondaries' },
         { v: 'syndicate', t: 'Syndicates' }, { v: 'preipo', t: 'Pre-IPO access' },
@@ -349,22 +356,22 @@
     var secTags = s.sectors.map(function (x) { return '<span>' + esc(SECN[x]) + '</span>'; }).join('') || '<span>Any</span>';
     var prodTags = s.products.map(function (x) { return '<span>' + esc(PRN[x]) + '</span>'; }).join('') || '<span>Any</span>';
     var nudge = s.holdings < a.spread
-      ? 'Given a ' + (RISKN[s.risk] || 'balanced').toLowerCase() + ' appetite, consider building toward ' + a.spread + '+ positions rather than ' + s.holdings + ' — the extra breadth is what protects you.'
+      ? 'Given a ' + (RISKN[s.risk] || 'balanced').toLowerCase() + ' appetite, consider building toward ' + a.spread + '+ positions rather than ' + s.holdings + ': the extra breadth is what protects you.'
       : 'Your target of ' + s.holdings + ' positions gives you healthy diversification for a ' + (RISKN[s.risk] || 'balanced').toLowerCase() + ' approach.';
 
     return '<h2 class="wz-h">Here\'s your profile.</h2>' +
       '<p class="wz-lede">This is the starting point Bundle uses to filter deals and keep you diversified. You can change any of it later.</p>' +
       '<div class="wz-rgrid">' +
-      cell('Investor category', LB[s.category] || '—') +
-      cell('Risk appetite', RISKN[s.risk] || '—') +
-      cell('Primary goal', LB[s.goal] || '—') +
+      cell('Investor category', LB[s.category] || '-') +
+      cell('Risk appetite', RISKN[s.risk] || '-') +
+      cell('Primary goal', LB[s.goal] || '-') +
       cell('Private-markets allocation', s.allocation + '% of investable assets') +
       '<div class="wz-rcell wide"><div class="wz-k">Target diversification</div><div class="wz-v">Building toward ' + s.holdings + (s.holdings === 50 ? '+' : '') + ' companies</div></div>' +
       '<div class="wz-rcell wide"><div class="wz-k">Sectors</div><div class="wz-tags">' + secTags + '</div></div>' +
       '<div class="wz-rcell wide"><div class="wz-k">Deal routes</div><div class="wz-tags">' + prodTags + '</div></div>' +
       '</div>' +
       '<div class="wz-notice"><b>Discipline note.</b> ' + esc(nudge) + '</div>' +
-      (!a.understood ? '<div class="wz-notice warn"><b>Worth a recap.</b> A couple of your answers on how these investments work are worth revisiting — you can lose everything, they\'re hard to sell, they aren\'t FSCS-protected, and your stake can be diluted. We\'ll walk you through it before your first commitment.</div>' : '') +
+      (!a.understood ? '<div class="wz-notice warn"><b>Worth a recap.</b> A couple of your answers on how these investments work are worth revisiting. You can lose everything, they\'re hard to sell, they aren\'t FSCS-protected, and your stake can be diluted. We\'ll walk you through it before your first commitment.</div>' : '') +
       (s.category === 'none' ? '<div class="wz-notice warn"><b>Note.</b> You\'re not currently in an eligible category, so live deals stay locked. Explore and learn in the meantime.</div>' : '');
   }
 
@@ -399,7 +406,7 @@
         : '<div class="wz-nav">' +
         (ctx.step > 0 ? '<button type="button" class="btn btn-ghost" data-nav="back">← Back</button>' : '<span></span>') +
         '<button type="button" class="btn btn-primary" data-nav="next"' + (st.valid(ctx.state) ? '' : ' disabled') + '>' +
-        (ctx.step === 0 ? 'Begin' : 'Continue') + ' <span class="arrow">→</span></button></div>';
+        (ctx.step === 0 ? 'Start building my plan' : 'Continue') + ' <span class="arrow">→</span></button></div>';
 
       root.innerHTML =
         '<div class="wz-spine">' + spine + '</div>' +
@@ -444,7 +451,7 @@
     });
 
     /* Patch the slider's readouts in place. A full draw() here would replace
-       root.innerHTML — destroying the very <input> being dragged, which is
+       root.innerHTML, destroying the very <input> being dragged, which is
        what made these sliders stutter and drop the drag. */
     root.addEventListener('input', function (e) {
       var sl = e.target.closest('[data-slider]');

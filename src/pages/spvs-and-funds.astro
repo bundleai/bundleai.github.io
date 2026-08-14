@@ -12,7 +12,7 @@ const routes = [
   {
     icon: 'target',
     title: 'Direct blocks',
-    body: 'Buy a listed block of shares on a marketplace like Forge or Hiive. Highest minimums, cleanest exposure — you hold the position the venue settles.',
+    body: 'Buy a listed block of shares on a marketplace like Forge or Hiive. Highest minimums, cleanest exposure. You hold the position the venue settles.',
     tag: 'Typical min: $5k–$100k',
   },
   {
@@ -24,22 +24,22 @@ const routes = [
   {
     icon: 'ring',
     title: 'Pre-IPO funds & baskets',
-    body: 'Funds hold several late-stage names in one wrapper. Lowest minimums and instant spread — watch fees and any premium to the value of what the fund holds.',
+    body: 'Funds hold several late-stage names in one wrapper. Lowest minimums and instant spread, watch fees and any premium to the value of what the fund holds.',
     tag: 'Typical min: $500+',
   },
 ];
 
 const checks = [
-  'The same company, offered as a block, an SPV and a fund — often at different effective prices per share',
+  'The same company, offered as a block, an SPV and a fund, often at different effective prices per share',
   'Management and carry fees, surfaced per route, so cheap headline minimums don’t hide expensive wrappers',
   'Premium or discount to the last primary round, computed the same way across every structure',
-  'Access rules per route — accreditation, residency, lockups — before you click through',
+  'Access rules per route, accreditation, residency, lockups, before you click through',
 ];
 ---
 
 <BaseLayout
   title="Pre-IPO & SPVs"
-  description="Compare routes into pre-IPO names — direct secondary blocks, SPVs and pre-IPO funds — across venues, with fees, minimums and premiums side by side."
+  description="Compare routes into pre-IPO names, direct secondary blocks, SPVs and pre-IPO funds, across venues, with fees, minimums and premiums side by side."
 >
   <PageHero
     eyebrow="Markets · Pre-IPO"
@@ -47,7 +47,7 @@ const checks = [
     lead="OpenAI via a block, an SPV or a fund? The ticket sizes, fees and effective share prices differ wildly. Bundle lines up every route into a name so you can pick the one that fits your cheque."
   >
     <a slot="actions" href="/deals?type=pre-ipo" class="btn btn-primary btn-lg">See pre-IPO deals <span class="arrow">→</span></a>
-    <a slot="actions" href="/waitlist" class="btn btn-ghost btn-lg">Get early access</a>
+    <a slot="actions" href="/portfolio" class="btn btn-ghost btn-lg">Build my portfolio</a>
   </PageHero>
 
   <!-- Live rail -->
@@ -61,7 +61,7 @@ const checks = [
         {preIpo.slice(0, 4).map((d, i) => <DealCard deal={d} class="reveal" style={`--d:${i * 0.06}s`} />)}
       </div>
       <p class="small muted" style="margin-top:0.9rem">
-        Indicative marks from venue public pages, as of 19 July 2026 — not live quotes or offers.
+        Indicative marks from venue public pages, as of 19 July 2026, not live quotes or offers.
       </p>
     </div>
   </section>
@@ -118,9 +118,9 @@ const checks = [
 
   <CTABand
     title="Pick the route <em>with your eyes open.</em>"
-    sub="Every route into every name, priced side by side — from day one of early access."
-    primaryLabel="Get early access"
-    primaryHref="/waitlist"
+    sub="Every route into every name, priced side by side, on one screen."
+    primaryLabel="Build my portfolio"
+    primaryHref="/portfolio"
     secondaryLabel="See pre-IPO deals"
     secondaryHref="/deals?type=pre-ipo"
   />

@@ -49,8 +49,8 @@ import Logo from '../components/Logo.astro';
         </form>
 
         <p class="small muted su-note">
-          Bundle is pre-launch. This account is held on this device only so you
-          can walk the product end to end — nothing is transmitted, and no real
+          This account is held on this device only so you
+          can walk the product end to end. Nothing is transmitted, and no real
           credentials are stored. Capital at risk.
         </p>
       </div>
@@ -132,7 +132,7 @@ import Logo from '../components/Logo.astro';
   const params = new URLSearchParams(location.search);
   const next = params.get('next') || '/portfolio';
 
-  // @ts-ignore — global from /auth.js
+  // @ts-ignore, global from /auth.js
   if (!window.BundleAuth?.draft() && lede) {
     lede.textContent =
       'Create an account to save your investor profile, see your guardrails and track holdings across every venue.';

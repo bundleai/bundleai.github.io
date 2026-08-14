@@ -22,7 +22,7 @@ const typeLabel = (t: string) =>
 
 <BaseLayout
   title="Deal Screener"
-  description="Screen every aggregated private-market deal — crowdfunding rounds, secondary blocks and pre-IPO offers — by sector, venue, price and minimum ticket."
+  description="Screen every aggregated private-market deal: crowdfunding rounds, secondary blocks and pre-IPO offers, by sector, venue, price and minimum ticket."
 >
   <Ticker />
   <DealsData />
@@ -90,6 +90,7 @@ const typeLabel = (t: string) =>
               <th class="num">Move / Status</th>
               <th class="num">Valuation / Raised</th>
               <th class="num">Access</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -135,7 +136,7 @@ const typeLabel = (t: string) =>
                     ) : d.status ? (
                       <span class="closes">{d.status}</span>
                     ) : (
-                      <span class="flat">—</span>
+                      <span class="flat">-</span>
                     )}
                   </td>
                   <td class="num">
@@ -149,12 +150,26 @@ const typeLabel = (t: string) =>
                     )}
                   </td>
                   <td class="num">{d.minTicket}</td>
+                  <td class="num">
+                    <button
+                      type="button"
+                      class="scr-trade"
+                      data-trade
+                      data-deal-id={d.id}
+                      data-deal-name={d.name}
+                      data-deal-venue={platformName(d.platform)}
+                      data-deal-sector={d.sector}
+                      data-deal-url={d.url}
+                    >
+                      Trade <span class="arrow">↗</span>
+                    </button>
+                  </td>
                 </tr>
               ))
             }
             <tr id="scr-empty" hidden>
-              <td colspan="7" class="empty-cell">
-                No deals match those filters — clear one and rescan.
+              <td colspan="8" class="empty-cell">
+                No deals match those filters, clear one and rescan.
               </td>
             </tr>
           </tbody>
@@ -164,7 +179,7 @@ const typeLabel = (t: string) =>
       <p class="scr-note small muted">
         Indicative data sourced from venue public pages (Forge Global's
         published Forge Price marks, Crowdcube company pages, Wefunder
-        listings) as of {dataAsOf} — not live quotes, offers or financial
+        listings) as of {dataAsOf}, not live quotes, offers or financial
         promotions. Selecting a deal first builds your investor profile, then opens that deal on the venue that lists it, under the venue's rules and eligibility; Bundle never holds your money.
         Venue names don't imply partnership or endorsement.
         <a href="/legal/risk-warning">Capital at risk.</a>
@@ -295,7 +310,7 @@ const typeLabel = (t: string) =>
     border-color: var(--green);
   }
 
-  /* Table cells — 8 columns, keep them on one screen at desktop */
+  /* Table cells, 8 columns, keep them on one screen at desktop */
   .scr-table :global(table.table th),
   .scr-table :global(table.table td) {
     padding-inline: 0.8rem;
@@ -401,6 +416,37 @@ const typeLabel = (t: string) =>
   .scr-row:target td {
     border-bottom-color: var(--green);
   }
+
+  .scr-trade {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.32rem 0.7rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+    font-size: 0.78rem;
+    font-weight: 570;
+    color: var(--green);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+  }
+
+  .scr-trade:hover,
+  .scr-row:hover .scr-trade {
+    background: var(--tint);
+    border-color: var(--green);
+    color: var(--green-deep);
+  }
+
+  .scr-trade .arrow {
+    transition: transform 0.18s ease;
+  }
+
+  .scr-trade:hover .arrow {
+    transform: translate(2px, -2px);
+  }
 </style>
 
 <script>
@@ -476,7 +522,7 @@ const typeLabel = (t: string) =>
   };
 
   const applyFit = () => {
-    // @ts-ignore — globals from /auth.js and /match.js
+    // @ts-ignore, globals from /auth.js and /match.js
     const Auth = window.BundleAuth;
     // @ts-ignore
     const Match = window.BundleMatch;

@@ -7,17 +7,17 @@ import CTABand from '../components/CTABand.astro';
 const features = [
   { icon: 'activity', title: 'One tape, three markets', body: 'Crowdfunding rounds, secondary blocks and pre-IPO offers stream into a single screener instead of a dozen tabs and newsletters.' },
   { icon: 'bell', title: 'Alerts that hit first', body: 'A block lists below the last round. A raise crosses 90% funded. A liquidity window opens on a name you hold. You know within minutes.' },
-  { icon: 'scale', title: 'Venue-by-venue comparison', body: 'Price, fees, minimums, share class and access rules, side by side — so the venue you execute on is a decision, not a default.' },
+  { icon: 'scale', title: 'Venue-by-venue comparison', body: 'Price, fees, minimums, share class and access rules, side by side, so the venue you execute on is a decision, not a default.' },
   { icon: 'pie', title: 'One portfolio, every venue', body: 'Positions on Crowdcube, Republic, Forge, Hiive and beyond, tracked in one P&L with revaluations as new rounds price.' },
-  { icon: 'eye', title: 'Watchlists on companies, not platforms', body: 'Follow the company once. Wherever its shares surface next — any venue, any structure — it shows up on your tape.' },
-  { icon: 'sliders', title: 'Screens that keep working', body: 'Save a screen — “UK fintech secondaries under £2k minimum” — and Bundle keeps running it while you sleep.' },
+  { icon: 'eye', title: 'Watchlists on companies, not platforms', body: 'Follow the company once. Wherever its shares surface next, any venue, any structure, it shows up on your tape.' },
+  { icon: 'sliders', title: 'Screens that keep working', body: 'Save a screen, “UK fintech secondaries under £2k minimum”, and Bundle keeps running it while you sleep.' },
 ];
 
 const alerts = [
-  { kind: 'down', icon: '▼', text: 'ANTH — block listed 6% below last round', src: 'Forge Global', time: '2m' },
+  { kind: 'down', icon: '▼', text: 'ANTH, block listed 6% below last round', src: 'Forge Global', time: '2m' },
   { kind: 'up', icon: '▲', text: 'Aurora Fusion crossed 84% funded', src: 'Crowdcube', time: '18m' },
   { kind: 'flat', icon: '◆', text: 'PISCES window announced: UK fintech you follow', src: 'LSE PSM', time: '1h' },
-  { kind: 'up', icon: '▲', text: 'REV — new high on the secondary tape', src: 'Hiive', time: '3h' },
+  { kind: 'up', icon: '▲', text: 'REV. New high on the secondary tape', src: 'Hiive', time: '3h' },
 ];
 ---
 
@@ -31,7 +31,7 @@ const alerts = [
     lead="Public-market traders get one terminal for everything. Private-market investors get scattered tabs and stale newsletters. Bundle fixes your side of that."
   >
     <a slot="actions" href="/deals" class="btn btn-primary btn-lg">Start scanning <span class="arrow">→</span></a>
-    <a slot="actions" href="/waitlist" class="btn btn-ghost btn-lg">Get early access</a>
+    <a slot="actions" href="/portfolio" class="btn btn-ghost btn-lg">Build my portfolio</a>
 
     <div slot="visual" class="alerts-panel panel" aria-hidden="true">
       <header class="ap-head">
@@ -84,7 +84,7 @@ const alerts = [
         <p>
           Bundle shows you the market; it doesn't pick your investments, hold
           your money or soften the risks. Private-market deals are illiquid and
-          high-risk on every venue — you can lose everything you put in.
+          high-risk on every venue. You can lose everything you put in.
           <a href="/legal/risk-warning">Two minutes on the risks</a>.
         </p>
       </div>
@@ -93,9 +93,9 @@ const alerts = [
 
   <CTABand
     title="Trade the whole market, <em>not one platform's shelf.</em>"
-    sub="Screener, watchlists and cross-venue alerts — free for investors, from day one."
-    primaryLabel="Get early access"
-    primaryHref="/waitlist"
+    sub="Screener, watchlists and cross-venue alerts, free for investors, from day one."
+    primaryLabel="Build my portfolio"
+    primaryHref="/portfolio"
     secondaryLabel="Browse live deals"
     secondaryHref="/deals"
   />

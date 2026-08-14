@@ -74,7 +74,18 @@ const typeLabel =
   </div>
 
   <footer class="dc-foot">
-    <span class="dc-cta">On {platformName(d.platform)} <span class="arrow">↗</span></span>
+    <button
+      type="button"
+      class="dc-cta"
+      data-trade
+      data-deal-id={d.id}
+      data-deal-name={d.name}
+      data-deal-venue={platformName(d.platform)}
+      data-deal-sector={d.sector}
+      data-deal-url={d.url}
+    >
+      Trade on {platformName(d.platform)} <span class="arrow">↗</span>
+    </button>
     {d.investors != null && <span class="dc-min px">from {d.minTicket}</span>}
   </footer>
 </div>

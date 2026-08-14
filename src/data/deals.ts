@@ -64,7 +64,7 @@ export const platformName = (id: string): string =>
   platforms.find((p) => p.id === id)?.name ?? id;
 
 export const deals: Deal[] = [
-  /* ---- Pre-IPO & secondaries — Forge Global public marks, 19 Jul 2026 ---- */
+  /* ---- Pre-IPO & secondaries, Forge Global public marks, 19 Jul 2026 ---- */
   {
     id: 'openai', name: 'OpenAI', code: 'OAI', sector: 'AI',
     type: 'pre-ipo', platform: 'forge',
@@ -122,7 +122,7 @@ export const deals: Deal[] = [
     minTicket: 'Accredited', hue: 'c1',
   },
 
-  /* ---- Live crowdfunding — Crowdcube public pages, 19 Jul 2026 ---- */
+  /* ---- Live crowdfunding, Crowdcube public pages, 19 Jul 2026 ---- */
   {
     id: 'permia-sensing', name: 'Permia Sensing', code: 'PERM', sector: 'Agritech',
     type: 'crowdfunding', platform: 'crowdcube',
@@ -148,7 +148,7 @@ export const deals: Deal[] = [
     minTicket: '£10+', hue: 'c6',
   },
 
-  /* ---- Live crowdfunding — Wefunder explore listings, 19 Jul 2026 ---- */
+  /* ---- Live crowdfunding, Wefunder explore listings, 19 Jul 2026 ---- */
   {
     id: 'bito', name: 'Bito', code: 'BITO', sector: 'AI',
     type: 'crowdfunding', platform: 'wefunder',
@@ -191,7 +191,7 @@ export const marketStats = {
 
 export const fmtPrice = (d: Deal): string =>
   d.price == null
-    ? '—'
+    ? '-'
     : `${d.currency}${d.price.toLocaleString('en-GB', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
@@ -199,5 +199,5 @@ export const fmtPrice = (d: Deal): string =>
 
 export const fmtChange = (d: Deal): string =>
   d.change == null || d.change === 0
-    ? '—'
+    ? '-'
     : `${d.change > 0 ? '+' : ''}${d.change.toFixed(2)}%`;

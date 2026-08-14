@@ -1,17 +1,17 @@
 /* ==========================================================================
-   Bundle design system — tokens, base, primitives
+   Bundle design system, tokens, base, primitives
    Premium fintech: calm, light, serif-headed. Mercury / Stripe / Ramp register.
-   Colour ratio target — 65% --bg, 20% white cards, 10% greens, 5% gold.
+   Colour ratio target, 65% --bg, 20% white cards, 10% greens, 5% gold.
    ========================================================================== */
 
 :root {
   /* Surfaces */
-  --bg: #f7f8f4;          /* page — the default everywhere */
+  --bg: #f7f8f4;          /* page: the default everywhere */
   --surface: #ffffff;     /* cards, tables, forms, modals */
-  --tint: #edf2ec;        /* primary light — hover, soft highlight, raised panels */
-  --cream: #efe9dc;       /* neutral cream — heroes, alternate sections */
+  --tint: #edf2ec;        /* primary light, hover, soft highlight, raised panels */
+  --cream: #efe9dc;       /* neutral cream, heroes, alternate sections */
   --tint-soft: #f1f4ee;   /* faintest wash between --bg and --tint */
-  --ink: #14281e;         /* primary dark — headings, primary text, dark sections */
+  --ink: #14281e;         /* primary dark, headings, primary text, dark sections */
   --text: #34473a;        /* body */
   --text-2: #5f705f;      /* secondary text, labels, captions */
   --faint: #7e8d7e;       /* placeholders, tertiary */
@@ -19,14 +19,14 @@
   --line-2: #c4d2c6;      /* stronger hairline */
 
   /* Brand */
-  --green: #21402e;       /* primary green — buttons, icons, links, active states */
+  --green: #21402e;       /* primary green, buttons, icons, links, active states */
   --green-deep: #14281e;  /* hover (darker, not brighter) */
   --green-soft: #edf2ec;  /* wash behind green icons/badges */
-  --gold: #c9a227;        /* accent — premium CTA, badges, key metrics. Sparingly. */
+  --gold: #c9a227;        /* accent, premium CTA, badges, key metrics. Sparingly. */
   --gold-deep: #ad8a1d;   /* gold hover + gold-on-light text (3.06:1, display only) */
   --gold-soft: #f6efdb;
 
-  /* Market direction (price up / down — reserved for movement, never decor).
+  /* Market direction (price up / down, reserved for movement, never decor).
      `-ink` steps are for text sitting on the matching tint, where the base
      step only reaches ~4.4:1. */
   --up: #2e7d32;
@@ -36,14 +36,14 @@
   --down-ink: #a32020;
   --down-tint: rgba(211, 47, 47, 0.09);
 
-  /* Semantic (status) — always ship with a label or icon, never colour alone.
+  /* Semantic (status), always ship with a label or icon, never colour alone.
      `-ink` steps are the text-safe versions (all ≥ 7:1 on white). */
   --sage: #2e7d32;   --sage-ink: #1f5c23;  --sage-tint: rgba(46, 125, 50, 0.1);
   --sand: #f59e0b;   --sand-ink: #92400e;  --sand-tint: rgba(245, 158, 11, 0.13);
   --red:  #d32f2f;   --red-ink:  #a32020;  --red-tint:  rgba(211, 47, 47, 0.09);
   --info: #1976d2;   --info-ink: #12539a;  --info-tint: rgba(25, 118, 210, 0.1);
 
-  /* Chart palette — categorical, validated for #FFFFFF surfaces.
+  /* Chart palette, categorical, validated for #FFFFFF surfaces.
      All six checks pass: L band, chroma floor, CVD ΔE 10.8 (protan) worst
      adjacent, normal-vision ΔE 17.8, contrast ≥ 3:1. Fixed order, never cycled.
      Note --c2 is a darker step than brand --gold, which is only 2.42:1 on white. */
@@ -53,12 +53,12 @@
   --c4: #c2643c;  /* terracotta */
   --c5: #0e9384;  /* teal    */
   --c6: #7a5aa6;  /* purple  */
-  /* Ordinal green ramp (stage / tiers) — monotone L, light end 2.12:1 */
+  /* Ordinal green ramp (stage / tiers), monotone L, light end 2.12:1 */
   --ramp1: #95bba2; --ramp2: #679c7a; --ramp3: #3c7455; --ramp4: #21402e;
   --chart-track: #e4eae3;   /* unfilled meter/track step */
   --chart-deemph: #b7c4b8;  /* de-emphasis series */
 
-  /* Type — elegant serif headings, modern sans body, mono for data */
+  /* Type, elegant serif headings, modern sans body, mono for data */
   --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
   --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
@@ -70,12 +70,12 @@
   --r-l: 16px;   /* cards, charts */
   --r-pill: 999px;
 
-  /* Depth — subtle elevation only. One shadow, three intensities. */
+  /* Depth, subtle elevation only. One shadow, three intensities. */
   --shadow-s: 0 1px 2px rgba(20, 40, 30, 0.04), 0 2px 8px rgba(20, 40, 30, 0.04);
   --shadow-m: 0 6px 24px rgba(20, 40, 30, 0.08);
   --shadow-l: 0 12px 40px rgba(20, 40, 30, 0.1);
 
-  /* Restrained gradients — greens only, for progress fills and rules.
+  /* Restrained gradients, greens only, for progress fills and rules.
      Never for text, buttons, or large surfaces. */
   --grad-brand: linear-gradient(90deg, #3c7455, #21402e);
   --grad-gold: linear-gradient(90deg, #d9b23f, #c9a227);
@@ -103,7 +103,7 @@ html {
 }
 
 /* Layered gradient canvas. Fixed so it reads as one continuous field rather
-   than repeating per section — warm cream top-left, soft green top-right,
+   than repeating per section, warm cream top-left, soft green top-right,
    settling into the base tone. */
 body {
   margin: 0;
@@ -123,7 +123,7 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Serif is reserved for the large headings — h1/h2 and the display helpers.
+/* Serif is reserved for the large headings, h1/h2 and the display helpers.
    h3 and below stay in the sans face, where a light serif turns weak. */
 h1, h2 {
   margin: 0 0 0.5em;
@@ -212,7 +212,7 @@ button {
   color: var(--ink);
 }
 
-/* Accent phrase inside a display heading. Solid gold — no gradient text.
+/* Accent phrase inside a display heading. Solid gold, no gradient text.
    3.06:1 on --bg, so display sizes only, never body copy. */
 .text-grad {
   color: var(--gold-deep);
@@ -403,13 +403,13 @@ button {
   border-block: 1px solid var(--line);
 }
 
-/* Warm cream — heroes, testimonials, marketing breaks */
+/* Warm cream, heroes, testimonials, marketing breaks */
 .section-cream {
   background: var(--cream);
   border-block: 1px solid #e3dccb;
 }
 
-/* Dark green section — the inverse surface */
+/* Dark green section: the inverse surface */
 .section-ink {
   background: var(--ink);
   color: #c9d6c9;
@@ -518,7 +518,7 @@ button {
   position: relative;
 }
 
-/* Very soft ambient tint. Deliberately weak — no aurora, no blur blobs. */
+/* Very soft ambient tint. Deliberately weak, no aurora, no blur blobs. */
 .aurora {
   position: relative;
   overflow: hidden;
@@ -547,7 +547,7 @@ button {
 .grain::before { content: none; }
 .float-a, .float-b, .float-c { animation: none; }
 
-/* Featured card — a gold hairline instead of a glow ring */
+/* Featured card: a gold hairline instead of a glow ring */
 .glow-card {
   background: var(--surface);
   border: 1px solid var(--gold);
@@ -624,7 +624,7 @@ button {
   color: var(--green-deep);
 }
 
-/* Premium CTA — one per page, maximum.
+/* Premium CTA: one per page, maximum.
    Spec asks for white on gold; that is 2.42:1 and fails WCAG, so the label is
    --ink (6.42:1). Same gold, readable. */
 .btn-gold {
@@ -1179,6 +1179,42 @@ table.table tbody tr:hover {
   max-width: 52ch;
 }
 
+/* The three-reason case that opens the questionnaire. */
+.wz-why {
+  list-style: none;
+  display: grid;
+  gap: 0.55rem;
+  margin: 0 0 1.35rem;
+  padding: 0;
+}
+
+.wz-why li {
+  position: relative;
+  padding: 0.7rem 0.9rem 0.7rem 2.25rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-s);
+  background: var(--tint);
+  font-size: 0.9rem;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+
+.wz-why li::before {
+  content: "";
+  position: absolute;
+  left: 0.95rem;
+  top: 1.15rem;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+.wz-why b {
+  color: var(--ink);
+  font-weight: 570;
+}
+
 .wz-q {
   font-size: 1rem;
   font-weight: 560;
@@ -1530,14 +1566,14 @@ table.table tbody tr:hover {
 }
 
 /* --------------------------------------------------------------------------
-   Pointer response — a soft light that follows the cursor, plus a sheen that
+   Pointer response: a soft light that follows the cursor, plus a sheen that
    tracks across whichever card you are over. Fine pointers only, and disabled
    entirely under prefers-reduced-motion.
    -------------------------------------------------------------------------- */
 
 /* Reads as a light source rather than a tint: a bright core that lifts the
    surface, a warm gold ring, then a faint green falloff. Lifting rather than
-   darkening matters — the glow passes behind body copy in transparent
+   darkening matters: the glow passes behind body copy in transparent
    sections, and a dark tint there eats text contrast. Alphas are capped at
    the point where --text-2 (#5F705F) still clears 4.5:1: gold 0.12 over the
    raw page, green 0.04 at the edge. The white core only improves it. */
@@ -1580,7 +1616,7 @@ table.table tbody tr:hover {
 body.pointer-live .pointer-glow { opacity: 1; }
 
 /* Keep page content above the glow layer. The glow is fixed with z-index 0,
-   which paints over the backgrounds of static elements — so every top-level
+   which paints over the backgrounds of static elements, so every top-level
    surface needs its own stacking context, the risk ribbon included.
 
    The modal is deliberately NOT in this list: it is already position: fixed
@@ -1593,7 +1629,7 @@ main,
 
 .site-header { z-index: 100; }
 
-/* Cards stay clean — no sheen tracks across them. Their opaque surfaces sit
+/* Cards stay clean, no sheen tracks across them. Their opaque surfaces sit
    above the glow, so the light stops at the card edge. */
 
 .scr-row { cursor: pointer; }
@@ -1607,7 +1643,7 @@ main,
 }
 
 /* --------------------------------------------------------------------------
-   Hand-off overlay — questionnaire → sign-up / dashboard
+   Hand-off overlay, questionnaire → sign-up / dashboard
    -------------------------------------------------------------------------- */
 
 .handoff {
@@ -1866,11 +1902,26 @@ main,
   margin-bottom: 0.6rem;
 }
 
-.pv-ctl label b {
+/* The read-out sits under the track, where the thumb is. */
+.pv-ctl-val {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.55rem;
+}
+
+.pv-ctl-val b {
   font-family: var(--font-display);
   font-weight: 500;
   font-size: 1.3rem;
   color: var(--green);
+  font-variant-numeric: tabular-nums;
+}
+
+.pv-ctl-scale {
+  font-size: 0.78rem;
+  color: var(--text-2);
 }
 
 .pv-ctl input[type="range"] {
@@ -1879,9 +1930,11 @@ main,
   width: 100%;
   height: 5px;
   border-radius: 999px;
-  background: var(--chart-track);
+  background: linear-gradient(90deg, var(--green) var(--fill, 0%), var(--chart-track) var(--fill, 0%));
   outline-offset: 6px;
   cursor: pointer;
+  /* horizontal drags belong to the slider, vertical ones still scroll the page */
+  touch-action: pan-y;
 }
 
 .pv-ctl input[type="range"]::-webkit-slider-thumb {
@@ -1893,11 +1946,37 @@ main,
   background: var(--surface);
   border: 2px solid var(--green);
   box-shadow: var(--shadow-s);
+  cursor: grab;
+  will-change: transform;
+  transition: transform 0.14s cubic-bezier(0.2, 0.7, 0.3, 1), box-shadow 0.14s ease;
+}
+
+.pv-ctl input[type="range"]:hover::-webkit-slider-thumb {
+  transform: scale(1.06);
+}
+
+.pv-ctl input[type="range"]:active::-webkit-slider-thumb {
+  cursor: grabbing;
+  transform: scale(1.14);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--green) 14%, transparent);
 }
 
 .pv-ctl input[type="range"]::-moz-range-thumb {
   width: 20px; height: 20px; border-radius: 50%;
   background: var(--surface); border: 2px solid var(--green);
+  will-change: transform;
+  transition: transform 0.14s cubic-bezier(0.2, 0.7, 0.3, 1), box-shadow 0.14s ease;
+}
+
+.pv-ctl input[type="range"]:active::-moz-range-thumb {
+  transform: scale(1.14);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--green) 14%, transparent);
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .pv-ctl input[type="range"]::-webkit-slider-thumb,
+  .pv-ctl input[type="range"]::-moz-range-thumb { transition: none; }
 }
 
 .pv-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
@@ -2120,13 +2199,13 @@ main,
 }
 
 /* --------------------------------------------------------------------------
-   Anchor offset — the header is sticky, so #id jumps must clear it.
+   Anchor offset: the header is sticky, so #id jumps must clear it.
    -------------------------------------------------------------------------- */
 
 [id] { scroll-margin-top: calc(var(--nav-h) + 1.5rem); }
 
 /* --------------------------------------------------------------------------
-   One-time nav hint — points a newly signed-in person at Portfolio
+   One-time nav hint, points a newly signed-in person at Portfolio
    -------------------------------------------------------------------------- */
 
 .nav-hint {
@@ -2146,7 +2225,7 @@ main,
   100% { box-shadow: 0 0 0 0 rgba(201, 162, 39, 0); }
 }
 
-/* Tooltip, desktop nav only — the mobile panel just gets the highlight. */
+/* Tooltip, desktop nav only: the mobile panel just gets the highlight. */
 .primary-nav .nav-hint::after {
   content: attr(data-hint);
   position: absolute;
@@ -2180,7 +2259,7 @@ main,
 }
 
 /* --------------------------------------------------------------------------
-   Unsaved-plan bar — fixed so a change is impossible to miss
+   Unsaved-plan bar, fixed so a change is impossible to miss
    -------------------------------------------------------------------------- */
 
 .pv-save {
@@ -2251,7 +2330,7 @@ main,
 }
 
 /* --------------------------------------------------------------------------
-   Personalised matching — screener fit mode + portfolio suggestions
+   Personalised matching, screener fit mode + portfolio suggestions
    -------------------------------------------------------------------------- */
 
 .scr-fit {
@@ -2427,3 +2506,353 @@ main,
 .pv-fit-cta { font-size: 0.85rem; font-weight: 550; color: var(--green); }
 .pv-fit-min { font-size: 0.74rem; color: var(--text-2); }
 .pv-fit-all { margin-top: 1rem; }
+
+/* ============================================================
+   Academy lesson player (public/lesson-player.js)
+   ============================================================ */
+
+.lp {
+  margin: 0 0 1.25rem;
+}
+
+.lp-stage {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: var(--r-m);
+  overflow: hidden;
+  box-shadow: var(--shadow-s);
+  background: linear-gradient(170deg, var(--tint) 0%, var(--surface) 62%);
+}
+
+.lp-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* --- scene type --- */
+.lp-svg text { font-family: var(--font-body); }
+
+.lp-stat-v {
+  font-family: var(--font-display);
+  font-size: 82px;
+  font-weight: 500;
+  fill: var(--ink);
+}
+
+.lp-stat-l { font-size: 19px; fill: var(--text); font-weight: 550; }
+.lp-stat-s { font-size: 14px; fill: var(--text-2); }
+.lp-head { font-size: 17px; fill: var(--ink); font-weight: 570; }
+.lp-axis { font-size: 12.5px; fill: var(--text-2); }
+.lp-blabel { font-size: 13.5px; fill: var(--text); }
+.lp-bval { font-size: 13.5px; fill: var(--ink); font-weight: 600; }
+.lp-bval.inv { fill: #fff; }
+.lp-btrack { fill: var(--chart-track); opacity: 0.45; }
+.lp-legend { font-size: 13px; fill: var(--text-2); }
+.lp-legend.strong { fill: var(--ink); font-weight: 570; font-family: var(--font-mono); font-size: 12.5px; }
+
+.lp-tl-rail, .lp-tl-tick { stroke: var(--line); stroke-width: 2; }
+.lp-tl-dot { fill: var(--green); }
+.lp-tl-at {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  fill: var(--green-deep);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.lp-tl-label { font-size: 12.5px; fill: var(--text-2); }
+
+.lp-stack-ghost { fill: var(--chart-track); opacity: 0.3; }
+.lp-stack { fill: var(--green); }
+.lp-stack-v { font-size: 14px; fill: var(--ink); font-weight: 600; font-family: var(--font-mono); }
+
+.lp-grid { stroke: var(--line); stroke-width: 1.5; }
+.lp-area { fill: var(--green); fill-opacity: 0.13; }
+.lp-line { fill: none; stroke: var(--green); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.lp-pt { fill: var(--surface); stroke: var(--green); stroke-width: 2.5; }
+.lp-pt-v { font-size: 12px; fill: var(--ink); font-weight: 570; font-family: var(--font-mono); }
+
+/* --- enter animation --- */
+.lp-a {
+  transition: transform 0.65s cubic-bezier(0.2, 0.7, 0.3, 1),
+    opacity 0.45s ease, stroke-dasharray 0.85s cubic-bezier(0.2, 0.7, 0.3, 1),
+    stroke-dashoffset 1s ease;
+}
+
+.lp-bar.lp-a { transform: scaleX(0); }
+.lp-stack.lp-a { transform: scaleY(0); }
+.lp-a[data-fade] { opacity: 0; }
+.lp-a[data-fade].in { opacity: 1; }
+.lp-line.lp-a { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.lp-line.lp-a.in { stroke-dashoffset: 0; }
+
+/* --- overlays --- */
+.lp-veil {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 0.7rem;
+  border: 0;
+  background: color-mix(in srgb, var(--ink) 46%, transparent);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.lp-veil:hover { background: color-mix(in srgb, var(--ink) 54%, transparent); }
+
+.lp-veil-btn {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--ink);
+  display: grid;
+  place-content: center;
+  font-size: 1.5rem;
+  padding-left: 5px;
+  box-shadow: var(--shadow-m);
+}
+
+.lp-veil-t { font-size: 0.9rem; font-weight: 550; letter-spacing: 0.02em; }
+
+.lp-knob {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.6rem 0.9rem;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  backdrop-filter: blur(8px);
+}
+
+.lp-knob label { font-size: 0.82rem; font-weight: 560; color: var(--ink); white-space: nowrap; }
+
+.lp-knob input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--chart-track);
+  cursor: pointer;
+  touch-action: pan-y;
+}
+
+.lp-knob input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--green);
+  box-shadow: var(--shadow-s);
+  transition: transform 0.14s ease;
+}
+
+.lp-knob input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.15); }
+
+.lp-knob input[type="range"]::-moz-range-thumb {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--surface); border: 2px solid var(--green);
+}
+
+.lp-knob output {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--green-deep);
+  min-width: 2.4rem;
+  text-align: right;
+}
+
+.lp-done {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  padding: 1.5rem;
+  background: color-mix(in srgb, var(--ink) 62%, transparent);
+  backdrop-filter: blur(3px);
+}
+
+.lp-done-card {
+  background: var(--surface);
+  border-radius: var(--r-m);
+  padding: 1.6rem 1.7rem;
+  max-width: 30rem;
+  text-align: center;
+  box-shadow: var(--shadow-l);
+}
+
+.lp-done-tick {
+  display: grid;
+  place-content: center;
+  width: 38px;
+  height: 38px;
+  margin: 0 auto 0.7rem;
+  border-radius: 50%;
+  background: var(--up-tint);
+  color: var(--up-ink);
+  font-size: 1.05rem;
+}
+
+.lp-done-h {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--ink);
+  margin: 0 0 0.35rem;
+}
+
+.lp-done-s { font-size: 0.9rem; color: var(--text-2); margin: 0 0 1.1rem; }
+
+.lp-done-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.lp-done-replay {
+  display: block;
+  margin: 0.9rem auto 0;
+  border: 0;
+  background: none;
+  color: var(--text-2);
+  font-size: 0.82rem;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+/* --- caption + controls --- */
+.lp-cap {
+  padding: 1.1rem 0.2rem 0.6rem;
+  min-height: 5.2rem;
+}
+
+.lp-cap-t {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--ink);
+  margin: 0 0 0.25rem;
+}
+
+.lp-cap-b { font-size: 0.95rem; color: var(--text-2); margin: 0; max-width: 60ch; }
+
+.lp-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--surface);
+}
+
+.lp-btn {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--tint);
+  color: var(--green-deep);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.lp-btn:hover { background: var(--green); color: #fff; }
+
+.lp-track {
+  flex: 1;
+  display: flex;
+  gap: 3px;
+  align-items: center;
+  cursor: pointer;
+  padding-block: 0.5rem;
+}
+
+.lp-seg {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--chart-track);
+  overflow: hidden;
+}
+
+.lp-seg-fill {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: var(--green);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.lp-time { font-size: 0.76rem; color: var(--text-2); white-space: nowrap; }
+
+.lp-chapters {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0;
+  margin: 0.9rem 0 0;
+}
+
+.lp-chapters button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.75rem 0.35rem 0.4rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  color: var(--text-2);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+}
+
+.lp-chapters button:hover { color: var(--ink); border-color: var(--green); }
+
+.lp-chapters button.now {
+  background: var(--tint);
+  border-color: var(--green);
+  color: var(--ink);
+  font-weight: 550;
+}
+
+.lp-ch-n {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--chart-track);
+  color: var(--green-deep);
+  display: grid;
+  place-content: center;
+  font-size: 0.68rem;
+}
+
+.lp-chapters button.now .lp-ch-n { background: var(--green); color: #fff; }
+
+.lp-note { margin: 0.9rem 0 0; }
+
+@media (max-width: 620px) {
+  .lp-stat-v { font-size: 64px; }
+  .lp-knob { flex-wrap: wrap; border-radius: var(--r-m); }
+  .lp-knob label { flex: 1 0 100%; }
+  .lp-cap { min-height: 6.5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lp-a { transition: none; }
+}

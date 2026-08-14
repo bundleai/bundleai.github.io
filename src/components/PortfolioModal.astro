@@ -11,8 +11,8 @@
   <div class="modal-panel">
     <header class="modal-head">
       <div>
-        <p class="modal-title" id="pm-title">Build your portfolio first</p>
-        <p class="modal-sub" id="pm-sub">A few questions so we can check this deal fits your plan.</p>
+        <p class="modal-title" id="pm-title">Why a portfolio comes first</p>
+        <p class="modal-sub" id="pm-sub">Thirty seconds on why spread beats picking, then a few questions that turn it into your plan.</p>
       </div>
       <button type="button" class="modal-close" data-close aria-label="Close">✕</button>
     </header>
@@ -38,15 +38,15 @@
     if (deal && titleEl && subEl) {
       titleEl.textContent = `Before you trade ${deal.name}`;
       subEl.textContent =
-        'A few questions so we can check this deal fits your plan, then we hand you to ' +
-        deal.venue + ' to execute.';
+        'Why one deal is never a plan, then a few questions so we can check this ' +
+        'one fits yours. We hand you to ' + deal.venue + ' to execute.';
     }
 
     modal!.hidden = false;
     document.body.style.overflow = 'hidden';
 
     if (!mounted) {
-      // @ts-ignore — global from /wizard.js
+      // @ts-ignore, global from /wizard.js
       window.BundleWizard.mount(host, {
         compact: true,
         saveLabel: 'Save & continue',
@@ -101,7 +101,7 @@
   });
 
   // Any element carrying data-trade routes into a deal. Someone who has
-  // already built a plan goes straight to the venue — the questionnaire is
+  // already built a plan goes straight to the venue: the questionnaire is
   // only a gate for people who have not answered it yet.
   document.addEventListener('click', (e) => {
     const trigger = (e.target as HTMLElement).closest('[data-trade]');
@@ -116,7 +116,7 @@
       url: trigger.getAttribute('data-deal-url') || '',
     };
 
-    // @ts-ignore — global from /auth.js
+    // @ts-ignore, global from /auth.js
     const Auth = window.BundleAuth;
     if (Auth?.signedIn() && Auth.profile()) {
       Auth.addHolding({ ...deal, at: Date.now() });

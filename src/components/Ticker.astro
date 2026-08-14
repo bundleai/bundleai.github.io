@@ -8,7 +8,7 @@ import { deals, dataAsOf, fmtPrice, fmtChange, platformName } from '../data/deal
 const tape = deals.filter((d) => d.price != null);
 ---
 
-<div class="ticker" role="marquee" aria-label={`Aggregated market tape — indicative venue marks as of ${dataAsOf}`}>
+<div class="ticker" role="marquee" aria-label={`Aggregated market tape, indicative venue marks as of ${dataAsOf}`}>
   <div class="tape">
     {
       [0, 1].map((copy) => (
