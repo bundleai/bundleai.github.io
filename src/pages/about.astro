@@ -3,6 +3,72 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import Icon from '../components/Icon.astro';
 import CTABand from '../components/CTABand.astro';
+import VizStatRow from '../components/VizStatRow.astro';
+import VizTimeline from '../components/VizTimeline.astro';
+import { platforms } from '../data/deals';
+
+const scattered = [
+  'Crowdcube',
+  'Republic Europe',
+  'Wefunder',
+  'Forge Global',
+  'Hiive',
+  'EquityZen',
+  'Nasdaq PM',
+  'Newsletters',
+  'A spreadsheet',
+];
+
+const decades = [
+  {
+    marker: 'Solved',
+    title: 'Access',
+    body: 'Crowdfunding and secondary venues opened the asset class to everyone.',
+    done: true,
+  },
+  {
+    marker: 'Arriving',
+    title: 'Liquidity',
+    body: 'Tenders, order books and, in the UK, regulated PISCES trading windows.',
+    done: true,
+  },
+  {
+    marker: 'Still open',
+    title: 'Discovery',
+    body: 'Nobody put the venues on one screen. That gap is the company.',
+  },
+];
+
+const principles = [
+  {
+    icon: 'scale',
+    title: 'Neutral or nothing',
+    body: 'Results rank by your filters, never by our commission.',
+  },
+  {
+    icon: 'lock',
+    title: 'Never touch the money',
+    body: 'Execution, custody and investor protections stay with the listing venue.',
+  },
+  {
+    icon: 'alert',
+    title: 'Honest about risk',
+    body: 'Aggregation makes the market visible, not safe. Deals can go to zero.',
+  },
+];
+
+const founders = [
+  {
+    name: 'Arjun Arun',
+    role: 'Co-founder · Product & markets',
+    line: 'Oxford Saïd MBA. Building the tooling private-market investors have gone without.',
+  },
+  {
+    name: 'Madhavi Bansal',
+    role: 'Co-founder · Operations & partnerships',
+    line: 'Oxford Saïd MBA. Venue relationships and the data plumbing behind one tape.',
+  },
+];
 ---
 
 <BaseLayout
@@ -12,73 +78,82 @@ import CTABand from '../components/CTABand.astro';
   <PageHero
     eyebrow="About Bundle"
     title='Private markets are having their <em class="serif-aside">Skyscanner moment.</em>'
-    lead="Flights were bookable long before they were comparable. Private-market deals are exactly there today: live on a dozen venues, visible on none of them together. Bundle is the comparison layer."
+    lead="Flights were bookable long before they were comparable. Private-market deals are exactly there today: live on a dozen venues, visible on none of them together."
   />
 
-  <!-- Mission narrative -->
+  <!-- The gap, drawn -->
   <section class="section">
-    <div class="container narrow">
-      <div class="prose mx-auto reveal">
-        <p>
-          The last decade solved <strong>access</strong>: crowdfunding platforms
-          let anyone back a startup, and secondary marketplaces let employees
-          and early backers sell before an IPO. The next decade is solving
-          <strong>liquidity</strong>, tender programmes, order-book
-          marketplaces and, in the UK, the PISCES regime for regulated
-          private-share trading windows.
-        </p>
-        <blockquote>
-          What nobody solved is discovery. The market exists. It's just
-          unwatchable.
-        </blockquote>
-        <p>
-          A serious private-market investor today runs a dozen tabs: two
-          crowdfunding platforms, three secondary marketplaces, a couple of
-          newsletters, a spreadsheet for the portfolio. Deals close before they
-          hear about them. The same company trades at different prices on
-          different venues, and nobody notices. That fragmentation isn't a
-          detail. It's the whole problem.
-        </p>
-        <p>
-          Bundle aggregates the market the way Skyscanner aggregated flights:
-          scan every venue, normalise every listing, put price against price -
-          then route you to the venue to do the deal under its regulatory
-          protections. We don't hold your money, we don't sell you our own
-          inventory, and we don't reorder the market for commission. The
-          aggregator only works if it's ruthlessly neutral, so that neutrality
-          is the product.
-        </p>
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow reveal">The gap</p>
+        <h2 class="h2 reveal" style="--d:.05s">Access is solved. Discovery isn't.</h2>
       </div>
+
+      <div class="gapviz panel reveal" style="--d:.08s">
+        <div class="gv-side">
+          <p class="gv-label mono">Today · a dozen tabs</p>
+          <div class="gv-chips">
+            {scattered.map((s, i) => <span class="gv-chip" style={`--r:${(i % 3) - 1}deg`}>{s}</span>)}
+          </div>
+        </div>
+
+        <div class="gv-mid" aria-hidden="true">
+          <span class="gv-engine">
+            <Icon name="layers" size={20} />
+            <span class="mono">Scan · Normalise · Compare</span>
+          </span>
+          <svg class="gv-arrow" viewBox="0 0 120 24" role="presentation">
+            <path d="M2 12h100" stroke="var(--line-2)" stroke-width="2" stroke-dasharray="5 6" stroke-linecap="round"></path>
+            <path d="M100 5l8 7-8 7" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+
+        <div class="gv-side">
+          <p class="gv-label mono">With Bundle · one tape</p>
+          <ul class="gv-tape">
+            {
+              [
+                ['Crowdcube', 'Forge'],
+                ['Wefunder', 'Hiive'],
+                ['Republic', 'EquityZen'],
+                ['SeedBlink', 'Nasdaq PM'],
+              ].map((venues) => (
+                <li class="gv-row">
+                  <span class="gv-dot" />
+                  <span class="gv-bar" />
+                  {venues.map((v) => <span class="src-chip">{v}</span>)}
+                </li>
+              ))
+            }
+          </ul>
+          <p class="gv-note mono">One row per company, every venue attached</p>
+        </div>
+      </div>
+
+      <p class="serif-aside gap-quote reveal" style="--d:.12s">
+        “The market exists. It's just unwatchable.”
+      </p>
+
+      <VizStatRow
+        class="gap-stats"
+        items={[
+          { value: 3, label: 'Market types', note: 'Crowdfunding, secondaries, pre-IPO' },
+          { value: platforms.length, label: 'Venues tracked', note: 'And counting, venue by venue' },
+          { value: 1, label: 'Portfolio', note: 'Every venue, one P&L' },
+          { value: 0, label: 'Markups', note: "You pay the venue's price" },
+        ]}
+      />
     </div>
   </section>
 
-  <!-- Founders -->
-  <section class="section section-tint-full">
+  <!-- Two decades -->
+  <section class="section tight section-tint-full">
     <div class="container">
       <div class="section-head">
-        <p class="eyebrow reveal">The founders</p>
-        <h2 class="h2 reveal" style="--d:.05s">Built at Oxford. Aimed at the gap.</h2>
+        <p class="eyebrow reveal">Where the market got to</p>
+        <h2 class="h2 reveal" style="--d:.05s">Three problems, one still unsolved</h2>
       </div>
-      <div class="grid cols-2 founders-grid">
-        <article class="card card-hover reveal">
-          <span class="icon-chip"><Icon name="users" size={20} /></span>
-          <h3 class="h3" style="margin-top:1.1rem">Arjun Arun</h3>
-          <p class="small muted" style="margin-bottom:0">
-            Co-founder. Oxford Saïd MBA. Product and markets, obsessed with
-            why private-market investors accept tooling that public-market
-            investors would laugh at.
-          </p>
-        </article>
-        <article class="card card-hover reveal" style="--d:.07s">
-          <span class="icon-chip"><Icon name="users" size={20} /></span>
-          <h3 class="h3" style="margin-top:1.1rem">Madhavi Bansal</h3>
-          <p class="small muted" style="margin-bottom:0">
-            Co-founder. Oxford Saïd MBA. Operations and partnerships, building
-            the venue relationships and data plumbing that make one tape out of
-            a fragmented market.
-          </p>
-        </article>
-      </div>
+      <VizTimeline items={decades} />
     </div>
   </section>
 
@@ -90,30 +165,39 @@ import CTABand from '../components/CTABand.astro';
         <h2 class="h2 reveal" style="--d:.05s">Three rules we don't trade away</h2>
       </div>
       <div class="grid cols-3">
-        <article class="card card-hover reveal">
-          <span class="icon-chip"><Icon name="scale" size={20} /></span>
-          <h3 class="h3" style="margin-top:1.1rem">Neutral or nothing</h3>
-          <p class="small muted" style="margin-bottom:0">
-            Results rank by your filters, never by our commission. Sponsored
-            placement, if it ever exists, gets a label you can't miss.
-          </p>
-        </article>
-        <article class="card card-hover reveal" style="--d:.07s">
-          <span class="icon-chip"><Icon name="lock" size={20} /></span>
-          <h3 class="h3" style="margin-top:1.1rem">Never touch the money</h3>
-          <p class="small muted" style="margin-bottom:0">
-            Execution, custody and investor protections belong to the regulated
-            venue that lists the deal. Bundle is the screen, not the till.
-          </p>
-        </article>
-        <article class="card card-hover reveal" style="--d:.14s">
-          <span class="icon-chip"><Icon name="alert" size={20} /></span>
-          <h3 class="h3" style="margin-top:1.1rem">Honest about risk</h3>
-          <p class="small muted" style="margin-bottom:0">
-            Aggregation makes the market visible, not safe. Every deal on the
-            tape can go to zero, and the site says so everywhere it matters.
-          </p>
-        </article>
+        {
+          principles.map((p, i) => (
+            <article class="card card-hover reveal" style={`--d:${i * 0.07}s`}>
+              <span class="icon-chip"><Icon name={p.icon} size={20} /></span>
+              <h3 class="h3" style="margin-top:1.1rem">{p.title}</h3>
+              <p class="small muted" style="margin-bottom:0">{p.body}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Founders -->
+  <section class="section tight">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow reveal">The founders</p>
+        <h2 class="h2 reveal" style="--d:.05s">Built at Oxford, aimed at the gap</h2>
+      </div>
+      <div class="grid cols-2 founders-grid">
+        {
+          founders.map((f, i) => (
+            <article class="card card-hover founder-card reveal" style={`--d:${i * 0.07}s`}>
+              <span class="icon-chip"><Icon name="users" size={20} /></span>
+              <div>
+                <h3 class="h3" style="margin-bottom:0.15rem">{f.name}</h3>
+                <p class="founder-role mono">{f.role}</p>
+                <p class="small muted" style="margin:0">{f.line}</p>
+              </div>
+            </article>
+          ))
+        }
       </div>
     </div>
   </section>
@@ -129,7 +213,151 @@ import CTABand from '../components/CTABand.astro';
 </BaseLayout>
 
 <style>
+  /* Scattered venues → one tape */
+  .gapviz {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 1.5rem;
+    align-items: center;
+    padding: clamp(1.25rem, 3vw, 2rem);
+  }
+
+  .gv-label {
+    margin: 0 0 1rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+
+  .gv-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .gv-chip {
+    padding: 0.34rem 0.7rem;
+    border-radius: var(--r-s);
+    border: 1px dashed var(--line-2);
+    background: var(--tint-soft);
+    color: var(--text-2);
+    font-size: 0.82rem;
+    transform: rotate(var(--r, 0deg));
+  }
+
+  .gv-mid {
+    display: grid;
+    justify-items: center;
+    gap: 0.6rem;
+    min-width: 9rem;
+  }
+
+  .gv-engine {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.8rem;
+    border-radius: var(--r-m);
+    border: 1px solid var(--gold);
+    background: var(--gold-soft);
+    color: var(--gold-deep);
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .gv-arrow {
+    width: 7rem;
+    height: 1.5rem;
+  }
+
+  .gv-tape {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .gv-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.65rem;
+    border: 1px solid var(--line);
+    border-radius: var(--r-s);
+    background: var(--surface);
+  }
+
+  .gv-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    flex: none;
+  }
+
+  .gv-bar {
+    height: 7px;
+    flex: 1;
+    min-width: 2rem;
+    border-radius: 999px;
+    background: var(--chart-track);
+  }
+
+  .gv-note {
+    margin: 0.75rem 0 0;
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  .gap-quote {
+    margin: 2rem auto 0;
+    max-width: 34rem;
+    text-align: center;
+    font-size: clamp(1.35rem, 2.6vw, 1.75rem);
+    line-height: 1.3;
+  }
+
+  .gap-stats {
+    margin-top: 2rem;
+  }
+
   .founders-grid {
     max-width: 56rem;
+  }
+
+  .founder-card {
+    display: flex;
+    gap: 1.1rem;
+    align-items: flex-start;
+  }
+
+  .founder-role {
+    margin: 0 0 0.5rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--green);
+  }
+
+  @media (max-width: 900px) {
+    .gapviz {
+      grid-template-columns: 1fr;
+    }
+
+    .gv-mid {
+      justify-items: start;
+    }
+
+    .gv-arrow {
+      transform: rotate(90deg);
+      width: 4rem;
+      margin-left: 1rem;
+    }
   }
 </style>

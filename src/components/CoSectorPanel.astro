@@ -1,0 +1,353 @@
+---
+/**
+ * Sector analytics: how this company's sector is moving across the deals
+ * Bundle tracks, benchmarked against every other tracked sector.
+ *
+ * Bars are diverging around a zero axis and use --up / --down, which is the
+ * one sanctioned use of those tokens: they are price movement.
+ */
+import type { SectorStat } from '../data/companies';
+import type { Deal } from '../data/deals';
+import { platformName, fmtPrice, fmtChange } from '../data/deals';
+
+interface Props {
+  sector: string;
+  stat?: SectorStat;
+  all: SectorStat[];
+  peers: Deal[];
+}
+
+const { sector, stat, all, peers } = Astro.props;
+
+// Only sectors carrying at least one priced deal can show a move.
+const ranked = all.filter((s) => s.priced > 0);
+const maxAbs = Math.max(0.5, ...ranked.map((s) => Math.abs(s.avgChange)));
+const trendWord = stat?.trend === 'up' ? 'Rising' : stat?.trend === 'down' ? 'Falling' : 'Flat';
+---
+
+<div class="sec">
+  {
+    stat ? (
+      <div class="sec-tiles">
+        <div class="sec-tile">
+          <span class="sec-k">Deals tracked</span>
+          <span class="sec-v px">{stat.count}</span>
+          <span class="sec-note">{stat.priced} with a venue mark</span>
+        </div>
+        <div class="sec-tile">
+          <span class="sec-k">Average move</span>
+          <span
+            class:list={['sec-v', 'px', stat.avgChange > 0 ? 'up' : stat.avgChange < 0 ? 'down' : '']}
+          >
+            {stat.avgChange > 0 ? '+' : ''}{stat.avgChange.toFixed(2)}%
+          </span>
+          <span class="sec-note">across priced deals</span>
+        </div>
+        <div class="sec-tile">
+          <span class="sec-k">Tracked valuation</span>
+          <span class="sec-v px">{stat.totalValuation}</span>
+          <span class="sec-note">sum of published marks</span>
+        </div>
+        <div class="sec-tile">
+          <span class="sec-k">Direction</span>
+          <span
+            class:list={['sec-v', stat.trend === 'up' ? 'up' : stat.trend === 'down' ? 'down' : '']}
+          >
+            {trendWord}
+          </span>
+          <span class="sec-note">on the latest marks</span>
+        </div>
+      </div>
+    ) : (
+      <p class="small muted">No sector aggregate is available for {sector}.</p>
+    )
+  }
+
+  {
+    ranked.length > 1 && (
+      <div class="sec-bench">
+        <h4 class="sec-h4">Average move by sector</h4>
+        <ul class="sec-bars">
+          {ranked.map((s) => {
+            const w = (Math.abs(s.avgChange) / maxAbs) * 50;
+            const pos = s.avgChange >= 0;
+            return (
+              <li class:list={['sec-bar-row', { now: s.sector === sector }]}>
+                <span class="sec-bar-lab">{s.sector}</span>
+                <span class="sec-bar-track">
+                  <span class="sec-bar-zero" />
+                  <span
+                    class:list={['sec-bar-fill', pos ? 'pos' : 'neg']}
+                    style={pos ? `left:50%;width:${w}%` : `right:50%;width:${w}%`}
+                  />
+                </span>
+                <span class:list={['sec-bar-val', 'px', pos ? 'up' : 'down']}>
+                  {pos ? '+' : ''}{s.avgChange.toFixed(2)}%
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+        <p class="sec-cap small muted">
+          Unweighted average of the percentage moves each venue publishes beside its
+          own mark. Sectors with no priced deal are left out.
+        </p>
+      </div>
+    )
+  }
+
+  <div class="sec-peers">
+    <h4 class="sec-h4">Others in {sector}</h4>
+    {
+      peers.length ? (
+        <ul class="sec-peer-list">
+          {peers.map((p) => (
+            <li>
+              <a href={`/company/${p.id}`} class="sec-peer">
+                <span class="sec-peer-av" style={`--h: var(--${p.hue})`}>
+                  {p.name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2)}
+                </span>
+                <span class="sec-peer-id">
+                  <span class="sec-peer-n">{p.name}</span>
+                  <span class="sec-peer-s">{platformName(p.platform)}</span>
+                </span>
+                <span class="sec-peer-px">
+                  <span class="px">{p.price != null ? fmtPrice(p) : p.raised ?? '—'}</span>
+                  {p.change != null && p.change !== 0 && (
+                    <span class:list={['px', 'sec-peer-ch', p.change > 0 ? 'up' : 'down']}>
+                      {fmtChange(p)}
+                    </span>
+                  )}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="small muted">
+          This is the only {sector} deal Bundle currently tracks.
+          <a href="/deals"> Browse the full screener</a> for adjacent sectors.
+        </p>
+      )
+    }
+  </div>
+</div>
+
+<style>
+  .sec {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .sec-tiles {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.65rem;
+  }
+
+  .sec-tile {
+    display: grid;
+    gap: 0.1rem;
+    padding: 0.8rem 0.9rem;
+    background: var(--tint-soft);
+    border: 1px solid var(--line);
+    border-radius: var(--r-m);
+  }
+
+  .sec-k {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+
+  .sec-v {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+
+  .sec-note {
+    font-size: 0.7rem;
+    color: var(--text-2);
+  }
+
+  .sec-h4 {
+    margin: 0 0 0.7rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .sec-bars {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .sec-bar-row {
+    display: grid;
+    grid-template-columns: 6.5rem 1fr 4rem;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.15rem 0.3rem;
+    border-radius: var(--r-s);
+  }
+
+  .sec-bar-row.now {
+    background: var(--tint);
+    outline: 1px solid var(--line-2);
+  }
+
+  .sec-bar-lab {
+    font-size: 0.8rem;
+    color: var(--text-2);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sec-bar-row.now .sec-bar-lab {
+    color: var(--ink);
+    font-weight: 570;
+  }
+
+  .sec-bar-track {
+    position: relative;
+    height: 16px;
+    min-width: 0;
+  }
+
+  .sec-bar-zero {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--line-2);
+  }
+
+  .sec-bar-fill {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    min-width: 2px;
+  }
+
+  .sec-bar-fill.pos {
+    background: var(--up);
+    border-radius: 0 4px 4px 0;
+  }
+
+  .sec-bar-fill.neg {
+    background: var(--down);
+    border-radius: 4px 0 0 4px;
+  }
+
+  .sec-bar-val {
+    font-size: 0.76rem;
+    text-align: right;
+  }
+
+  .sec-cap {
+    margin: 0.6rem 0 0;
+    max-width: 58ch;
+  }
+
+  .sec-peer-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .sec-peer {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.55rem 0.7rem;
+    border: 1px solid var(--line);
+    border-radius: var(--r-m);
+    background: var(--surface);
+    color: var(--text);
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .sec-peer:hover {
+    border-color: var(--line-2);
+    background: var(--tint-soft);
+    color: var(--text);
+  }
+
+  .sec-peer-av {
+    flex: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--h);
+    background: color-mix(in srgb, var(--h) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--h) 28%, transparent);
+  }
+
+  .sec-peer-id {
+    display: grid;
+    line-height: 1.3;
+    min-width: 0;
+  }
+
+  .sec-peer-n {
+    font-size: 0.9rem;
+    font-weight: 560;
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sec-peer-s {
+    font-size: 0.72rem;
+    color: var(--text-2);
+  }
+
+  .sec-peer-px {
+    margin-left: auto;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  .sec-peer-ch {
+    font-size: 0.75rem;
+  }
+
+  @media (max-width: 900px) {
+    .sec-tiles {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 440px) {
+    .sec-bar-row {
+      grid-template-columns: 4.6rem 1fr 3.4rem;
+      gap: 0.4rem;
+    }
+
+    .sec-bar-lab,
+    .sec-bar-val {
+      font-size: 0.7rem;
+    }
+  }
+</style>

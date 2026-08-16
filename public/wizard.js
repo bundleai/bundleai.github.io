@@ -1,9 +1,19 @@
 /* Bundle investor-profile wizard.
    One engine, two hosts: the /portfolio page and the deal-card modal.
-   Ported from the Sample_Questionnaire spec onto the Bundle design system.
+
+   Three short steps, then the plan. Everything that only existed to satisfy a
+   rulebook, the investor self-certification, the appropriateness quiz, tax
+   residency and the SEIS question, has come out: the venue runs eligibility
+   and appropriateness at the point of investment, and the disclaimer on the
+   final step says so in two sentences. What is left is the set of answers
+   that actually changes the plan.
+
+   State keys are unchanged, including the ones no longer asked, because
+   /match.js and /portfolio-view.js read them. Anything retired keeps a
+   sensible default in blank() rather than going undefined.
 
    Usage:  BundleWizard.mount(containerEl, { compact, onSave })
-   Also exposes BundleWizard.analyse(profile) so /dashboard can reuse the
+   Also exposes BundleWizard.analyse(profile) so /portfolio can reuse the
    same risk / diversification logic without duplicating it. */
 (function () {
   'use strict';
@@ -21,15 +31,22 @@
   var PRN = { primary: 'Primary', secondary: 'Secondaries', syndicate: 'Syndicates', preipo: 'Pre-IPO' };
   var STG = { seed: 'Pre-seed / Seed', ab: 'Series A – B', growth: 'Growth / late stage', preipo: 'Pre-IPO' };
   var RISKN = { cautious: 'Cautious', balanced: 'Balanced', adventurous: 'Adventurous', high: 'High conviction' };
+  var HZN = { u3: 'Under 3 years', '3-5': '3 – 5 years', '5-7': '5 – 7 years', '7+': '7 years or more' };
 
+  /* Asked: goal, horizon, risk, assets, allocation, holdings, ticket, annual,
+     sectors, stages, products, involvement.
+     Not asked any more, kept because other scripts read them:
+       category  the venue checks eligibility when you invest. 'hnw' keeps
+                 /match.js from gating accredited listings on an answer we no
+                 longer collect.
+       seis      'maybe' is the neutral behaviour: show relief where it applies
+                 rather than claim anything about the investor. */
   function blank() {
     return {
-      investingAs: null, ukTax: null, category: null, catConfirm: false,
-      assets: null, allocation: 10, seis: null,
-      a1: null, a2: null, a3: null, a4: null,
       goal: null, horizon: null, risk: null,
-      holdings: 20, ticket: null, annual: null,
+      assets: null, allocation: 10, holdings: 20, ticket: null, annual: null,
       sectors: [], stages: [], products: [], involvement: null,
+      category: 'hnw', seis: 'maybe',
     };
   }
 
@@ -42,7 +59,6 @@
   /* ---------- shared analysis: also used by the dashboard ---------- */
   function analyse(s) {
     var spread = ({ cautious: 30, balanced: 25, adventurous: 18, high: 12 })[s.risk] || 20;
-    var understood = s.a1 === 'yes' && s.a2 === 'no' && s.a3 === 'no' && s.a4 === 'yes';
     var risks = [];
     var actions = [];
 
@@ -62,6 +78,8 @@
         body: 'Under ten holdings, a single failure can wipe out the return of everything else. Most early-stage bets fail; breadth is what lets the winners carry the portfolio.',
       });
     }
+    /* Both category branches below only fire for profiles saved back when the
+       questionnaire asked the question. Nothing sets them now. */
     if (s.category === 'restricted' && s.allocation > 10) {
       risks.push({
         level: 'bad',
@@ -86,14 +104,6 @@
       });
       actions.push('Extend your horizon to 5+ years, or keep this money in liquid assets instead.');
     }
-    if (!understood) {
-      risks.push({
-        level: 'warn',
-        title: 'Risk checks worth revisiting',
-        body: 'Some answers on how these investments work need a recap: you can lose everything, they are hard to sell, they are not FSCS-protected, and your stake can be diluted by later rounds.',
-      });
-      actions.push('Re-take the risk check before your first commitment.');
-    }
     if (s.category === 'none') {
       risks.push({
         level: 'bad',
@@ -110,9 +120,6 @@
     if (s.products.length === 1) {
       actions.push('Consider more than one route in: primaries, secondaries and syndicates carry different fees and liquidity.');
     }
-    if (s.seis === 'no' && s.ukTax === 'yes') {
-      actions.push('You are UK tax resident but skipping SEIS/EIS, worth checking what relief you are leaving on the table.');
-    }
     if (!actions.length) actions.push('Your plan looks well spread. Keep position sizes even as you add names.');
 
     var score = 100;
@@ -120,7 +127,12 @@
     score = Math.max(12, Math.min(100, score));
 
     return {
-      spread: spread, understood: understood, risks: risks, actions: actions,
+      spread: spread,
+      /* The appropriateness quiz is gone: the venue asks it, and the
+         disclaimer covers it here. Kept in the shape so callers reading
+         analyse() keep working. */
+      understood: true,
+      risks: risks, actions: actions,
       score: score,
       grade: score >= 80 ? 'Well spread' : score >= 55 ? 'Needs balancing' : 'Concentrated',
     };
@@ -149,67 +161,11 @@
 
   /* ---------- steps ---------- */
   var STEPS = [
-    { key: 'Welcome', valid: function () { return true; }, render: sWelcome },
-    { key: 'About you', valid: function (s) { return s.investingAs && s.ukTax; }, render: sAbout },
-    { key: 'Eligibility', valid: function (s) { return s.category && (s.category === 'none' || s.catConfirm); }, render: sCategory },
-    { key: 'Wealth', valid: function (s) { return s.assets && s.seis; }, render: sWealth },
-    { key: 'Understanding', valid: function (s) { return s.a1 && s.a2 && s.a3 && s.a4; }, render: sApprop },
     { key: 'Goals', valid: function (s) { return s.goal && s.horizon && s.risk; }, render: sGoals },
-    { key: 'Portfolio', valid: function (s) { return s.ticket && s.annual; }, render: sPortfolio },
+    { key: 'Portfolio', valid: function (s) { return s.assets && s.ticket && s.annual; }, render: sPortfolio },
     { key: 'Preferences', valid: function (s) { return s.sectors.length && s.products.length && s.involvement; }, render: sPrefs },
     { key: 'Your profile', valid: function () { return true; }, render: sResult, terminal: true },
   ];
-
-  /* The case for the whole approach, before a single question. Short on
-     purpose: three reasons, then straight into the profile. */
-  function sWelcome(ctx) {
-    return '<h2 class="wz-h">Why a portfolio, not a punt.</h2>' +
-      '<p class="wz-lede">Most startups return nothing. A handful return everything. Nobody reliably picks which is which, so professionals own enough of the market to be holding the winners when they land.</p>' +
-      '<ul class="wz-why">' +
-      '<li><b>Spread does the work.</b> At 20+ positions, no single failure decides your outcome. At three, one does.</li>' +
-      '<li><b>A cap keeps you safe.</b> Private markets are one slice of your wealth, sized deliberately rather than deal by deal.</li>' +
-      '<li><b>Pacing beats timing.</b> A few deals a year across several years spreads you over vintages instead of betting on one.</li>' +
-      '</ul>' +
-      '<div class="wz-notice warn"><b>Before you start.</b> Investing in early-stage and private companies is high risk. You could lose all the money you put in, these holdings are hard to sell, and they are not protected by the Financial Services Compensation Scheme. A portfolio approach spreads that risk. It does not remove it.</div>' +
-      '<p class="wz-lede" style="margin-bottom:0">Next, about three minutes of questions turns that into your plan: what you are eligible for, how much belongs here, and which deals fit.</p>';
-  }
-
-  function sAbout(ctx) {
-    return '<h2 class="wz-h">First, the basics.</h2>' +
-      '<div class="wz-q">Who is investing?</div>' +
-      optRows(ctx, 'investingAs', [
-        { v: 'individual', t: 'As an individual', d: 'In your own name' },
-        { v: 'company', t: 'Through a company', d: 'Corporate or holding entity' },
-        { v: 'trust', t: 'As a trustee', d: 'On behalf of a trust' },
-        { v: 'pension', t: 'Via a SIPP / SSAS', d: 'Self-invested pension' },
-      ], { cols: 2 }) +
-      '<div class="wz-q">Are you a UK tax resident?</div>' +
-      '<div class="wz-hint">This affects your eligibility for SEIS / EIS tax relief.</div>' +
-      optRows(ctx, 'ukTax', [{ v: 'yes', t: 'Yes' }, { v: 'no', t: 'No' }], { cols: 2 });
-  }
-
-  function sCategory(ctx) {
-    var s = ctx.state;
-    var statement = {
-      hnw: 'I confirm I have, in the last financial year, an annual income of £100,000 or more, or net assets of £250,000 or more (excluding my main home, pensions and life-cover benefits).',
-      soph: 'I confirm I meet at least one of the sophisticated-investor criteria described above and understand I am self-certifying to that effect.',
-      restricted: 'I confirm that in the next twelve months I will not invest more than 10% of my net assets in high-risk investments, and I understand why that limit exists to protect me.',
-    }[s.category];
-    var showConfirm = s.category && s.category !== 'none';
-
-    return '<h2 class="wz-h">Are you eligible to invest?</h2>' +
-      '<p class="wz-lede">UK rules mean we can only show high-risk private-market deals to investors in one of the categories below. Pick the one that fits you. You self-certify. Nothing here is shared publicly.</p>' +
-      optRows(ctx, 'category', [
-        { v: 'hnw', t: 'High-net-worth investor', d: 'Income of £100,000+ last year, or net assets of £250,000+ (excluding home, pension and life cover).' },
-        { v: 'soph', t: 'Sophisticated investor', d: "You've been in an angel syndicate 6+ months, worked in private-equity or SME finance in the last 2 years, or been a director of a company turning over £1m+." },
-        { v: 'restricted', t: 'Restricted (everyday) investor', d: "Neither of the above. You'll cap high-risk investments at 10% of your net assets over the next 12 months." },
-        { v: 'none', t: 'None of these apply to me', d: "Let's see where that leaves you." },
-      ]) +
-      (s.category === 'none' ? '<div class="wz-notice warn"><b>You may not be eligible yet.</b> Access to these investments is restricted for good reason. You\'re welcome to explore Bundle\'s learning materials and watchlists, and revisit once one of the categories fits.</div>' : '') +
-      (showConfirm ? '<div class="wz-notice">' + esc(statement) + '</div>' +
-        '<button type="button" class="wz-opt sq' + (s.catConfirm ? ' sel' : '') + '" data-confirm="1" style="width:100%">' +
-        '<span class="wz-tick"></span><span class="wz-body"><b>I confirm the statement above is true.</b></span></button>' : '');
-  }
 
   /* Slider display is derived in one place so the initial render and the live
      in-place update during a drag can never disagree. */
@@ -218,10 +174,11 @@
       fill: function (s) { return (s.allocation / 50 * 100).toFixed(2); },
       value: function (s) { return s.allocation + '%'; },
       note: function (s) {
-        return s.allocation <= 10 ? 'Conservative, in line with the everyday-investor cap.'
+        return s.allocation <= 10 ? 'Conservative. Private markets stay a small slice of your wealth.'
           : s.allocation <= 25 ? 'Moderate weighting toward private markets.'
             : 'A high concentration. Make sure the rest of your wealth is well diversified.';
       },
+      /* Only profiles saved under the old self-certification carry this. */
       warn: function (s) { return s.category === 'restricted' && s.allocation > 10; },
     },
     holdings: {
@@ -236,46 +193,28 @@
     },
   };
 
-  function sWealth(ctx) {
+  function slider(ctx, field, label, hint, scale) {
     var s = ctx.state;
-    var S = SLIDERS.allocation;
-
-    return '<h2 class="wz-h">Your position, roughly.</h2>' +
-      '<div class="wz-q">Your investable assets, cash and investments you could deploy, excluding your home and pension.</div>' +
-      optRows(ctx, 'assets', [
-        { v: 'u25', t: 'Under £25,000' }, { v: '25-100', t: '£25,000 – £100,000' },
-        { v: '100-250', t: '£100,000 – £250,000' }, { v: '250-1m', t: '£250,000 – £1m' },
-        { v: '1m+', t: 'Over £1m' },
-      ], { cols: 2 }) +
-      '<div class="wz-q">Of that, how much are you comfortable putting into private markets?</div>' +
-      '<div class="wz-hint">A guardrail, not a target. Private markets should be one slice of a wider portfolio.</div>' +
+    var S = SLIDERS[field];
+    return '<div class="wz-q">' + esc(label) + '</div>' +
+      (hint ? '<div class="wz-hint">' + esc(hint) + '</div>' : '') +
       '<div class="wz-slider">' +
-      '<input type="range" min="1" max="50" value="' + s.allocation + '" style="--fill:' + S.fill(s) + '%" data-slider="allocation" aria-label="Share of investable assets in private markets">' +
-      '<div class="wz-slval"><b data-slider-value="allocation">' + S.value(s) + '</b>' +
-      '<span class="wz-note" data-slider-note="allocation">' + S.note(s) + '</span></div>' +
-      '<div class="wz-scale"><span>1%</span><span>25%</span><span>50%</span></div></div>' +
-      '<div class="wz-notice warn" data-slider-warn="allocation"' + (S.warn(s) ? '' : ' hidden') +
-      '><b>Heads up.</b> As a restricted investor you\'ve self-certified to a 10% cap on high-risk investments. We\'ll hold you to that when you allocate.</div>' +
-      '<div class="wz-q">Interested in SEIS / EIS tax relief on qualifying deals?</div>' +
-      optRows(ctx, 'seis', [
-        { v: 'yes', t: 'Yes, prioritise it' }, { v: 'maybe', t: 'Show me where it applies' },
-        { v: 'no', t: 'Not relevant to me' },
-      ], { cols: 2 });
+      '<input type="range" min="1" max="50" value="' + s[field] + '" style="--fill:' + S.fill(s) +
+      '%" data-slider="' + field + '" aria-label="' + esc(label) + '">' +
+      '<div class="wz-slval"><b data-slider-value="' + field + '">' + S.value(s) + '</b>' +
+      '<span class="wz-note" data-slider-note="' + field + '">' + S.note(s) + '</span></div>' +
+      '<div class="wz-scale">' + scale.map(function (x) { return '<span>' + esc(x) + '</span>'; }).join('') +
+      '</div></div>' +
+      '<div class="wz-notice warn" data-slider-warn="' + field + '"' + (S.warn(s) ? '' : ' hidden') +
+      '><b>Heads up.</b> You self-certified to a 10% cap on high-risk investments. We\'ll hold you to that when you allocate.</div>';
   }
 
-  function sApprop(ctx) {
-    var yn = [{ v: 'yes', t: 'Yes' }, { v: 'no', t: 'No' }];
-    return '<h2 class="wz-h">Quick check on the risks.</h2>' +
-      '<p class="wz-lede">No trick questions, just confirming the important stuff is clear before you invest.</p>' +
-      '<div class="wz-q">Could you lose all the money you invest in a private company?</div>' + optRows(ctx, 'a1', yn, { cols: 2 }) +
-      '<div class="wz-q">Can you usually sell these shares quickly, whenever you want?</div>' + optRows(ctx, 'a2', yn, { cols: 2 }) +
-      '<div class="wz-q">Are these investments protected by the FSCS if the company fails?</div>' + optRows(ctx, 'a3', yn, { cols: 2 }) +
-      '<div class="wz-q">Can your stake be diluted when a company raises money again later?</div>' + optRows(ctx, 'a4', yn, { cols: 2 });
-  }
-
+  /* The case for the whole approach is one paragraph now, above the first
+     real question, rather than a step of its own. */
   function sGoals(ctx) {
     var s = ctx.state;
     return '<h2 class="wz-h">What are you here to do?</h2>' +
+      '<p class="wz-lede">Most startups return nothing and a handful return everything, and nobody reliably picks which is which. So Bundle builds you a spread rather than a punt. Three short steps and you have the plan.</p>' +
       '<div class="wz-q">Your main goal</div>' +
       optRows(ctx, 'goal', [
         { v: 'growth', t: 'Long-term capital growth', d: 'Back companies early and compound over years' },
@@ -298,18 +237,25 @@
       ]);
   }
 
+  /* The money step: what the plan sizes itself against. Every answer here
+     feeds the budget, the pace and the spread the dashboard draws. */
   function sPortfolio(ctx) {
-    var s = ctx.state;
-    var S = SLIDERS.holdings;
-
     return '<h2 class="wz-h">Shape of your portfolio.</h2>' +
-      '<div class="wz-q">How many companies would you like to build toward holding?</div>' +
-      '<div class="wz-hint">Breadth is the discipline that does the heavy lifting, no single deal should make or break you.</div>' +
-      '<div class="wz-slider">' +
-      '<input type="range" min="1" max="50" value="' + s.holdings + '" style="--fill:' + S.fill(s) + '%" data-slider="holdings" aria-label="Target number of companies">' +
-      '<div class="wz-slval"><b data-slider-value="holdings">' + S.value(s) + '</b>' +
-      '<span class="wz-note" data-slider-note="holdings">' + S.note(s) + '</span></div>' +
-      '<div class="wz-scale"><span>1</span><span>25</span><span>50+</span></div></div>' +
+      '<div class="wz-q">Your investable assets, cash and investments you could deploy, excluding your home and pension.</div>' +
+      '<div class="wz-hint">Only used to size the cap below. It stays on your device.</div>' +
+      optRows(ctx, 'assets', [
+        { v: 'u25', t: 'Under £25,000' }, { v: '25-100', t: '£25,000 – £100,000' },
+        { v: '100-250', t: '£100,000 – £250,000' }, { v: '250-1m', t: '£250,000 – £1m' },
+        { v: '1m+', t: 'Over £1m' },
+      ], { cols: 2 }) +
+      slider(ctx, 'allocation',
+        'Of that, how much are you comfortable putting into private markets?',
+        'A guardrail, not a target. Private markets should be one slice of a wider portfolio.',
+        ['1%', '25%', '50%']) +
+      slider(ctx, 'holdings',
+        'How many companies would you like to build toward holding?',
+        'Breadth is the discipline that does the heavy lifting, no single deal should make or break you.',
+        ['1', '25', '50+']) +
       '<div class="wz-q">Typical amount per deal</div>' +
       optRows(ctx, 'ticket', [
         { v: 'u500', t: 'Under £500' }, { v: '500-2k', t: '£500 – £2,000' },
@@ -331,7 +277,7 @@
         { v: 'consumer', t: 'Consumer & brands' }, { v: 'saas', t: 'Enterprise SaaS' },
         { v: 'proptech', t: 'Proptech' }, { v: 'other', t: 'Open to anything' },
       ]) +
-      '<div class="wz-q">Stages you\'re open to</div>' +
+      '<div class="wz-q">Stages you\'re open to <span class="wz-opt-note">optional</span></div>' +
       multiChips(ctx, 'stages', [
         { v: 'seed', t: 'Pre-seed / Seed' }, { v: 'ab', t: 'Series A – B' },
         { v: 'growth', t: 'Growth / late stage' }, { v: 'preipo', t: 'Pre-IPO' },
@@ -362,17 +308,18 @@
     return '<h2 class="wz-h">Here\'s your profile.</h2>' +
       '<p class="wz-lede">This is the starting point Bundle uses to filter deals and keep you diversified. You can change any of it later.</p>' +
       '<div class="wz-rgrid">' +
-      cell('Investor category', LB[s.category] || '-') +
-      cell('Risk appetite', RISKN[s.risk] || '-') +
       cell('Primary goal', LB[s.goal] || '-') +
+      cell('Risk appetite', RISKN[s.risk] || '-') +
+      cell('Horizon', HZN[s.horizon] || '-') +
       cell('Private-markets allocation', s.allocation + '% of investable assets') +
       '<div class="wz-rcell wide"><div class="wz-k">Target diversification</div><div class="wz-v">Building toward ' + s.holdings + (s.holdings === 50 ? '+' : '') + ' companies</div></div>' +
       '<div class="wz-rcell wide"><div class="wz-k">Sectors</div><div class="wz-tags">' + secTags + '</div></div>' +
       '<div class="wz-rcell wide"><div class="wz-k">Deal routes</div><div class="wz-tags">' + prodTags + '</div></div>' +
       '</div>' +
       '<div class="wz-notice"><b>Discipline note.</b> ' + esc(nudge) + '</div>' +
-      (!a.understood ? '<div class="wz-notice warn"><b>Worth a recap.</b> A couple of your answers on how these investments work are worth revisiting. You can lose everything, they\'re hard to sell, they aren\'t FSCS-protected, and your stake can be diluted. We\'ll walk you through it before your first commitment.</div>' : '') +
-      (s.category === 'none' ? '<div class="wz-notice warn"><b>Note.</b> You\'re not currently in an eligible category, so live deals stay locked. Explore and learn in the meantime.</div>' : '');
+      /* The one disclaimer that replaced the eligibility and appropriateness
+         questions. Everything it covers is now checked where it belongs. */
+      '<div class="wz-notice warn small"><b>Before you invest.</b> These are high-risk investments: you can lose all the money you put in, the holdings are illiquid and hard to sell, and they are not covered by the FSCS. Whether you are eligible, and whether a deal is appropriate for you, is checked by the venue at the point of investment. Bundle aggregates public listings and never gives advice.</div>';
   }
 
   function cell(k, v) {
@@ -385,7 +332,13 @@
     var ctx = { state: opts.state || blank(), step: 0 };
     var saved = null;
     try { saved = JSON.parse(localStorage.getItem('bundle.profileDraft') || 'null'); } catch (e) { }
-    if (saved && !opts.state) { Object.keys(saved).forEach(function (k) { ctx.state[k] = saved[k]; }); }
+    if (saved && !opts.state) {
+      /* Drafts saved before the questionnaire was trimmed can carry nulls for
+         questions that no longer exist. The defaults above win over those. */
+      Object.keys(saved).forEach(function (k) {
+        if (saved[k] !== null && saved[k] !== undefined) ctx.state[k] = saved[k];
+      });
+    }
 
     root.classList.add('wz');
     if (opts.compact) root.classList.add('wz-compact');
@@ -399,6 +352,7 @@
       var spine = STEPS.map(function (_, i) {
         return '<span class="wz-node ' + (i < ctx.step ? 'done' : i === ctx.step ? 'now' : '') + '"></span>';
       }).join('');
+      var last = ctx.step === STEPS.length - 2;
 
       var nav = st.terminal
         ? '<div class="wz-nav"><button type="button" class="btn btn-ghost" data-nav="restart">Start over</button>' +
@@ -406,18 +360,18 @@
         : '<div class="wz-nav">' +
         (ctx.step > 0 ? '<button type="button" class="btn btn-ghost" data-nav="back">← Back</button>' : '<span></span>') +
         '<button type="button" class="btn btn-primary" data-nav="next"' + (st.valid(ctx.state) ? '' : ' disabled') + '>' +
-        (ctx.step === 0 ? 'Start building my plan' : 'Continue') + ' <span class="arrow">→</span></button></div>';
+        (last ? 'See my plan' : 'Continue') + ' <span class="arrow">→</span></button></div>';
 
       root.innerHTML =
         '<div class="wz-spine">' + spine + '</div>' +
         '<div class="wz-meta"><span class="wz-key">' + esc(st.key) + '</span>' +
-        '<span class="wz-cnt">' + (st.terminal ? 'Complete' : 'Step ' + ctx.step + ' of ' + (STEPS.length - 2)) + '</span></div>' +
+        '<span class="wz-cnt">' + (st.terminal ? 'Complete' : 'Step ' + (ctx.step + 1) + ' of ' + (STEPS.length - 1)) + '</span></div>' +
         '<div class="wz-card">' + st.render(ctx) + nav + '</div>';
       persistDraft();
     }
 
     root.addEventListener('click', function (e) {
-      var el = e.target.closest('[data-pick],[data-toggle],[data-nav],[data-confirm]');
+      var el = e.target.closest('[data-pick],[data-toggle],[data-nav]');
       if (!el || !root.contains(el)) return;
       e.preventDefault();
 
@@ -429,10 +383,6 @@
         var f = el.getAttribute('data-toggle'), v = el.getAttribute('data-val');
         var arr = ctx.state[f], i = arr.indexOf(v);
         if (i >= 0) arr.splice(i, 1); else arr.push(v);
-        return draw();
-      }
-      if (el.hasAttribute('data-confirm')) {
-        ctx.state.catConfirm = !ctx.state.catConfirm;
         return draw();
       }
       var nav = el.getAttribute('data-nav');
@@ -494,6 +444,6 @@
 
   window.BundleWizard = {
     mount: mount, analyse: analyse, blank: blank,
-    labels: { LB: LB, SECN: SECN, PRN: PRN, STG: STG, RISKN: RISKN },
+    labels: { LB: LB, SECN: SECN, PRN: PRN, STG: STG, RISKN: RISKN, HZN: HZN },
   };
 })();

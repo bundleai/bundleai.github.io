@@ -1,0 +1,424 @@
+---
+/**
+ * Equity calculator: amount in, shares and share-of-company out, plus a
+ * what-if on exit multiples.
+ *
+ * Valuation parsing happens at BUILD time via parseValuationBn() from
+ * src/data/companies.ts, and the resulting number is handed to the browser as
+ * a data attribute. That keeps one parser in one place rather than a second,
+ * drifting copy in client JS. A valuation string that carries no parseable
+ * figure ("Imperial spinout", "Functional NA beer") yields 0, which the UI
+ * treats as "unknown" and hides the equity maths rather than inventing a number.
+ *
+ * Deals with no venue mark (crowdfunding) hide the per-share maths entirely.
+ */
+import type { Deal } from '../data/deals';
+import { parseValuationBn } from '../data/companies';
+
+interface Props {
+  deal: Deal;
+}
+
+const { deal: d } = Astro.props;
+
+const valuationBn = parseValuationBn(d.valuation);
+const valuationAbs = valuationBn * 1e9;
+const hasValuation = valuationBn > 0;
+const hasPrice = d.price != null;
+
+/** "£10+" -> 10, "$100" -> 100, "Accredited" -> no figure. */
+const minTicketNum = (() => {
+  const m = /([\d,]+(?:\.\d+)?)/.exec(d.minTicket);
+  return m ? parseFloat(m[1].replace(/,/g, '')) : null;
+})();
+
+// Accredited-only deals publish no figure; seed a round number and say so.
+const defaultAmount = minTicketNum ?? 10000;
+const isCap = /cap/i.test(d.valuation);
+---
+
+<div
+  class="eq"
+  data-equity-calc
+  data-price={d.price ?? ''}
+  data-valuation={hasValuation ? valuationAbs : ''}
+  data-currency={d.currency}
+>
+  <div class="field eq-field">
+    <label for={`eq-amt-${d.id}`}>Amount you invest</label>
+    <div class="eq-input">
+      <span class="eq-cur px">{d.currency}</span>
+      <input
+        type="number"
+        id={`eq-amt-${d.id}`}
+        data-eq-amount
+        value={defaultAmount}
+        min="0"
+        step="10"
+        inputmode="decimal"
+        autocomplete="off"
+      />
+    </div>
+    <p class="hint">
+      {
+        minTicketNum != null
+          ? `Venue minimum ${d.minTicket}.`
+          : `${d.minTicket} only — the venue sets the real minimum, which is typically far higher.`
+      }
+    </p>
+  </div>
+
+  <dl class="eq-out">
+    {
+      hasPrice && (
+        <div class="eq-row">
+          <dt>Shares acquired</dt>
+          <dd class="px" data-eq-shares>—</dd>
+        </div>
+      )
+    }
+    {
+      hasPrice && (
+        <div class="eq-row">
+          <dt>At a mark of</dt>
+          <dd class="px" data-eq-price>—</dd>
+        </div>
+      )
+    }
+    {
+      hasValuation && (
+        <div class="eq-row">
+          <dt>Share of the company{isCap ? ' (at the cap)' : ''}</dt>
+          <dd class="px eq-strong" data-eq-equity>—</dd>
+        </div>
+      )
+    }
+    {
+      hasValuation && (
+        <div class="eq-row">
+          <dt>{isCap ? 'Valuation cap' : 'Company valuation'}</dt>
+          <dd class="px">{d.valuation}</dd>
+        </div>
+      )
+    }
+  </dl>
+
+  {
+    !hasValuation && (
+      <p class="eq-nofig small muted">
+        The venue publishes no headline valuation for this round, so a share-of-company
+        figure cannot be worked out. What you would own is set out in the round documents
+        on the venue.
+      </p>
+    )
+  }
+
+  {
+    !hasPrice && (
+      <p class="eq-nofig small muted">
+        No per-share mark is published for this raise, so there is no share count to
+        calculate. Crowdfunding rounds are usually priced on a valuation cap and the
+        share price is fixed at the round's close.
+      </p>
+    )
+  }
+
+  {
+    hasValuation && (
+      <div class="eq-exit">
+        <div class="eq-exit-head">
+          <h4 class="eq-h4">If the company exits at…</h4>
+          <div class="eq-presets" role="group" aria-label="Exit multiple presets">
+            <button type="button" data-eq-preset="2">2×</button>
+            <button type="button" data-eq-preset="5" class="on">5×</button>
+            <button type="button" data-eq-preset="10">10×</button>
+          </div>
+        </div>
+
+        <div class="pv-ctl eq-slider">
+          <label for={`eq-mult-${d.id}`} class="pv-ctl-label">
+            <span>Exit multiple</span>
+            <span class="px" data-eq-mult-label>5×</span>
+          </label>
+          <input
+            type="range"
+            id={`eq-mult-${d.id}`}
+            data-eq-mult
+            min="1"
+            max="20"
+            step="1"
+            value="5"
+          />
+          <div class="pv-ctl-val">
+            <b data-eq-worth>—</b>
+            <span class="pv-ctl-scale">
+              on a <span class="px" data-eq-exitval>—</span> exit
+            </span>
+          </div>
+        </div>
+
+        <p class="eq-warn small">
+          A multiple is an arbitrary what-if, not a forecast. Most private companies
+          never reach an exit, and the most likely outcome for any single early-stage
+          holding is a total loss. Dilution from later rounds would reduce the share
+          shown above.
+        </p>
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .eq {
+    display: grid;
+    gap: 1.1rem;
+  }
+
+  .eq-field label {
+    font-size: 0.85rem;
+  }
+
+  .eq-input {
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+    border: 1px solid var(--line);
+    border-radius: var(--r-m);
+    background: var(--surface);
+    padding-left: 0.9rem;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .eq-input:focus-within {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(33, 64, 46, 0.12);
+  }
+
+  .eq-cur {
+    color: var(--text-2);
+    font-size: 1rem;
+    flex: none;
+  }
+
+  .eq-input input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: none;
+    padding: 0.7rem 0.9rem 0.7rem 0.25rem;
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 1.05rem;
+    color: var(--ink);
+  }
+
+  .eq-input input:focus {
+    outline: none;
+  }
+
+  .eq-out {
+    display: grid;
+    gap: 0;
+    margin: 0;
+  }
+
+  .eq-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .eq-row:last-child {
+    border-bottom: 0;
+  }
+
+  .eq-row dt {
+    font-size: 0.86rem;
+    color: var(--text-2);
+  }
+
+  .eq-row dd {
+    margin: 0;
+    text-align: right;
+    color: var(--ink);
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  .eq-row dd.eq-strong {
+    font-size: 1.12rem;
+    color: var(--green);
+  }
+
+  .eq-nofig {
+    margin: 0;
+    padding: 0.75rem 0.9rem;
+    background: var(--tint);
+    border: 1px solid var(--line);
+    border-radius: var(--r-s);
+    max-width: none;
+  }
+
+  .eq-exit {
+    padding-top: 1rem;
+    border-top: 1px dashed var(--line);
+  }
+
+  .eq-exit-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.9rem;
+  }
+
+  .eq-h4 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .eq-presets {
+    display: flex;
+    gap: 0.25rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    padding: 0.2rem;
+  }
+
+  .eq-presets button {
+    border: 0;
+    background: none;
+    color: var(--text-2);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.28rem 0.6rem;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .eq-presets button:hover {
+    color: var(--ink);
+  }
+
+  .eq-presets button.on {
+    background: var(--tint);
+    color: var(--ink);
+  }
+
+  .eq-slider .pv-ctl-label {
+    margin-bottom: 0.55rem;
+  }
+
+  .eq-slider .pv-ctl-val b {
+    font-size: 1.5rem;
+  }
+
+  .eq-warn {
+    margin: 0.9rem 0 0;
+    color: var(--sand-ink);
+    background: var(--sand-tint);
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    border-radius: var(--r-s);
+    padding: 0.7rem 0.85rem;
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-equity-calc]');
+
+  if (root) {
+    const price = parseFloat(root.dataset.price || '') || null;
+    const valuation = parseFloat(root.dataset.valuation || '') || null;
+    const cur = root.dataset.currency || '$';
+
+    const amountEl = root.querySelector<HTMLInputElement>('[data-eq-amount]');
+    const multEl = root.querySelector<HTMLInputElement>('[data-eq-mult]');
+    const sharesEl = root.querySelector<HTMLElement>('[data-eq-shares]');
+    const priceEl = root.querySelector<HTMLElement>('[data-eq-price]');
+    const equityEl = root.querySelector<HTMLElement>('[data-eq-equity]');
+    const worthEl = root.querySelector<HTMLElement>('[data-eq-worth]');
+    const exitValEl = root.querySelector<HTMLElement>('[data-eq-exitval]');
+    const multLabel = root.querySelector<HTMLElement>('[data-eq-mult-label]');
+    const presets = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-eq-preset]'));
+
+    const money = (n: number, dp = 2) =>
+      cur +
+      n.toLocaleString('en-GB', { minimumFractionDigits: dp, maximumFractionDigits: dp });
+
+    /** Big numbers read better abbreviated than as 12 digits. */
+    const bigMoney = (n: number) =>
+      n >= 1e12 ? `${cur}${(n / 1e12).toFixed(2)}tn`
+      : n >= 1e9 ? `${cur}${(n / 1e9).toFixed(2)}bn`
+      : n >= 1e6 ? `${cur}${(n / 1e6).toFixed(2)}m`
+      : n >= 1e3 ? `${cur}${(n / 1e3).toFixed(1)}k`
+      : money(n, 0);
+
+    /** Stakes here are genuinely tiny, so fixed decimals would read as 0.00%. */
+    const pct = (p: number) => {
+      if (!isFinite(p) || p <= 0) return '—';
+      if (p >= 1) return p.toFixed(2) + '%';
+      if (p >= 0.01) return p.toFixed(3) + '%';
+      if (p >= 1e-6) return p.toPrecision(2) + '%';
+      return '<0.000001%';
+    };
+
+    const paintSlider = () => {
+      if (!multEl) return;
+      const min = parseFloat(multEl.min || '1');
+      const max = parseFloat(multEl.max || '20');
+      const v = parseFloat(multEl.value || '1');
+      multEl.style.setProperty('--fill', ((v - min) / (max - min)) * 100 + '%');
+    };
+
+    const render = () => {
+      const amount = Math.max(0, parseFloat(amountEl?.value || '0') || 0);
+      const mult = parseFloat(multEl?.value || '1') || 1;
+
+      if (sharesEl && price) {
+        const shares = amount / price;
+        sharesEl.textContent = shares.toLocaleString('en-GB', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+      }
+
+      if (priceEl && price) priceEl.textContent = money(price) + ' /share';
+
+      // shares × price / valuation reduces to amount / valuation, so the
+      // per-share mark is not needed for the equity slice — which is why
+      // crowdfunding deals with no mark still get a figure here.
+      if (equityEl && valuation) {
+        equityEl.textContent = pct((amount / valuation) * 100);
+      }
+
+      if (multLabel) multLabel.textContent = mult + '×';
+      if (worthEl) worthEl.textContent = bigMoney(amount * mult);
+      if (exitValEl && valuation) exitValEl.textContent = bigMoney(valuation * mult);
+
+      presets.forEach((b) =>
+        b.classList.toggle('on', parseFloat(b.dataset.eqPreset || '0') === mult)
+      );
+      paintSlider();
+    };
+
+    amountEl?.addEventListener('input', render);
+    multEl?.addEventListener('input', render);
+    presets.forEach((b) =>
+      b.addEventListener('click', () => {
+        if (multEl) multEl.value = b.dataset.eqPreset || '5';
+        render();
+      })
+    );
+
+    render();
+  }
+</script>

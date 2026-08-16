@@ -3,40 +3,91 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import Icon from '../components/Icon.astro';
 import CTABand from '../components/CTABand.astro';
+import VizLayers from '../components/VizLayers.astro';
+import VizTimeline from '../components/VizTimeline.astro';
 
 const principles = [
-  { icon: 'scale', title: 'Neutral ranking, always', body: 'Screener and search results order by the filters you set, price, deadline, sector, never by what a venue pays us. If sponsored placement ever exists, it will be labelled unmistakably.' },
-  { icon: 'coins', title: 'No markups, no spreads', body: 'You pay the venue’s price and the venue’s fees. Bundle’s referral revenue comes out of the venue’s take, and a deal with no referral programme is displayed identically to one with.' },
-  { icon: 'clock', title: 'Honest data freshness', body: 'Private-market data goes stale. Every listing carries a last-checked timestamp and links to its source, so you always know what you’re looking at and how old it is.' },
-  { icon: 'eye', title: 'Human oversight of AI', body: 'The agents that scan, summarise and flag deals are reviewed by humans on anything consequential, and every output is logged and auditable.' },
-  { icon: 'doc', title: 'Risk on the surface', body: 'Risk warnings sit on every page, not behind a link. Deal summaries state what could go wrong before what could go right.' },
-  { icon: 'ban', title: 'No manufactured urgency', body: 'Deadlines shown on Bundle are the venue’s real deadlines. We add no countdown theatre, no “only £12k left!” bars, no confetti, no streaks.' },
+  {
+    icon: 'scale',
+    title: 'Neutral ranking',
+    body: 'Results order by your filters. Sponsored placement, if it ever exists, gets labelled unmistakably.',
+  },
+  {
+    icon: 'coins',
+    title: 'No markups, no spreads',
+    body: "You pay the venue's price and fees. Deals with no referral programme are displayed identically.",
+  },
+  {
+    icon: 'clock',
+    title: 'Honest data freshness',
+    body: 'Every listing carries a last-checked timestamp and a link to its source.',
+  },
+  {
+    icon: 'eye',
+    title: 'Humans oversee the AI',
+    body: 'Agents scan and draft; people review anything consequential. Every output is logged.',
+  },
+  {
+    icon: 'doc',
+    title: 'Risk on the surface',
+    body: 'Warnings sit on the page, not behind a link. Downside before upside.',
+  },
+  {
+    icon: 'ban',
+    title: 'No manufactured urgency',
+    body: "Real venue deadlines only. No countdown theatre, no “£12k left!” bars, no confetti.",
+  },
 ];
 
-const protections = [
-  { icon: 'shield', title: 'The venue’s regulatory permissions', body: 'Crowdfunding platforms and secondary marketplaces operate under their own authorisations (FCA in the UK, SEC/FINRA in the US). Your money moves under their rules, not ours.' },
-  { icon: 'wallet', title: 'The venue’s custody arrangements', body: 'Shares and client money are held by the venue’s nominee and custody structures. Bundle holds neither, ever.' },
-  { icon: 'timer', title: 'The venue’s investor protections', body: 'Appropriateness tests, cooling-off periods and eligibility checks are run by the venue at the point of investment, as regulation intends.' },
-  { icon: 'alert', title: 'What no one can protect you from', body: 'Company failure, illiquidity and dilution. They’re inherent to the asset class on every venue, and no aggregator changes that.' },
+const layers = [
+  {
+    label: 'Layer 1',
+    icon: 'layers',
+    title: 'Bundle · the screen',
+    body: 'Discovery, comparison, watchlists and tracking. No money, no custody, no advice.',
+    items: ['Aggregation', 'Comparison', 'Alerts', 'Portfolio view'],
+  },
+  {
+    label: 'Layer 2',
+    icon: 'shield',
+    title: 'The venue · where your protection lives',
+    body: 'Crowdfunding platforms and secondary marketplaces operate under their own authorisations (FCA in the UK, SEC/FINRA in the US). Your money moves under their rules, not ours, and they run the checks at the point of investment.',
+    items: [
+      'Regulatory permissions',
+      'Nominee & client-money custody',
+      'Appropriateness tests',
+      'Cooling-off periods',
+      'Eligibility checks',
+    ],
+  },
+  {
+    label: 'Layer 3',
+    icon: 'alert',
+    accent: 'warn' as const,
+    title: 'The company · what no one can protect you from',
+    body: 'Company failure, illiquidity and dilution are inherent to the asset class on every venue. No aggregator changes that.',
+    items: ['Total loss possible', 'Years without a sale', 'Dilution by later rounds'],
+  },
 ];
 
 const phases = [
   {
-    phase: 'Phase 1',
+    marker: 'Phase 1',
     title: 'Pure aggregation',
-    body: 'Discovery, comparison, watchlists and portfolio tracking, activities that don’t require FCA authorisation, run with financial-promotion rules in mind and legal counsel on speed dial.',
+    body: 'Discovery, comparison, watchlists and tracking: activities that need no FCA authorisation, run with financial-promotion rules in mind.',
     status: 'The launch path',
+    done: true,
   },
   {
-    phase: 'Phase 2',
+    marker: 'Phase 2',
     title: 'Authorised distribution',
-    body: 'Where deeper routing, pre-filled orders, promoting specific deals, constitutes regulated activity, it ships only under FCA permissions or a partnership with an authorised firm.',
+    body: 'Deeper routing and pre-filled orders ship only under FCA permissions, or with an authorised partner firm.',
     status: 'In preparation',
   },
   {
-    phase: 'Phase 3',
+    marker: 'Phase 3',
     title: 'Embedded execution',
-    body: 'Venue API integrations that complete the trade without leaving Bundle, under whichever permissions that requires. The screen stays neutral; the plumbing gets shorter.',
+    body: 'Venue APIs complete the trade without leaving Bundle, under whatever permissions that requires.',
     status: 'The destination',
   },
 ];
@@ -49,7 +100,7 @@ const phases = [
   <PageHero
     eyebrow="Trust & Safety"
     title='An aggregator is only useful if you can <em class="serif-aside">trust the screen.</em>'
-    lead="Skyscanner works because nobody suspects the results are rigged. Bundle holds itself to the same bar: neutral ranking, no markups, honest data and risk kept on the surface."
+    lead="Skyscanner works because nobody suspects the results are rigged. Bundle holds itself to the same bar."
   >
     <Fragment slot="actions">
       <a href="#principles" class="btn btn-primary btn-lg">The house rules <span class="arrow">→</span></a>
@@ -57,7 +108,7 @@ const phases = [
     </Fragment>
   </PageHero>
 
-  <!-- Principles -->
+  <!-- House rules -->
   <section class="section" id="principles">
     <div class="container">
       <div class="section-head">
@@ -67,9 +118,10 @@ const phases = [
       <div class="grid cols-3">
         {
           principles.map((p, i) => (
-            <article class="card card-hover reveal" style={`--d:${(i % 3) * 0.07}s`}>
+            <article class="card card-hover rule-card reveal" style={`--d:${(i % 3) * 0.07}s`}>
+              <span class="rule-num mono">{String(i + 1).padStart(2, '0')}</span>
               <span class="icon-chip"><Icon name={p.icon} /></span>
-              <h3 class="h3" style="margin-top:1.1rem">{p.title}</h3>
+              <h3 class="h3" style="margin:1rem 0 0.35rem">{p.title}</h3>
               <p class="small muted" style="margin-bottom:0">{p.body}</p>
             </article>
           ))
@@ -85,24 +137,11 @@ const phases = [
         <p class="eyebrow reveal">The honest map</p>
         <h2 class="h2 reveal" style="--d:.05s">Where your protection actually comes from</h2>
         <p class="lead reveal" style="--d:.1s">
-          Because you invest on the listing venue, the regulatory protections
-          are the venue's. Knowing exactly whose rules cover you is itself a
-          protection, so we spell it out.
+          You invest on the listing venue, so the regulatory protections are the
+          venue's. Here is the whole stack.
         </p>
       </div>
-      <div class="grid cols-2">
-        {
-          protections.map((p, i) => (
-            <article class="prot-card reveal" style={`--d:${i * 0.06}s`}>
-              <span class="icon-chip"><Icon name={p.icon} size={19} /></span>
-              <div>
-                <h3 class="prot-title">{p.title}</h3>
-                <p class="small" style="margin:0;color:#b4c4b4">{p.body}</p>
-              </div>
-            </article>
-          ))
-        }
-      </div>
+      <VizLayers layers={layers} tone="dark" />
     </div>
   </section>
 
@@ -113,24 +152,13 @@ const phases = [
         <p class="eyebrow reveal">Regulatory path</p>
         <h2 class="h2 reveal" style="--d:.05s">Built to grow into regulation, not around it</h2>
       </div>
-      <div class="grid cols-3">
-        {
-          phases.map((ph, i) => (
-            <article class="card card-hover reveal" style={`--d:${i * 0.07}s`}>
-              <span class="badge badge-green mono">{ph.phase}</span>
-              <h3 class="h3" style="margin-top:0.9rem">{ph.title}</h3>
-              <p class="small muted">{ph.body}</p>
-              <span class="badge badge-line">{ph.status}</span>
-            </article>
-          ))
-        }
-      </div>
+      <VizTimeline items={phases} />
     </div>
   </section>
 
   <CTABand
     title="Neutrality is <em>the product.</em>"
-    sub="If you ever catch the screen bending, tell us, that's the whole company on the line."
+    sub="If you ever catch the screen bending, tell us: that's the whole company on the line."
     primaryLabel="Build my portfolio"
     primaryHref="/portfolio"
     secondaryLabel="Contact us"
@@ -139,19 +167,16 @@ const phases = [
 </BaseLayout>
 
 <style>
-  .prot-card {
-    display: flex;
-    gap: 1rem;
-    align-items: flex-start;
-    padding: 1.4rem;
-    border: 1px solid var(--line-2);
-    border-radius: var(--r-m);
-    background: rgba(255, 255, 255, 0.015);
+  .rule-card {
+    position: relative;
   }
 
-  .prot-title {
-    margin: 0 0 0.35rem;
-    color: #fff;
-    font-size: 1.05rem;
+  .rule-num {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.35rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: var(--faint);
   }
 </style>

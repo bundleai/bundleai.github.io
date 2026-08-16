@@ -3,47 +3,46 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import Icon from '../components/Icon.astro';
 import CTABand from '../components/CTABand.astro';
+import VizFlow from '../components/VizFlow.astro';
 
 const steps = [
   {
-    num: '01',
     icon: 'search',
     title: 'Scan',
-    body: 'Bundle continuously scans the venues where private-market deals actually live: crowdfunding platforms, secondary marketplaces, pre-IPO desks. New listings hit your screen the moment they hit the market.',
+    body: 'Every venue, continuously. New listings land the minute they go live.',
   },
   {
-    num: '02',
     icon: 'sliders',
     title: 'Screen',
-    body: 'Cut the whole market by sector, valuation, minimum ticket, venue or market type. Save the screen, and Bundle keeps watching it after you close the tab.',
+    body: 'Cut the market by sector, valuation, ticket size, venue or type.',
   },
   {
-    num: '03',
     icon: 'scale',
     title: 'Compare',
-    body: 'The same company often trades in more than one place at more than one price. Bundle lines up price, fees, minimums, share class and access requirements, so you route the order to the best venue.',
+    body: 'One company, several venues: price, fees, minimums and share class, side by side.',
   },
   {
-    num: '04',
     icon: 'exchange',
     title: 'Execute',
-    body: 'One click drops you into the live deal on the venue that lists it. You invest under that venue’s regulatory protections; Bundle never touches your money.',
+    body: 'One click into the live deal, on the venue that lists it.',
   },
   {
-    num: '05',
     icon: 'pie',
     title: 'Track',
-    body: 'Positions across every venue sync into one portfolio: one P&L, revaluations as new rounds price, and alerts when liquidity opens up for something you hold.',
+    body: 'Every position in one P&L, revalued as new rounds price.',
   },
 ];
 
+const is = [
+  'A screener for the whole private market: crowdfunding, secondaries, pre-IPO',
+  'A comparison layer: price, fees, minimums and access, venue by venue',
+  'One portfolio and alert engine across every venue you use',
+];
+
 const isnt = [
-  { is: true, text: 'A screener for the entire private market: crowdfunding, secondaries, pre-IPO' },
-  { is: true, text: 'A comparison layer: price, fees, minimums and access, venue by venue' },
-  { is: true, text: 'A single portfolio and alert engine across every venue you use' },
-  { is: false, text: 'A broker or exchange. Trades execute on the venue that lists the deal' },
-  { is: false, text: 'A custodian. Bundle never holds your money or your shares' },
-  { is: false, text: 'An adviser. We show the whole market, we don’t tell you what to buy' },
+  'Not a broker or exchange. Trades execute on the venue that lists the deal',
+  'Not a custodian. Bundle never holds your money or your shares',
+  'Not an adviser. We show the whole market, we never tell you what to buy',
 ];
 ---
 
@@ -54,57 +53,68 @@ const isnt = [
   <PageHero
     eyebrow="How it works"
     title="From scattered venues to <em>one order flow.</em>"
-    lead="The deals were always out there, spread across a dozen tabs, logins and mailing lists. Bundle collapses them into a single screen and gets you from discovery to execution in minutes."
+    lead="Five steps from a dozen tabs to a routed order, on the venue that lists the deal."
   >
     <a slot="actions" href="/deals" class="btn btn-primary btn-lg">Open the screener <span class="arrow">→</span></a>
     <a slot="actions" href="/portfolio" class="btn btn-ghost btn-lg">Build my portfolio</a>
   </PageHero>
 
-  <!-- Steps -->
+  <!-- The flow -->
   <section class="section">
     <div class="container">
-      <ol class="flow">
-        {
-          steps.map((s, i) => (
-            <li class="flow-step reveal" style={`--d:${i * 0.06}s`}>
-              <div class="flow-rail">
-                <span class="flow-num mono">{s.num}</span>
-                <span class="flow-line" />
-              </div>
-              <div class="flow-card card card-hover">
-                <span class="icon-chip"><Icon name={s.icon} /></span>
-                <div>
-                  <h2 class="h3">{s.title}</h2>
-                  <p class="small muted">{s.body}</p>
-                </div>
-              </div>
-            </li>
-          ))
-        }
-      </ol>
+      <div class="section-head">
+        <p class="eyebrow reveal">The loop</p>
+        <h2 class="h2 reveal" style="--d:.05s">Discovery to execution, five steps</h2>
+      </div>
+      <VizFlow steps={steps} />
+
+      <div class="route-strip panel-tint reveal" style="--d:.1s">
+        <span class="rs-node mono">You</span>
+        <span class="rs-line" aria-hidden="true"></span>
+        <span class="rs-node is-brand mono"><Icon name="layers" size={15} /> Bundle compares</span>
+        <span class="rs-line" aria-hidden="true"></span>
+        <span class="rs-node mono"><Icon name="shield" size={15} /> Venue executes &amp; holds</span>
+        <span class="rs-tag mono">Money never touches Bundle</span>
+      </div>
     </div>
   </section>
 
   <!-- Is / isn't -->
   <section class="section section-ink grain">
-    <div class="container narrow">
+    <div class="container">
       <div class="section-head">
         <p class="eyebrow reveal">No small-print surprises</p>
-        <h2 class="h2 reveal" style="--d:.05s">What Bundle is, and what it refuses to be</h2>
+        <h2 class="h2 reveal" style="--d:.05s">What Bundle is, and refuses to be</h2>
       </div>
-      <ul class="isnt-list reveal" style="--d:.08s">
-        {
-          isnt.map((row) => (
-            <li class:list={['isnt-row', row.is ? 'yes' : 'no']}>
-              <span class="isnt-mark">
-                <Icon name={row.is ? 'check' : 'close'} size={13} stroke={2.4} />
-              </span>
-              <span>{row.text}</span>
-            </li>
-          ))
-        }
-      </ul>
-      <p class="small muted reveal" style="margin-top:1.5rem">
+      <div class="grid cols-2">
+        <div class="isnt-panel reveal">
+          <p class="isnt-head yes mono">Is</p>
+          <ul class="isnt-list">
+            {
+              is.map((t) => (
+                <li class="isnt-row">
+                  <span class="isnt-mark yes"><Icon name="check" size={13} stroke={2.4} /></span>
+                  <span>{t}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div class="isnt-panel reveal" style="--d:.07s">
+          <p class="isnt-head no mono">Is not</p>
+          <ul class="isnt-list">
+            {
+              isnt.map((t) => (
+                <li class="isnt-row">
+                  <span class="isnt-mark no"><Icon name="close" size={13} stroke={2.4} /></span>
+                  <span>{t}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+      <p class="small muted reveal risk-line">
         Every deal carries the risks of the venue that lists it: illiquidity,
         dilution and the real possibility of losing everything you invest.
         <a href="/legal/risk-warning">Read the risk warning</a>.
@@ -114,7 +124,7 @@ const isnt = [
 
   <CTABand
     title="See the whole market <em>before everyone else.</em>"
-    sub="The screener is live, the plan takes three minutes, and the deal is executed on the venue that lists it."
+    sub="The screener is live, and the plan takes three minutes."
     primaryLabel="Build my portfolio"
     primaryHref="/portfolio"
     secondaryLabel="Browse live deals"
@@ -123,85 +133,84 @@ const isnt = [
 </BaseLayout>
 
 <style>
-  .flow {
-    list-style: none;
-    margin: 0 auto;
-    padding: 0;
-    max-width: 52rem;
-    display: grid;
-  }
-
-  .flow-step {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 1.4rem;
-  }
-
-  .flow-rail {
+  /* Where the order actually goes */
+  .route-strip {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 1.5rem;
+    padding: 0.9rem 1.1rem;
   }
 
-  .flow-num {
-    flex: none;
-    width: 2.4rem;
-    height: 2.4rem;
+  .rs-node {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    border-radius: 50%;
+    gap: 0.4rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: 999px;
     border: 1px solid var(--line-2);
     background: var(--surface);
+    font-size: 0.74rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-2);
+    white-space: nowrap;
+  }
+
+  .rs-node.is-brand {
+    border-color: var(--green);
+    background: var(--green);
+    color: #fff;
+  }
+
+  .rs-line {
+    flex: 1;
+    min-width: 1.5rem;
+    height: 2px;
+    background: repeating-linear-gradient(90deg, var(--line-2) 0 5px, transparent 5px 10px);
+  }
+
+  .rs-tag {
+    margin-left: auto;
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     color: var(--green);
-    font-size: 0.8rem;
   }
 
-  .flow-line {
-    flex: 1;
-    width: 1px;
-    background: linear-gradient(180deg, var(--line-2), var(--line));
+  .isnt-panel {
+    padding: 1.35rem 1.4rem;
+    border: 1px solid var(--line-2);
+    border-radius: var(--r-m);
+    background: rgba(255, 255, 255, 0.02);
   }
 
-  .flow-step:last-child .flow-line {
-    display: none;
+  .isnt-head {
+    margin: 0 0 0.9rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
   }
 
-  .flow-card {
-    display: flex;
-    gap: 1.1rem;
-    align-items: flex-start;
-    margin-bottom: 1.1rem;
-    flex: 1;
-  }
-
-  .flow-card h2 {
-    margin-bottom: 0.3rem;
-  }
-
-  .flow-card .small {
-    margin: 0;
-    max-width: 52ch;
-  }
+  .isnt-head.yes { color: var(--gold); }
+  .isnt-head.no { color: #b4c4b4; }
 
   .isnt-list {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 0.6rem;
+    gap: 0.75rem;
   }
 
   .isnt-row {
     display: flex;
-    gap: 0.75rem;
+    gap: 0.7rem;
     align-items: flex-start;
-    padding: 0.85rem 1.1rem;
-    border-radius: var(--r-s);
-    border: 1px solid var(--line);
-    background: rgba(255, 255, 255, 0.015);
     color: #c9d6c9;
+    font-size: 0.95rem;
+    line-height: 1.5;
   }
 
   .isnt-mark {
@@ -215,13 +224,18 @@ const isnt = [
     justify-content: center;
   }
 
-  .isnt-row.yes .isnt-mark {
-    background: var(--up-tint);
-    color: var(--up);
+  .isnt-mark.yes {
+    background: rgba(201, 162, 39, 0.18);
+    color: var(--gold);
   }
 
-  .isnt-row.no .isnt-mark {
-    background: var(--down-tint);
-    color: var(--down);
+  .isnt-mark.no {
+    background: rgba(255, 255, 255, 0.08);
+    color: #b4c4b4;
+  }
+
+  .risk-line {
+    margin-top: 1.5rem;
+    max-width: 46rem;
   }
 </style>

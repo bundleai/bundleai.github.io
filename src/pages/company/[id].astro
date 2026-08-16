@@ -1,0 +1,775 @@
+---
+/**
+ * Company dashboard, /company/<id>.
+ *
+ * The page a click on a company anywhere on the site lands on, instead of
+ * bouncing straight out to the venue. Everything is built defensively: a deal
+ * may have no company profile, no venue mark (crowdfunding) and no parseable
+ * valuation, and each of those degrades to an honest empty state rather than
+ * an error or an invented number.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CoPriceChart from '../../components/CoPriceChart.astro';
+import CoWorthBand from '../../components/CoWorthBand.astro';
+import CoEquityCalc from '../../components/CoEquityCalc.astro';
+import CoSectorPanel from '../../components/CoSectorPanel.astro';
+import { deals, platformName, fmtPrice, fmtChange, dataAsOf, type Deal } from '../../data/deals';
+import { getCompany, estimatedWorth, sectorStats, sectorFor } from '../../data/companies';
+
+export function getStaticPaths() {
+  return deals.map((deal) => ({ params: { id: deal.id }, props: { deal } }));
+}
+
+interface Props {
+  deal: Deal;
+}
+
+const { deal: d } = Astro.props;
+const co = getCompany(d.id);
+const venue = platformName(d.platform);
+const band = estimatedWorth(d);
+const stat = sectorFor(d.sector);
+const allStats = sectorStats();
+const peers = deals.filter((x) => x.sector === d.sector && x.id !== d.id).slice(0, 4);
+
+const initials = d.name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2);
+const typeLabel =
+  d.type === 'crowdfunding' ? 'Crowdfunding' : d.type === 'pre-ipo' ? 'Pre-IPO' : 'Secondary';
+
+const lastRound = co?.rounds?.length ? co.rounds[co.rounds.length - 1] : null;
+
+// Key facts: only the ones we actually hold get a tile.
+const facts: Array<{ k: string; v: string; href?: string }> = [];
+if (co?.hq) facts.push({ k: 'Headquarters', v: co.hq });
+if (co?.founded) facts.push({ k: 'Founded', v: String(co.founded) });
+if (co?.employees) facts.push({ k: 'Employees', v: co.employees });
+if (lastRound) {
+  facts.push({ k: 'Last round', v: `${lastRound.stage} · ${lastRound.valuation}` });
+}
+facts.push({ k: 'Min ticket', v: d.minTicket });
+facts.push({ k: 'Deal type', v: `${typeLabel} · ${venue}` });
+if (co?.website) {
+  facts.push({ k: 'Website', v: co.website.replace(/^https?:\/\/(www\.)?/, ''), href: co.website });
+}
+
+const desc = co?.about
+  ? `${d.name}: ${co.about.slice(0, 130)}`
+  : `${d.name} (${d.code}) — ${typeLabel.toLowerCase()} deal listed on ${venue}, aggregated by Bundle. Indicative venue data, capital at risk.`;
+---
+
+<BaseLayout title={`${d.name} · Company dashboard`} description={desc}>
+  <section class="section tight co-page">
+    <div class="container">
+      <a href="/deals" class="co-back small">← Deal screener</a>
+
+      {/* ---------------- 1. Header ---------------- */}
+      <header class="co-head panel">
+        <div class="co-head-main">
+          <div class="co-id">
+            <span class="co-avatar" style={`--h: var(--${d.hue})`}>{initials}</span>
+            <div class="co-id-txt">
+              <h1 class="co-name">
+                {d.name} <span class="co-code mono">{d.code}</span>
+              </h1>
+              <div class="chip-row co-chips">
+                <span class="badge badge-line">{d.sector}</span>
+                <span class="badge badge-green">{typeLabel}</span>
+                <span class="src-chip">{venue}</span>
+                {d.trending && <span class="badge badge-gold">Trending</span>}
+              </div>
+            </div>
+          </div>
+
+          {co?.about && <p class="co-about">{co.about}</p>}
+        </div>
+
+        <div class="co-head-px">
+          <div class="co-px-block">
+            {
+              d.price != null ? (
+                <>
+                  <span class="co-px px">{fmtPrice(d)}</span>
+                  <span class="co-px-unit">per share · venue mark</span>
+                </>
+              ) : (
+                <>
+                  <span class="co-px px">{d.raised ?? '—'}</span>
+                  <span class="co-px-unit">
+                    raised{d.investors != null ? ` · ${d.investors} investors` : ''}
+                  </span>
+                </>
+              )
+            }
+            <div class="co-px-meta">
+              {
+                d.change != null && d.change !== 0 ? (
+                  <span class:list={['badge', d.change > 0 ? 'badge-up' : 'badge-down', 'px']}>
+                    {fmtChange(d)}
+                  </span>
+                ) : d.closes ? (
+                  <span class="badge badge-sand">Closes in {d.closes}</span>
+                ) : d.status ? (
+                  <span class="badge badge-up">{d.status}</span>
+                ) : null
+              }
+              <span class="co-val px">{d.valuation}</span>
+            </div>
+          </div>
+
+          <div class="co-cta">
+            <a
+              class="btn btn-primary"
+              href={d.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-trade={d.id}
+              data-deal-name={d.name}
+              data-platform={venue}
+              data-deal-id={d.id}
+              data-deal-venue={venue}
+              data-deal-sector={d.sector}
+              data-deal-url={d.url}
+            >
+              Trade on {venue} <span class="arrow">↗</span>
+            </a>
+            <button
+              type="button"
+              class="btn btn-ghost"
+              data-watch={d.id}
+              data-watch-name={d.name}
+              aria-pressed="false"
+            >
+              <span data-watch-label>Add to watchlist</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* ---------------- 2. Key facts ---------------- */}
+      <dl class="co-facts">
+        {
+          facts.map((f) => (
+            <div class="co-fact">
+              <dt>{f.k}</dt>
+              <dd>
+                {f.href ? (
+                  <a href={f.href} target="_blank" rel="noopener noreferrer">
+                    {f.v} <span class="co-ext">↗</span>
+                  </a>
+                ) : (
+                  f.v
+                )}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <div class="co-grid">
+        <div class="co-main">
+          {/* ---------------- 3. Estimated worth ---------------- */}
+          <section class="card co-card" aria-labelledby="co-worth-h">
+            <div class="co-card-head">
+              <h2 class="h3" id="co-worth-h">Estimated worth per share</h2>
+              <span class="badge badge-line">Derived</span>
+            </div>
+            {
+              band ? (
+                <CoWorthBand
+                  band={band}
+                  currency={d.currency}
+                  mark={d.price as number}
+                  lastRoundPps={co?.lastRoundPps}
+                  asOf={dataAsOf}
+                />
+              ) : (
+                <p class="small muted co-empty">
+                  No per-share mark is published for this raise, so there is no basis
+                  for an estimated worth. Crowdfunding rounds are priced on a valuation
+                  cap set by the company, not by a secondary market.
+                </p>
+              )
+            }
+          </section>
+
+          {/* ---------------- 4. Price reference points ---------------- */}
+          <section class="card co-card" aria-labelledby="co-chart-h">
+            <div class="co-card-head">
+              <h2 class="h3" id="co-chart-h">Price reference points</h2>
+              <span class="small muted">as of {dataAsOf}</span>
+            </div>
+            <CoPriceChart
+              points={co?.history}
+              currency={d.currency}
+              hue={d.hue}
+              asOf={dataAsOf}
+            />
+          </section>
+
+          {/* ---------------- 6. Pros & cons ---------------- */}
+          {
+            (co?.pros?.length || co?.cons?.length) && (
+              <section class="card co-card" aria-labelledby="co-pc-h">
+                <div class="co-card-head">
+                  <h2 class="h3" id="co-pc-h">The case, both ways</h2>
+                </div>
+                <div class="co-pc">
+                  <div>
+                    <h3 class="co-pc-h co-pc-h-up">Strengths</h3>
+                    <ul class="co-pc-list co-pros">
+                      {co?.pros?.map((p) => (
+                        <li>
+                          <span class="co-pc-mark" aria-hidden="true">✓</span>
+                          <span>{p}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h3 class="co-pc-h co-pc-h-down">Risks</h3>
+                    <ul class="co-pc-list co-cons">
+                      {co?.cons?.map((c) => (
+                        <li>
+                          <span class="co-pc-mark" aria-hidden="true">!</span>
+                          <span>{c}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                <p class="co-pc-note small muted">
+                  Editorial framing of publicly known factors, written by Bundle. Not
+                  research, not a recommendation, and not a complete list of risks.
+                </p>
+              </section>
+            )
+          }
+
+          {/* ---------------- 7. Sector analytics ---------------- */}
+          <section class="card co-card" aria-labelledby="co-sec-h">
+            <div class="co-card-head">
+              <h2 class="h3" id="co-sec-h">{d.sector} on Bundle</h2>
+              <span class="small muted">{allStats.length} sectors tracked</span>
+            </div>
+            <CoSectorPanel sector={d.sector} stat={stat} all={allStats} peers={peers} />
+          </section>
+
+          {/* ---------------- 8. News ---------------- */}
+          {
+            co?.news?.length && (
+              <section class="card co-card" aria-labelledby="co-news-h">
+                <div class="co-card-head">
+                  <h2 class="h3" id="co-news-h">Recent developments</h2>
+                </div>
+                <ol class="co-news">
+                  {co.news.map((n) => (
+                    <li class="co-news-item">
+                      <span class="co-news-date px">{n.date}</span>
+                      <span class="co-news-body">
+                        <span class="co-news-t">
+                          {n.url ? (
+                            <a href={n.url} target="_blank" rel="noopener noreferrer">
+                              {n.title} <span class="co-ext">↗</span>
+                            </a>
+                          ) : (
+                            n.title
+                          )}
+                        </span>
+                        <span class="co-news-src">{n.source}</span>
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+                <p class="co-news-note small muted">
+                  Headlines summarising public reporting on {d.name}, including
+                  {' '}{d.sector} sector coverage where it moves this company's mark.
+                  Summaries are Bundle's own and are not quotes from the source.
+                </p>
+              </section>
+            )
+          }
+        </div>
+
+        {/* ---------------- 5. Equity calculator (rail) ---------------- */}
+        <aside class="co-rail">
+          <section class="card co-card co-calc" aria-labelledby="co-calc-h">
+            <div class="co-card-head">
+              <h2 class="h3" id="co-calc-h">Equity calculator</h2>
+            </div>
+            <CoEquityCalc deal={d} />
+          </section>
+        </aside>
+      </div>
+
+      {/* ---------------- 9. Risk footer ---------------- */}
+      <aside class="co-risk" role="note" aria-label="Risk warning">
+        <p>
+          <strong>Capital at risk.</strong> These are high-risk, illiquid private
+          investments: you could lose everything, you may be unable to sell, and you
+          are not protected by the FSCS or the Financial Ombudsman Service. Figures
+          shown are indicative venue marks as of {dataAsOf}, not live quotes, offers
+          or financial promotions.
+        </p>
+        <p>
+          Bundle aggregates and never holds your money or gives advice — you invest on
+          {' '}{venue} under its own rules, eligibility checks and fees.
+          <a href="/legal/risk-warning">Take 2 mins to learn more</a>
+        </p>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .co-page {
+    padding-top: clamp(1.25rem, 3vw, 2rem);
+  }
+
+  .co-back {
+    display: inline-block;
+    color: var(--text-2);
+    margin-bottom: 1rem;
+  }
+
+  .co-back:hover {
+    color: var(--green);
+  }
+
+  /* ---- header ---- */
+  .co-head {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: clamp(1.25rem, 3vw, 2.5rem);
+    align-items: start;
+    padding: clamp(1.2rem, 2.5vw, 1.6rem);
+    margin-bottom: 0.9rem;
+  }
+
+  .co-id {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    min-width: 0;
+  }
+
+  .co-avatar {
+    flex: none;
+    width: 52px;
+    height: 52px;
+    border-radius: 13px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--h);
+    background: color-mix(in srgb, var(--h) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--h) 30%, transparent);
+  }
+
+  .co-id-txt {
+    min-width: 0;
+  }
+
+  .co-name {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+    font-weight: 500;
+    line-height: 1.1;
+    color: var(--ink);
+    margin: 0 0 0.4rem;
+  }
+
+  .co-code {
+    font-size: 0.8rem;
+    color: var(--text-2);
+    letter-spacing: 0.08em;
+    vertical-align: middle;
+  }
+
+  .co-chips {
+    gap: 0.4rem;
+  }
+
+  .co-about {
+    margin: 1rem 0 0;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: var(--text-2);
+    max-width: 54ch;
+  }
+
+  .co-head-px {
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+  }
+
+  .co-px-block {
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  .co-px {
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    font-weight: 500;
+    line-height: 1;
+    color: var(--ink);
+  }
+
+  .co-px-unit {
+    font-size: 0.76rem;
+    color: var(--text-2);
+  }
+
+  .co-px-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+  }
+
+  .co-val {
+    font-size: 0.86rem;
+    color: var(--text-2);
+  }
+
+  .co-cta {
+    display: flex;
+    gap: 0.55rem;
+    flex-wrap: wrap;
+  }
+
+  /* ---- key facts ---- */
+  .co-facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+    gap: 1px;
+    margin: 0 0 1.25rem;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--r-l);
+    overflow: hidden;
+  }
+
+  .co-fact {
+    background: var(--surface);
+    padding: 0.75rem 0.95rem;
+    min-width: 0;
+  }
+
+  .co-fact dt {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--text-2);
+    margin-bottom: 0.2rem;
+  }
+
+  .co-fact dd {
+    margin: 0;
+    font-size: 0.88rem;
+    font-weight: 550;
+    color: var(--ink);
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  .co-ext {
+    font-size: 0.72em;
+  }
+
+  /* ---- layout ---- */
+  .co-grid {
+    display: grid;
+    grid-template-columns: 1.55fr 1fr;
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .co-main {
+    display: grid;
+    gap: 1rem;
+    min-width: 0;
+  }
+
+  .co-rail {
+    display: grid;
+    gap: 1rem;
+    min-width: 0;
+    position: sticky;
+    top: calc(var(--nav-h) + 1rem);
+  }
+
+  .co-card {
+    padding: 1.2rem 1.3rem;
+  }
+
+  .co-card-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+
+  .co-card-head .h3 {
+    margin: 0;
+  }
+
+  .co-empty {
+    margin: 0;
+    padding: 0.85rem 1rem;
+    background: var(--tint-soft);
+    border: 1px dashed var(--line-2);
+    border-radius: var(--r-m);
+  }
+
+  /* ---- pros & cons ---- */
+  .co-pc {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+
+  .co-pc-h {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    margin: 0 0 0.6rem;
+  }
+
+  .co-pc-h-up {
+    color: var(--up-ink);
+  }
+
+  .co-pc-h-down {
+    color: var(--down-ink);
+  }
+
+  .co-pc-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .co-pc-list li {
+    display: flex;
+    gap: 0.55rem;
+    align-items: flex-start;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--text);
+  }
+
+  .co-pc-mark {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    margin-top: 0.15rem;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+
+  .co-pros .co-pc-mark {
+    background: var(--up-tint);
+    color: var(--up-ink);
+  }
+
+  .co-cons .co-pc-mark {
+    background: var(--down-tint);
+    color: var(--down-ink);
+  }
+
+  .co-pc-note {
+    margin: 1rem 0 0;
+    padding-top: 0.7rem;
+    border-top: 1px dashed var(--line);
+  }
+
+  /* ---- news ---- */
+  .co-news {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+  }
+
+  .co-news-item {
+    display: grid;
+    grid-template-columns: 5.5rem 1fr;
+    gap: 0.9rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .co-news-item:last-child {
+    border-bottom: 0;
+  }
+
+  .co-news-date {
+    font-size: 0.72rem;
+    color: var(--text-2);
+    letter-spacing: 0.03em;
+    padding-top: 0.15rem;
+    white-space: nowrap;
+  }
+
+  .co-news-body {
+    display: grid;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+
+  .co-news-t {
+    font-size: 0.9rem;
+    font-weight: 550;
+    color: var(--ink);
+    line-height: 1.45;
+  }
+
+  .co-news-src {
+    font-size: 0.74rem;
+    color: var(--text-2);
+  }
+
+  .co-news-note {
+    margin: 0.9rem 0 0;
+    padding-top: 0.7rem;
+    border-top: 1px dashed var(--line);
+  }
+
+  /* ---- risk footer ---- */
+  .co-risk {
+    margin-top: 1.25rem;
+    padding: 1rem 1.2rem;
+    background: var(--tint);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--sand);
+    border-radius: var(--r-m);
+  }
+
+  .co-risk p {
+    margin: 0;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--text-2);
+    max-width: 84ch;
+  }
+
+  .co-risk p + p {
+    margin-top: 0.4rem;
+  }
+
+  .co-risk strong {
+    color: var(--ink);
+  }
+
+  .co-risk a {
+    margin-left: 0.35rem;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    white-space: nowrap;
+  }
+
+  /* ---- responsive ---- */
+  @media (max-width: 1000px) {
+    .co-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .co-rail {
+      position: static;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .co-head {
+      grid-template-columns: 1fr;
+    }
+
+    .co-head-px {
+      padding-top: 1rem;
+      border-top: 1px dashed var(--line);
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .co-pc {
+      grid-template-columns: 1fr;
+    }
+
+    .co-facts {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .co-news-item {
+      grid-template-columns: 1fr;
+      gap: 0.2rem;
+    }
+
+    .co-cta {
+      width: 100%;
+    }
+
+    .co-cta .btn {
+      flex: 1 1 auto;
+    }
+  }
+</style>
+
+<script>
+  /* Watchlist: local to this device, same storage convention as /auth.js.
+     Deliberately a no-op beyond localStorage — Bundle holds nothing. */
+  const KEY = 'bundle.watchlist';
+
+  const read = (): string[] => {
+    try {
+      const v = JSON.parse(localStorage.getItem(KEY) || '[]');
+      return Array.isArray(v) ? v : [];
+    } catch {
+      return [];
+    }
+  };
+
+  const write = (list: string[]) => {
+    try {
+      localStorage.setItem(KEY, JSON.stringify(list));
+    } catch {
+      /* storage unavailable (private mode, blocked cookies) — button still toggles */
+    }
+  };
+
+  const btn = document.querySelector<HTMLButtonElement>('[data-watch]');
+
+  if (btn) {
+    const id = btn.dataset.watch || '';
+    const label = btn.querySelector<HTMLElement>('[data-watch-label]');
+
+    const paint = (on: boolean) => {
+      btn.setAttribute('aria-pressed', String(on));
+      if (label) label.textContent = on ? 'On your watchlist ✓' : 'Add to watchlist';
+    };
+
+    paint(read().includes(id));
+
+    btn.addEventListener('click', () => {
+      const list = read();
+      const on = list.includes(id);
+      write(on ? list.filter((x) => x !== id) : [...list, id]);
+      paint(!on);
+    });
+  }
+</script>
