@@ -49,24 +49,24 @@ const steps = [
   {
     icon: 'search',
     title: 'Discover',
-    body: 'One search across every venue we track: crowdfunding rounds, secondary blocks and pre-IPO offers, side by side.',
+    body: 'Every venue we track, one search. Crowdfunding, secondaries and pre-IPO, side by side.',
   },
   {
     icon: 'scale',
     title: 'Compare',
-    body: 'Same company, different venue, different price. See fees, minimums, share class and access requirements before you commit.',
+    body: 'Same company, different venue, different price. Fees, minimums and access, compared.',
   },
   {
     icon: 'exchange',
     title: 'Execute',
-    body: 'Jump straight into the deal on the venue that listed it. Bundle tracks the position in your cross-platform portfolio.',
+    body: 'Straight into the deal on the venue that listed it. We track the position after.',
   },
 ];
 
 const edges = [
-  { icon: 'bell', title: 'Price & discount alerts', body: 'Get pinged when a block lists below the last round, or a raise nears its close.' },
-  { icon: 'pie', title: 'One portfolio, every venue', body: 'Holdings on Crowdcube, Republic, Forge and beyond, tracked in a single P&L.' },
-  { icon: 'sliders', title: 'Screener-grade filters', body: 'Filter the whole private market by sector, valuation, minimum ticket and venue.' },
+  { icon: 'bell', title: 'Price & discount alerts', body: 'Pinged when a block lists below the last round, or a raise nears its close.' },
+  { icon: 'pie', title: 'One portfolio, every venue', body: 'Every holding, every platform, a single P&L.' },
+  { icon: 'sliders', title: 'Screener-grade filters', body: 'Sector, valuation, minimum ticket, venue. Cut the whole market.' },
 ];
 ---
 
@@ -86,9 +86,8 @@ const edges = [
             Every private-market deal.<br /><span class="text-grad">One terminal.</span>
           </h1>
           <p class="lead reveal" style="--d:.11s">
-            Crowdfunding rounds, secondary blocks and pre-IPO offers from
-            Crowdcube, Republic Europe, Wefunder, EquityZen, Forge and more -
-            screened, compared and one click from execution.
+            Crowdfunding, secondaries and pre-IPO, aggregated from every major
+            venue. Screened, compared, one click from execution.
           </p>
           <form class="hero-search reveal" style="--d:.16s" action="/deals" method="get" role="search">
             <Icon name="search" size={18} />
@@ -270,11 +269,9 @@ const edges = [
           <summary>How does Bundle make money?</summary>
           <div class="faq-body">
             <p>
-              Bundle is free for investors. When venues operate referral or
-              partner programmes, Bundle may earn a fee when you complete an
-              investment we routed, never by marking up the price you pay.
-              Where no programme exists, the deal is listed anyway: coverage
-              comes first.
+              Free for investors. Where a venue runs a referral programme, we
+              may earn a fee on a routed investment, never a markup on your
+              price. No programme, the deal still lists: coverage comes first.
             </p>
           </div>
         </details>
@@ -282,11 +279,10 @@ const edges = [
           <summary>Is Bundle regulated? Do you hold my money?</summary>
           <div class="faq-body">
             <p>
-              Bundle never holds your money or your shares. You invest directly
-              on the venue that lists the deal, under its own regulatory
-              permissions. Bundle Technologies Ltd is a technology company, not
-              a broker; any activity that requires FCA authorisation is offered
-              only through the venue or partner that holds the permission.
+              Never. You invest on the venue that lists the deal, under its own
+              permissions. Bundle Technologies Ltd is a technology company, not a
+              broker; anything needing FCA authorisation runs through the venue or
+              partner that holds it.
             </p>
           </div>
         </details>
@@ -294,12 +290,10 @@ const edges = [
           <summary>Are the prices on this page live?</summary>
           <div class="faq-body">
             <p>
-              They're real but not live. Figures are sourced from the venues'
-              own public pages, Forge Global's published Forge Price marks,
-              Crowdcube company pages and Wefunder listings, as of
-              {dataAsOf}, and refreshed manually while we build. Private-market
-              pricing is indicative by nature: even at launch, quotes reflect
-              the venue's latest listed mark, not a continuous exchange feed.
+              Real, but not live. Sourced from the venues' own public pages as
+              of {dataAsOf} and refreshed manually. Private-market pricing is
+              indicative by nature: quotes reflect the venue's latest mark, not a
+              continuous exchange feed.
             </p>
           </div>
         </details>
@@ -307,11 +301,10 @@ const edges = [
           <summary>What are the risks?</summary>
           <div class="faq-body">
             <p>
-              The same as investing on any of the underlying venues: startups
-              and private companies fail often, shares are illiquid, dilution is
-              normal and you may lose everything you invest. Aggregation makes
-              the market easier to see. It does not make it safer. Read the
-              <a href="/legal/risk-warning">full risk warning</a>.
+              The same as on any underlying venue: companies fail often, shares
+              are illiquid, dilution is normal, and you can lose everything.
+              Aggregation makes the market easier to see, not safer.
+              <a href="/legal/risk-warning">Read the full risk warning</a>.
             </p>
           </div>
         </details>
@@ -329,9 +322,8 @@ const edges = [
             The whole private market.<br /><em class="serif-aside">On your screen now.</em>
           </h2>
           <p class="lead reveal" style="--d:.1s">
-            Three minutes of questions gives you a plan with real guardrails, and
-            the screener starts ranking every live deal against it. Watchlists and
-            alerts included, free for investors.
+            A few questions gives you a plan with real guardrails, then the
+            screener ranks every live deal against it. Free for investors.
           </p>
         </div>
         <div class="card start-card reveal" style="--d:.12s">

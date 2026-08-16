@@ -1,0 +1,262 @@
+---
+/**
+ * Estimated worth per share: a derived indicative band around the venue's
+ * published mark. Not a valuation, not advice — the labelling on this
+ * component is load-bearing and should not be softened.
+ *
+ * The band itself comes from estimatedWorth() in src/data/companies.ts, which
+ * widens the range to span the last reported primary round price where one
+ * exists (so the band reflects real disagreement between the round price and
+ * the current mark) and otherwise uses the mark ±15%.
+ */
+import type { WorthBand } from '../data/companies';
+
+interface Props {
+  band: WorthBand;
+  currency: string;
+  mark: number;
+  lastRoundPps?: number;
+  asOf: string;
+}
+
+const { band, currency, mark, lastRoundPps, asOf } = Astro.props;
+
+const fmt = (n: number): string =>
+  `${currency}${n.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+const span = band.high - band.low || 1;
+const pct = (v: number) => Math.min(100, Math.max(0, ((v - band.low) / span) * 100));
+
+const markPct = pct(mark);
+const roundPct = lastRoundPps != null ? pct(lastRoundPps) : null;
+const prem = band.premiumPct;
+const premLabel =
+  prem == null ? null : prem >= 0 ? 'premium to last round' : 'discount to last round';
+---
+
+<div class="wb">
+  <div class="wb-figures">
+    <div class="wb-fig">
+      <span class="wb-k">Low</span>
+      <span class="wb-v px">{fmt(band.low)}</span>
+    </div>
+    <div class="wb-fig wb-fig-mid">
+      <span class="wb-k">Venue mark</span>
+      <span class="wb-v px">{fmt(band.mid)}</span>
+    </div>
+    <div class="wb-fig wb-fig-end">
+      <span class="wb-k">High</span>
+      <span class="wb-v px">{fmt(band.high)}</span>
+    </div>
+  </div>
+
+  <div class="wb-bar" role="img" aria-label={`Indicative range from ${fmt(band.low)} to ${fmt(band.high)}, venue mark ${fmt(mark)}`}>
+    <div class="wb-track"></div>
+    {
+      roundPct != null && (
+        <span class="wb-round" style={`left:${roundPct}%`}>
+          <span class="wb-round-tick"></span>
+        </span>
+      )
+    }
+    <span class="wb-mark" style={`left:${markPct}%`}>
+      <span class="wb-mark-dot"></span>
+    </span>
+  </div>
+
+  <div class="wb-axis px">
+    <span>{fmt(band.low)}</span>
+    <span>{fmt(band.high)}</span>
+  </div>
+
+  <ul class="wb-legend">
+    <li><span class="wb-sw wb-sw-mark"></span> Venue mark {fmt(mark)}</li>
+    {
+      lastRoundPps != null && (
+        <li><span class="wb-sw wb-sw-round"></span> Last primary round {fmt(lastRoundPps)}</li>
+      )
+    }
+  </ul>
+
+  {
+    prem != null && (
+      <p class="wb-prem">
+        <span class:list={['badge', prem >= 0 ? 'badge-up' : 'badge-down', 'px']}>
+          {prem >= 0 ? '+' : ''}{prem.toFixed(1)}%
+        </span>
+        <span class="small muted">{premLabel}</span>
+      </p>
+    )
+  }
+
+  <p class="wb-basis small muted">
+    <strong>Derived estimate, not a valuation.</strong> {band.basis}. Calculated
+    by Bundle from the venue's published mark as of {asOf} — it is not an offer,
+    an appraisal, a forecast or advice, and the price you actually pay is set on
+    the venue.
+  </p>
+</div>
+
+<style>
+  .wb {
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .wb-figures {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 0.75rem;
+  }
+
+  .wb-fig {
+    display: grid;
+    gap: 0.15rem;
+  }
+
+  .wb-fig-mid {
+    text-align: center;
+  }
+
+  .wb-fig-end {
+    text-align: right;
+  }
+
+  .wb-k {
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+
+  .wb-v {
+    font-size: 1rem;
+    color: var(--text-2);
+  }
+
+  .wb-fig-mid .wb-v {
+    font-size: 1.45rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .wb-bar {
+    position: relative;
+    height: 34px;
+    display: flex;
+    align-items: center;
+  }
+
+  .wb-track {
+    width: 100%;
+    height: 10px;
+    border-radius: 999px;
+    /* Confidence shading: the middle of the band is the darker step. */
+    background: linear-gradient(
+      90deg,
+      var(--chart-track) 0%,
+      color-mix(in srgb, var(--green) 26%, var(--chart-track)) 50%,
+      var(--chart-track) 100%
+    );
+    border: 1px solid var(--line);
+  }
+
+  .wb-mark,
+  .wb-round {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    display: grid;
+    place-items: center;
+    transform: translateX(-50%);
+  }
+
+  .wb-mark-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 3px solid var(--green);
+    box-shadow: var(--shadow-s);
+  }
+
+  .wb-round-tick {
+    width: 3px;
+    height: 22px;
+    border-radius: 2px;
+    background: var(--gold-deep);
+  }
+
+  .wb-axis {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    color: var(--text-2);
+    margin-top: -0.5rem;
+  }
+
+  .wb-legend {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1.1rem;
+    font-size: 0.8rem;
+    color: var(--text-2);
+  }
+
+  .wb-legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .wb-sw {
+    flex: none;
+    border-radius: 2px;
+  }
+
+  .wb-sw-mark {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 3px solid var(--green);
+  }
+
+  .wb-sw-round {
+    width: 3px;
+    height: 12px;
+    background: var(--gold-deep);
+  }
+
+  .wb-prem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+  }
+
+  .wb-basis {
+    margin: 0;
+    padding-top: 0.7rem;
+    border-top: 1px dashed var(--line);
+    max-width: 60ch;
+  }
+
+  .wb-basis strong {
+    color: var(--ink);
+  }
+
+  @media (max-width: 420px) {
+    .wb-fig-mid .wb-v {
+      font-size: 1.2rem;
+    }
+
+    .wb-v {
+      font-size: 0.9rem;
+    }
+  }
+</style>

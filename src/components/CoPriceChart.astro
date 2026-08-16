@@ -1,0 +1,303 @@
+---
+/**
+ * Reference-point chart for a company's published share-price marks.
+ *
+ * Deliberately NOT called a price history: src/data/companies.ts holds only
+ * real reference points (reported primary round prices plus the current venue
+ * mark), not a continuous traded series. Points are placed on a real time axis
+ * where the "Mon YYYY" dates parse, and fall back to even spacing where they
+ * do not. Hand-rolled SVG, no chart library.
+ */
+import type { PricePoint } from '../data/companies';
+
+interface Props {
+  points?: PricePoint[];
+  currency: string;
+  hue: string;
+  asOf: string;
+}
+
+const { points = [], currency, hue, asOf } = Astro.props;
+
+const MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+
+/** "Mar 2025" -> months since year 0, so the x axis reflects real elapsed time. */
+const toMonths = (date: string): number | null => {
+  const m = /^([A-Za-z]{3})[a-z]*\s+(\d{4})$/.exec(date.trim());
+  if (!m) return null;
+  const mi = MONTHS.indexOf(m[1].toLowerCase());
+  if (mi < 0) return null;
+  return parseInt(m[2], 10) * 12 + mi;
+};
+
+const fmt = (n: number): string =>
+  `${currency}${n.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+const enough = points.length >= 2;
+
+// Geometry. Generous top/bottom padding leaves room for the point labels.
+const W = 720;
+const H = 250;
+const padL = 14;
+const padR = 14;
+const padT = 40;
+const padB = 40;
+
+let plotted: Array<{ x: number; y: number; p: PricePoint }> = [];
+let line = '';
+let area = '';
+let lo = 0;
+let hi = 0;
+
+if (enough) {
+  const times = points.map((p) => toMonths(p.date));
+  const realTime = times.every((t): t is number => t != null);
+  const tMin = realTime ? Math.min(...times as number[]) : 0;
+  const tMax = realTime ? Math.max(...times as number[]) : points.length - 1;
+  const tSpan = tMax - tMin || 1;
+
+  const prices = points.map((p) => p.price);
+  lo = Math.min(...prices);
+  hi = Math.max(...prices);
+  // 12% headroom each side so the extremes never sit on the frame.
+  const pad = (hi - lo || hi || 1) * 0.12;
+  const yMin = lo - pad;
+  const yMax = hi + pad;
+
+  plotted = points.map((p, i) => {
+    const t = realTime ? (times[i] as number) : i;
+    const x = padL + ((t - tMin) / tSpan) * (W - padL - padR);
+    const y = padT + (1 - (p.price - yMin) / (yMax - yMin || 1)) * (H - padT - padB);
+    return { x, y, p };
+  });
+
+  line = plotted.map((q, i) => `${i ? 'L' : 'M'}${q.x.toFixed(1)},${q.y.toFixed(1)}`).join(' ');
+  const base = H - padB;
+  area = `${line} L${plotted[plotted.length - 1].x.toFixed(1)},${base} L${plotted[0].x.toFixed(1)},${base} Z`;
+}
+
+const gid = `co-chart-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+{
+  enough ? (
+    <figure class="pc" style={`--h: var(--${hue})`}>
+      <div class="pc-scroll">
+        <svg
+          class="pc-svg"
+          viewBox={`0 0 ${W} ${H}`}
+          role="img"
+          aria-label={`Reported share-price reference points, ${plotted
+            .map((q) => `${q.p.date} ${fmt(q.p.price)}`)
+            .join(', ')}`}
+        >
+          <defs>
+            <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--h)" stop-opacity="0.18" />
+              <stop offset="100%" stop-color="var(--h)" stop-opacity="0.01" />
+            </linearGradient>
+          </defs>
+
+          {/* high / low guides */}
+          <line class="pc-grid" x1={padL} y1={padT + 0.5} x2={W - padR} y2={padT + 0.5} />
+          <line class="pc-grid" x1={padL} y1={H - padB - 0.5} x2={W - padR} y2={H - padB - 0.5} />
+
+          <path class="pc-area" d={area} fill={`url(#${gid})`} />
+          <path class="pc-line" d={line} />
+
+          {plotted.map((q, i) => {
+            const last = i === plotted.length - 1;
+            const anchor = i === 0 ? 'start' : last ? 'end' : 'middle';
+            const dx = i === 0 ? -4 : last ? 4 : 0;
+            return (
+              <g class:list={['pc-pt', { last }]}>
+                <circle class="pc-dot" cx={q.x} cy={q.y} r={last ? 5.5 : 4} />
+                <text class="pc-val" x={q.x + dx} y={q.y - 14} text-anchor={anchor}>
+                  {fmt(q.p.price)}
+                </text>
+                <text class="pc-lab" x={q.x + dx} y={H - padB + 18} text-anchor={anchor}>
+                  {q.p.date}
+                </text>
+                {q.p.label && (
+                  <text class="pc-sub" x={q.x + dx} y={H - padB + 32} text-anchor={anchor}>
+                    {q.p.label}
+                  </text>
+                )}
+                <circle class="pc-hit" cx={q.x} cy={q.y} r="18">
+                  <title>{`${q.p.label ? q.p.label + ' · ' : ''}${q.p.date}: ${fmt(q.p.price)}`}</title>
+                </circle>
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+
+      <figcaption class="pc-cap small">
+        <span class="pc-legend">
+          <span class="pc-key" /> Reported reference points
+        </span>
+        <span class="muted">
+          Low {fmt(lo)} · High {fmt(hi)} · Latest {fmt(points[points.length - 1].price)}
+        </span>
+      </figcaption>
+      <p class="pc-note small muted">
+        These are published reference points — reported primary round prices and
+        the venue's current mark as of {asOf} — joined for readability. Private
+        shares do not trade continuously, so this is not a traded price history
+        and the line between points is not observed data.
+      </p>
+    </figure>
+  ) : (
+    <div class="pc-empty">
+      <p class="pc-empty-t">No published price points</p>
+      <p class="small muted">
+        Bundle only charts prices a venue or a reported primary round has actually
+        published. Nothing is on record for this company yet, so there is nothing
+        to plot — which is normal for crowdfunding rounds priced on a valuation cap.
+      </p>
+    </div>
+  )
+}
+
+<style>
+  .pc {
+    margin: 0;
+  }
+
+  /* The chart scales with its viewBox, but keep the escape hatch so a narrow
+     viewport can never be forced wider by the SVG. */
+  .pc-scroll {
+    overflow-x: auto;
+  }
+
+  .pc-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    min-width: 280px;
+    overflow: visible;
+  }
+
+  .pc-grid {
+    stroke: var(--line);
+    stroke-width: 1;
+  }
+
+  .pc-line {
+    fill: none;
+    stroke: var(--h);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .pc-dot {
+    fill: var(--surface);
+    stroke: var(--h);
+    stroke-width: 2.5;
+    transition: r 0.15s ease;
+  }
+
+  .pc-pt.last .pc-dot {
+    fill: var(--h);
+  }
+
+  .pc-val {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    fill: var(--text-2);
+  }
+
+  .pc-pt.last .pc-val {
+    fill: var(--ink);
+    font-weight: 500;
+  }
+
+  .pc-lab {
+    font-family: var(--font-body);
+    font-size: 12px;
+    fill: var(--text-2);
+  }
+
+  .pc-sub {
+    font-family: var(--font-body);
+    font-size: 10.5px;
+    fill: var(--faint);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .pc-hit {
+    fill: transparent;
+    cursor: pointer;
+  }
+
+  .pc-pt:hover .pc-dot {
+    r: 7;
+  }
+
+  .pc-pt:hover .pc-val {
+    fill: var(--ink);
+  }
+
+  .pc-cap {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+    padding-top: 0.7rem;
+    border-top: 1px dashed var(--line);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+  }
+
+  .pc-legend {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--text-2);
+  }
+
+  .pc-key {
+    width: 14px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--h);
+  }
+
+  .pc-note {
+    margin: 0.7rem 0 0;
+    max-width: 62ch;
+  }
+
+  .pc-empty {
+    display: grid;
+    gap: 0.35rem;
+    padding: 1.5rem 1.25rem;
+    text-align: center;
+    background: var(--tint-soft);
+    border: 1px dashed var(--line-2);
+    border-radius: var(--r-m);
+  }
+
+  .pc-empty-t {
+    margin: 0;
+    font-weight: 570;
+    color: var(--ink);
+  }
+
+  .pc-empty p.small {
+    margin: 0;
+    max-width: 46ch;
+    margin-inline: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pc-dot {
+      transition: none;
+    }
+  }
+</style>

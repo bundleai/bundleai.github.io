@@ -1,0 +1,232 @@
+---
+/**
+ * VizLayers: stacked layer diagram (who does what, pipeline stages).
+ * Bands connected by a downward arrow; chips carry the detail instead of prose.
+ * tone="dark" for use inside .section-ink.
+ */
+import Icon from './Icon.astro';
+
+interface Layer {
+  label: string;
+  title: string;
+  body?: string;
+  items?: string[];
+  icon?: string;
+  accent?: 'brand' | 'gold' | 'warn';
+}
+
+interface Props {
+  layers: Layer[];
+  tone?: 'light' | 'dark';
+  class?: string;
+}
+
+const { layers, tone = 'light', class: className } = Astro.props;
+---
+
+<div class:list={['vlay', tone === 'dark' && 'is-dark', className]}>
+  {
+    layers.map((l, i) => (
+      <div
+        class:list={['vlay-band', 'reveal', `accent-${l.accent ?? 'brand'}`]}
+        style={`--d:${i * 0.06}s`}
+      >
+        <div class="vlay-side">
+          {l.icon && (
+            <span class="vlay-ico">
+              <Icon name={l.icon} size={18} />
+            </span>
+          )}
+          <span class="vlay-label mono">{l.label}</span>
+        </div>
+        <div class="vlay-main">
+          <h3 class="vlay-title">{l.title}</h3>
+          {l.body && <p class="vlay-body">{l.body}</p>}
+          {l.items && l.items.length > 0 && (
+            <div class="vlay-chips">
+              {l.items.map((it) => (
+                <span class="vlay-chip">{it}</span>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .vlay {
+    display: grid;
+    gap: 1.35rem;
+  }
+
+  .vlay-band {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(8.5rem, 11rem) 1fr;
+    gap: 1.25rem;
+    align-items: start;
+    padding: 1.25rem 1.4rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--green);
+    border-radius: var(--r-m);
+    box-shadow: var(--shadow-s);
+  }
+
+  .accent-gold { border-left-color: var(--gold); }
+  .accent-warn { border-left-color: var(--sand); }
+
+  /* Downward connector between bands */
+  .vlay-band:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    left: 2.6rem;
+    bottom: -1.35rem;
+    width: 8px;
+    height: 8px;
+    margin-left: -4px;
+    border-right: 2px solid var(--line-2);
+    border-bottom: 2px solid var(--line-2);
+    transform: translateY(-1px) rotate(45deg);
+  }
+
+  .vlay-band:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    left: 2.6rem;
+    bottom: -1.35rem;
+    width: 2px;
+    height: 1.35rem;
+    margin-left: -1px;
+    background: repeating-linear-gradient(
+      180deg,
+      var(--line-2) 0 5px,
+      transparent 5px 10px
+    );
+  }
+
+  .vlay-side {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+  .vlay-ico {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: var(--green-soft);
+    border: 1px solid var(--line);
+    color: var(--green);
+    flex: none;
+  }
+
+  .accent-gold .vlay-ico {
+    background: var(--gold-soft);
+    border-color: rgba(201, 162, 39, 0.35);
+    color: var(--gold-deep);
+  }
+
+  .accent-warn .vlay-ico {
+    background: var(--sand-tint);
+    border-color: rgba(245, 158, 11, 0.28);
+    color: var(--sand-ink);
+  }
+
+  .vlay-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--text-2);
+    line-height: 1.25;
+  }
+
+  .vlay-title {
+    margin: 0 0 0.25rem;
+    font-size: 1.02rem;
+    color: var(--ink);
+  }
+
+  .vlay-body {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--text-2);
+    max-width: 56ch;
+  }
+
+  .vlay-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+  }
+
+  .vlay-chip {
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    border: 1px solid var(--line-2);
+    background: var(--tint-soft);
+    font-size: 0.78rem;
+    color: var(--text-2);
+  }
+
+  /* Dark variant */
+  .is-dark .vlay-band {
+    background: rgba(255, 255, 255, 0.02);
+    border-color: var(--line-2);
+    border-left-color: var(--gold);
+    box-shadow: none;
+  }
+
+  .is-dark .accent-brand { border-left-color: rgba(255, 255, 255, 0.45); }
+  .is-dark .accent-warn { border-left-color: var(--sand); }
+
+  .is-dark .vlay-ico {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.16);
+    color: var(--gold);
+  }
+
+  .is-dark .vlay-label {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .is-dark .vlay-title { color: #fff; }
+  .is-dark .vlay-body { color: #b4c4b4; }
+
+  .is-dark .vlay-chip {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.18);
+    color: #c9d6c9;
+  }
+
+  .is-dark .vlay-band:not(:last-child)::after {
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+
+  .is-dark .vlay-band:not(:last-child)::before {
+    background: repeating-linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.3) 0 5px,
+      transparent 5px 10px
+    );
+  }
+
+  @media (max-width: 720px) {
+    .vlay-band {
+      grid-template-columns: 1fr;
+      gap: 0.85rem;
+    }
+
+    .vlay-band:not(:last-child)::after,
+    .vlay-band:not(:last-child)::before {
+      left: 1.6rem;
+    }
+  }
+</style>

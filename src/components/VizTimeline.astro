@@ -1,0 +1,168 @@
+---
+/**
+ * VizTimeline: horizontal timeline with nodes and a connecting rail.
+ * Collapses to a vertical rail below 760px. tone="dark" for .section-ink.
+ */
+interface Item {
+  marker: string;
+  title: string;
+  body?: string;
+  status?: string;
+  done?: boolean;
+}
+
+interface Props {
+  items: Item[];
+  tone?: 'light' | 'dark';
+  class?: string;
+}
+
+const { items, tone = 'light', class: className } = Astro.props;
+---
+
+<ol
+  class:list={['vtl', tone === 'dark' && 'is-dark', className]}
+  style={`--n:${items.length}`}
+>
+  {
+    items.map((it, i) => (
+      <li class="vtl-item reveal" style={`--d:${i * 0.07}s`}>
+        <span class:list={['vtl-dot', it.done && 'is-done']} aria-hidden="true" />
+        <span class="vtl-marker mono">{it.marker}</span>
+        <h3 class="vtl-title">{it.title}</h3>
+        {it.body && <p class="vtl-body">{it.body}</p>}
+        {it.status && <span class="vtl-status">{it.status}</span>}
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .vtl {
+    --gap: 1.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--gap);
+    grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  }
+
+  .vtl-item {
+    position: relative;
+    padding-top: 1.9rem;
+  }
+
+  /* Rail segment reaching across the gap into the next node */
+  .vtl-item:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    top: 6px;
+    left: 15px;
+    right: calc(-1 * var(--gap) - 15px);
+    height: 2px;
+    background: var(--line-2);
+  }
+
+  .vtl-dot {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 3px solid var(--line-2);
+    z-index: 1;
+  }
+
+  .vtl-dot.is-done {
+    border-color: var(--green);
+    background: var(--green);
+  }
+
+  .vtl-marker {
+    display: block;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 0.3rem;
+  }
+
+  .vtl-title {
+    margin: 0 0 0.3rem;
+    font-size: 1.02rem;
+    color: var(--ink);
+  }
+
+  .vtl-body {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: var(--text-2);
+  }
+
+  .vtl-status {
+    display: inline-block;
+    margin-top: 0.7rem;
+    padding: 0.16rem 0.6rem;
+    border-radius: 999px;
+    border: 1px solid var(--line-2);
+    font-size: 0.72rem;
+    font-weight: 550;
+    color: var(--text-2);
+  }
+
+  .is-dark .vtl-item:not(:last-child)::before {
+    background: rgba(255, 255, 255, 0.22);
+  }
+
+  .is-dark .vtl-dot {
+    background: var(--ink);
+    border-color: rgba(255, 255, 255, 0.32);
+  }
+
+  .is-dark .vtl-dot.is-done {
+    background: var(--gold);
+    border-color: var(--gold);
+  }
+
+  .is-dark .vtl-marker {
+    color: var(--gold);
+  }
+
+  .is-dark .vtl-title {
+    color: #fff;
+  }
+
+  .is-dark .vtl-body {
+    color: #b4c4b4;
+  }
+
+  .is-dark .vtl-status {
+    border-color: rgba(255, 255, 255, 0.24);
+    color: #c9d6c9;
+  }
+
+  @media (max-width: 760px) {
+    .vtl {
+      grid-template-columns: 1fr;
+      gap: 1.6rem;
+    }
+
+    .vtl-item {
+      padding: 0 0 0 1.9rem;
+      min-height: 1.5rem;
+    }
+
+    .vtl-item:not(:last-child)::before {
+      top: 15px;
+      bottom: calc(-1 * var(--gap) - 4px);
+      left: 6px;
+      right: auto;
+      width: 2px;
+      height: auto;
+    }
+  }
+</style>

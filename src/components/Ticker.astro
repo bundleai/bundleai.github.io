@@ -15,7 +15,7 @@ const tape = deals.filter((d) => d.price != null);
         <ul class="tape-run" aria-hidden={copy === 1 ? 'true' : undefined}>
           {tape.map((d) => (
             <li>
-              <a href={`/deals#${d.id}`}>
+              <a href={`/company/${d.id}`}>
                 <span class="t-code mono">{d.code}</span>
                 <span class="t-name">{d.name}</span>
                 <span class="t-price px">{fmtPrice(d)}</span>

@@ -186,9 +186,9 @@
         r.reasons.filter(function (x) { return x.kind !== 'warn' && x.kind !== 'block'; })
       ).slice(0, 2);
       var warn = r.reasons.filter(function (x) { return x.kind === 'warn'; })[0];
-      return '<article class="pv-fit" data-trade data-deal-id="' + esc(d.id) + '" data-deal-name="' + esc(d.name) +
+      return '<article class="pv-fit" data-company="/company/' + esc(d.id) + '" data-deal-id="' + esc(d.id) + '" data-deal-name="' + esc(d.name) +
         '" data-deal-venue="' + esc(window.BundleMatch.platformName(d.platform, pf)) + '" data-deal-sector="' + esc(d.sector) +
-        '" data-deal-url="' + esc(d.url) + '" role="button" tabindex="0" aria-label="Open ' + esc(d.name) + '">' +
+        '" data-deal-url="' + esc(d.url) + '" role="link" tabindex="0" aria-label="View ' + esc(d.name) + ' company dashboard">' +
         '<header class="pv-fit-head">' +
         '<span class="pv-fit-avatar" style="--h: var(--' + esc(d.hue) + ')">' +
         esc(d.name.split(/\s+/).map(function (w) { return w[0]; }).join('').slice(0, 2)) + '</span>' +
