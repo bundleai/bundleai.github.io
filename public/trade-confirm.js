@@ -177,23 +177,27 @@
     });
   }
 
-  function maybeAsk() {
+  // `requireVisible` is only meaningful for the event-driven calls; on first
+  // load the document can still report "hidden" (prerender, background tab
+  // restore, headless) even though the page is being rendered, and skipping
+  // there would drop the prompt entirely.
+  function maybeAsk(requireVisible) {
     if (host) return;
     var p = read();
     if (!p || !p.deal) return;
     if (Date.now() - p.at > MAX_AGE) { write(null); return; }
     if (p.asked && Date.now() - p.asked < SNOOZE) return;
-    if (document.visibilityState !== 'visible') return;
+    if (requireVisible && document.visibilityState !== 'visible') return;
     ask(p);
   }
 
   document.addEventListener('visibilitychange', function () {
-    if (document.visibilityState === 'visible') setTimeout(maybeAsk, 600);
+    if (document.visibilityState === 'visible') setTimeout(function () { maybeAsk(true); }, 600);
   });
-  window.addEventListener('focus', function () { setTimeout(maybeAsk, 600); });
+  window.addEventListener('focus', function () { setTimeout(function () { maybeAsk(true); }, 600); });
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () { setTimeout(maybeAsk, 900); });
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(function () { maybeAsk(false); }, 900); });
   } else {
-    setTimeout(maybeAsk, 900);
+    setTimeout(function () { maybeAsk(false); }, 900);
   }
 })();
