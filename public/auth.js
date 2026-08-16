@@ -58,8 +58,15 @@
     holdings: function () { return read(HKEY) || []; },
     addHolding: function (h) {
       var all = Auth.holdings();
-      if (all.some(function (x) { return x.id === h.id; })) return all;
-      all.push(h);
+      var i = all.findIndex(function (x) { return x.id === h.id; });
+      if (i > -1) {
+        // A confirmed position (with amounts) supersedes the click-through
+        // record written when someone merely opened the venue.
+        if (!h.confirmed && all[i].confirmed) return all;
+        all[i] = Object.assign({}, all[i], h);
+      } else {
+        all.push(h);
+      }
       write(HKEY, all);
       return all;
     },

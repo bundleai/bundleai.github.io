@@ -2856,3 +2856,136 @@ main,
 @media (prefers-reduced-motion: reduce) {
   .lp-a { transition: none; }
 }
+
+
+/* --------------------------------------------------------------------------
+   Post-trade capture modal (public/trade-confirm.js)
+   -------------------------------------------------------------------------- */
+
+.tc-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  background: rgba(20, 40, 30, 0.45);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  animation: tc-fade 0.18s ease;
+}
+
+.tc-modal {
+  position: relative;
+  width: min(34rem, 100%);
+  max-height: 90dvh;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-l, 16px);
+  box-shadow: var(--shadow-l);
+  padding: clamp(1.5rem, 4vw, 2.15rem);
+  animation: tc-rise 0.22s cubic-bezier(0.2, 0.6, 0.25, 1);
+}
+
+.tc-x {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.85rem;
+  border: 0;
+  background: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--faint);
+  cursor: pointer;
+  padding: 0.2rem 0.35rem;
+  border-radius: 6px;
+}
+
+.tc-x:hover { color: var(--ink); background: var(--tint); }
+
+.tc-eyebrow {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+
+.tc-title {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.2rem, 2.4vw, 1.45rem);
+  line-height: 1.2;
+}
+
+.tc-sub {
+  margin: 0 0 1.3rem;
+  font-size: 0.92rem;
+  color: var(--text-2);
+  line-height: 1.55;
+}
+
+.tc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+  margin-bottom: 1.3rem;
+}
+
+.tc-field {
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 550;
+  color: var(--ink);
+}
+
+.tc-field i {
+  font-style: normal;
+  font-weight: 400;
+  color: var(--faint);
+  font-size: 0.78rem;
+}
+
+.tc-field input {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-s, 8px);
+  background: var(--bg);
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.tc-field input:focus {
+  outline: none;
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(33, 64, 46, 0.12);
+}
+
+.tc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.tc-note {
+  margin: 1rem 0 0;
+  font-size: 0.78rem;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+
+@keyframes tc-fade { from { opacity: 0; } }
+@keyframes tc-rise { from { opacity: 0; transform: translateY(10px); } }
+
+@media (max-width: 480px) {
+  .tc-grid { grid-template-columns: 1fr; }
+  .tc-actions .btn { flex: 1 1 100%; justify-content: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tc-backdrop, .tc-modal { animation: none; }
+}
