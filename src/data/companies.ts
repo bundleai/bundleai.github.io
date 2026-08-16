@@ -8,7 +8,7 @@
  *  - `rounds` are publicly reported primary rounds. `pps` (price per share) is
  *    only present where a venue published it.
  *  - `history` holds ONLY real reference points: publicly reported round prices
- *    plus the current venue mark. It is not a continuous price series, and the
+ *    plus the current venue mark (refreshed 16 Aug 2026). It is not a continuous series, and the
  *    chart must be labelled as reference points, not a traded price history.
  *  - `news` items summarise public reporting; they are headlines, not quotes.
  *  - `pros` / `cons` are editorial framing of publicly known factors. They are
@@ -90,7 +90,7 @@ export const companies: Record<string, Company> = {
     history: [
       { date: 'Oct 2024', price: 127.0, label: 'Round mark' },
       { date: 'Mar 2025', price: 242.0, label: 'Round mark' },
-      { date: 'Jul 2026', price: 721.85, label: 'Venue mark' },
+      { date: 'Aug 2026', price: 721.85, label: 'Venue mark' },
     ],
   },
 
@@ -114,7 +114,7 @@ export const companies: Record<string, Company> = {
       'Late-stage entry price leaves a thinner margin to an IPO mark',
     ],
     news: [
-      { date: 'Jul 2026', title: 'Secondary mark up 7.6% on the session, among the strongest movers', source: 'Forge Global' },
+      { date: 'Aug 2026', title: 'Among the strongest movers on the tracked tape', source: 'Forge Global' },
       { date: 'Feb 2026', title: 'AI product line reported as the fastest-growing segment', source: 'Public reporting' },
     ],
     rounds: [
@@ -124,7 +124,7 @@ export const companies: Record<string, Company> = {
     history: [
       { date: 'Dec 2024', price: 92.0, label: 'Series J' },
       { date: 'Jan 2026', price: 191.0, label: 'Series K' },
-      { date: 'Jul 2026', price: 242.04, label: 'Venue mark' },
+      { date: 'Aug 2026', price: 264.9, label: 'Venue mark' },
     ],
     lastRoundPps: 191.0,
   },
@@ -145,13 +145,13 @@ export const companies: Record<string, Company> = {
       'One of the few genuinely global consumer finance franchises',
     ],
     cons: [
-      'Mark fell 4.7% on the session — momentum has turned',
+      'Mark is volatile session to session; direction can reverse fast',
       'Heavily exposed to consumer credit and FX cycles',
       'Regulatory scrutiny across multiple jurisdictions',
       'UK/EU listing venue and timing still undecided',
     ],
     news: [
-      { date: 'Jul 2026', title: 'Secondary mark down 4.7%, the largest decliner on the tracked tape', source: 'Forge Global' },
+      { date: 'Aug 2026', title: 'Secondary mark re-rated sharply higher on the tracked tape', source: 'Forge Global' },
       { date: 'Apr 2026', title: 'Customer accounts pass a new milestone as lending expands', source: 'Public reporting' },
     ],
     rounds: [
@@ -161,7 +161,7 @@ export const companies: Record<string, Company> = {
     history: [
       { date: 'Aug 2024', price: 790.0, label: 'Secondary' },
       { date: 'Nov 2025', price: 1381.0, label: 'Tender' },
-      { date: 'Jul 2026', price: 1315.53, label: 'Venue mark' },
+      { date: 'Aug 2026', price: 2200.0, label: 'Venue mark' },
     ],
     lastRoundPps: 1381.0,
   },
@@ -196,7 +196,7 @@ export const companies: Record<string, Company> = {
     history: [
       { date: 'Feb 2025', price: 37.2, label: 'Tender' },
       { date: 'Feb 2026', price: 43.4, label: 'Tender' },
-      { date: 'Jul 2026', price: 72.45, label: 'Venue mark' },
+      { date: 'Aug 2026', price: 72.45, label: 'Venue mark' },
     ],
     lastRoundPps: 43.4,
   },
@@ -232,7 +232,7 @@ export const companies: Record<string, Company> = {
     history: [
       { date: 'Jun 2025', price: 41.0, label: 'Series G' },
       { date: 'Feb 2026', price: 95.0, label: 'Series H' },
-      { date: 'Jul 2026', price: 116.68, label: 'Venue mark' },
+      { date: 'Aug 2026', price: 130.03, label: 'Venue mark' },
     ],
     lastRoundPps: 95.0,
   },
@@ -266,7 +266,7 @@ export const companies: Record<string, Company> = {
     history: [
       { date: 'Jul 2025', price: 61.0, label: 'Series E' },
       { date: 'Mar 2026', price: 112.0, label: 'Series F' },
-      { date: 'Jul 2026', price: 125.55, label: 'Venue mark' },
+      { date: 'Aug 2026', price: 125.55, label: 'Venue mark' },
     ],
     lastRoundPps: 112.0,
   },
@@ -292,13 +292,13 @@ export const companies: Record<string, Company> = {
       'Very high valuation relative to current revenue',
     ],
     news: [
-      { date: 'Jul 2026', title: 'Mark up 6.9% on the session as usage metrics were reported higher', source: 'Forge Global' },
+      { date: 'Aug 2026', title: 'Mark moved higher as usage metrics were reported', source: 'Forge Global' },
       { date: 'Jan 2026', title: 'Commerce and advertising products moved into broader rollout', source: 'Public reporting' },
     ],
     rounds: [{ date: 'Sep 2025', stage: 'Late-stage round', valuation: '$20bn' }],
     history: [
       { date: 'Sep 2025', price: 64.0, label: 'Round mark' },
-      { date: 'Jul 2026', price: 69.5, label: 'Venue mark' },
+      { date: 'Aug 2026', price: 67.31, label: 'Venue mark' },
     ],
     lastRoundPps: 64.0,
   },
@@ -333,7 +333,7 @@ export const companies: Record<string, Company> = {
     history: [
       { date: 'Mar 2025', price: 73.0, label: 'Series F-1' },
       { date: 'Jan 2026', price: 148.0, label: 'Series G' },
-      { date: 'Jul 2026', price: 163.79, label: 'Venue mark' },
+      { date: 'Aug 2026', price: 164.25, label: 'Venue mark' },
     ],
     lastRoundPps: 148.0,
   },
