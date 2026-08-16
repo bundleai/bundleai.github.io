@@ -100,14 +100,14 @@ const typeLabel = (t: string) =>
                   id={d.id}
                   class="scr-row"
                   tabindex="0"
-                  role="button"
-                  aria-label={`Trade ${d.name} on ${platformName(d.platform)}`}
+                  role="link"
+                  aria-label={`View ${d.name} company dashboard`}
                   data-name={`${d.name} ${d.code}`.toLowerCase()}
                   data-sector={d.sector}
                   data-venue={d.platform}
                   data-venue-name={platformName(d.platform).toLowerCase()}
                   data-type={d.type}
-                  data-trade
+                  data-company={`/company/${d.id}`}
                   data-deal-id={d.id}
                   data-deal-name={d.name}
                   data-deal-venue={platformName(d.platform)}

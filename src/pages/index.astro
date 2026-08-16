@@ -11,12 +11,39 @@ const closingSoon = deals
   .sort((a, b) => (a.closes ? -1 : 0) - (b.closes ? -1 : 0) || parseInt(a.closes ?? '99') - parseInt(b.closes ?? '99'))
   .slice(0, 3);
 
+/**
+ * The board is the shop window for the aggregator, so "All markets" must look
+ * like an aggregator: round-robin across venues so one platform can't fill the
+ * table, rather than taking the first N deals (which are all one venue).
+ */
+const spreadByVenue = (pool: typeof deals, limit: number) => {
+  const byVenue = new Map<string, typeof deals>();
+  pool.forEach((d) => {
+    const list = byVenue.get(d.platform) ?? [];
+    list.push(d);
+    byVenue.set(d.platform, list);
+  });
+  const queues = [...byVenue.values()];
+  const out: typeof deals = [];
+  let round = 0;
+  while (out.length < limit && queues.some((q) => q.length > round)) {
+    for (const q of queues) {
+      if (out.length >= limit) break;
+      if (q[round]) out.push(q[round]);
+    }
+    round++;
+  }
+  return out;
+};
+
 const boardTabs = [
-  { id: 'all', label: 'All markets', rows: deals.slice(0, 7) },
-  { id: 'cf', label: 'Crowdfunding', rows: deals.filter((d) => d.type === 'crowdfunding').slice(0, 7) },
-  { id: 'sec', label: 'Secondaries', rows: deals.filter((d) => d.type === 'secondary').slice(0, 7) },
-  { id: 'pre', label: 'Pre-IPO', rows: deals.filter((d) => d.type === 'pre-ipo').slice(0, 7) },
+  { id: 'all', label: 'All markets', rows: spreadByVenue(deals, 8) },
+  { id: 'cf', label: 'Crowdfunding', rows: spreadByVenue(deals.filter((d) => d.type === 'crowdfunding'), 8) },
+  { id: 'sec', label: 'Secondaries', rows: spreadByVenue(deals.filter((d) => d.type === 'secondary'), 8) },
+  { id: 'pre', label: 'Pre-IPO', rows: spreadByVenue(deals.filter((d) => d.type === 'pre-ipo'), 8) },
 ];
+
+const venuesOnBoard = new Set(spreadByVenue(deals, 8).map((d) => d.platform)).size;
 
 const steps = [
   {
@@ -54,7 +81,7 @@ const edges = [
     <div class="container">
       <div class="hero-grid">
         <div class="hero-copy">
-          <p class="eyebrow no-rule reveal"><span class="live-dot"></span> Live across 10 venues</p>
+          <p class="eyebrow no-rule reveal"><span class="live-dot"></span> Live across {platforms.length} venues</p>
           <h1 class="display reveal" style="--d:.05s">
             Every private-market deal.<br /><span class="text-grad">One terminal.</span>
           </h1>
@@ -84,7 +111,7 @@ const edges = [
         <div class="hero-board reveal" style="--d:.18s">
           <div class="board panel" data-tabs>
             <header class="board-head">
-              <span class="board-live"><span class="live-dot"></span> Market board</span>
+              <span class="board-live"><span class="live-dot"></span> Market board · <span class="px">{venuesOnBoard}</span> venues</span>
               <div class="board-tabs" role="tablist" aria-label="Market type">
                 {
                   boardTabs.map((t, i) => (
@@ -108,7 +135,7 @@ const edges = [
                   <ul class="board-rows">
                     {t.rows.map((d) => (
                       <li>
-                        <a href={`/deals#${d.id}`} class="board-row">
+                        <a href={`/company/${d.id}`} class="board-row">
                           <span class="br-avatar" style={`--h: var(--${d.hue})`}>{d.name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2)}</span>
                           <span class="br-id">
                             <span class="br-name">{d.name}</span>

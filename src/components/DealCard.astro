@@ -1,7 +1,8 @@
 ---
 /**
  * Aggregated deal card: company, source venue, venue mark or raise totals,
- * and a trade CTA. The whole card links out to the deal on the listing venue.
+ * and a trade CTA. The card body opens the company dashboard; the CTA opens
+ * the deal on the listing venue.
  */
 import type { Deal } from '../data/deals';
 import { fmtPrice, fmtChange, platformName } from '../data/deals';
@@ -22,10 +23,10 @@ const typeLabel =
   id={d.id}
   class:list={['deal-card', 'card', 'card-hover', className]}
   style={style}
-  role="button"
+  role="link"
   tabindex="0"
-  aria-label={`Trade ${d.name} on ${platformName(d.platform)}`}
-  data-trade
+  aria-label={`View ${d.name} company dashboard`}
+  data-company={`/company/${d.id}`}
   data-deal-id={d.id}
   data-deal-name={d.name}
   data-deal-venue={platformName(d.platform)}
@@ -229,3 +230,37 @@ const typeLabel =
     color: var(--text-2);
   }
 </style>
+
+<script>
+  /**
+   * Card body opens the company dashboard; the Trade button (data-trade) is
+   * handled separately by PortfolioModal and must not also navigate.
+   * Guarded so multiple component instances register the listener only once.
+   */
+  // @ts-ignore
+  if (!window.__bundleCompanyNav) {
+    // @ts-ignore
+    window.__bundleCompanyNav = true;
+
+    const go = (el: Element) => {
+      const href = el.getAttribute('data-company');
+      if (href) location.href = href;
+    };
+
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.closest('[data-trade], a, button')) return;
+      const card = target.closest('[data-company]');
+      if (card) go(card);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      const target = e.target as HTMLElement;
+      const card = target.closest?.('[data-company]');
+      if (!card || target.closest('[data-trade], a, button')) return;
+      e.preventDefault();
+      go(card);
+    });
+  }
+</script>

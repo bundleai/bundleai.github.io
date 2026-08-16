@@ -1,0 +1,248 @@
+---
+/**
+ * VizFlow: numbered process flow with connector lines.
+ * Horizontal on desktop, vertical rail on mobile. Pure CSS connectors.
+ * tone="dark" for use inside .section-ink.
+ */
+import Icon from './Icon.astro';
+
+interface Step {
+  icon?: string;
+  title: string;
+  body?: string;
+  meta?: string;
+}
+
+interface Props {
+  steps: Step[];
+  tone?: 'light' | 'dark';
+  class?: string;
+  numbered?: boolean;
+}
+
+const { steps, tone = 'light', class: className, numbered = true } = Astro.props;
+const n = steps.length;
+---
+
+<ol
+  class:list={['vflow', tone === 'dark' && 'is-dark', className]}
+  data-n={n}
+  style={`--n:${n}`}
+>
+  {
+    steps.map((s, i) => (
+      <li class="vflow-step reveal" style={`--d:${i * 0.06}s`}>
+        <div class="vflow-head">
+          <span class="vflow-node">
+            {s.icon ? <Icon name={s.icon} size={19} /> : <span class="vflow-plain mono">{i + 1}</span>}
+          </span>
+          {numbered && s.icon && <span class="vflow-idx mono">{String(i + 1).padStart(2, '0')}</span>}
+        </div>
+        <h3 class="vflow-title">{s.title}</h3>
+        {s.body && <p class="vflow-body">{s.body}</p>}
+        {s.meta && <span class="vflow-meta mono">{s.meta}</span>}
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .vflow {
+    --gap: 1.1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--gap);
+    grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  }
+
+  .vflow-step {
+    position: relative;
+    padding: 1.2rem 1.15rem 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-l);
+    box-shadow: var(--shadow-s);
+  }
+
+  /* Connector line, runs across the gap at node height */
+  .vflow-step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 1.2rem;
+    margin-top: 20px;
+    left: 100%;
+    width: var(--gap);
+    height: 2px;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--line-2) 0 5px,
+      transparent 5px 10px
+    );
+  }
+
+  /* Arrowhead at the end of the connector */
+  .vflow-step:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    top: 1.2rem;
+    margin-top: 16px;
+    left: calc(100% + var(--gap) - 7px);
+    width: 7px;
+    height: 7px;
+    border-top: 2px solid var(--line-2);
+    border-right: 2px solid var(--line-2);
+    transform: rotate(45deg);
+  }
+
+  .vflow-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .vflow-node {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 11px;
+    background: var(--green-soft);
+    border: 1px solid var(--line);
+    color: var(--green);
+    flex: none;
+  }
+
+  .vflow-plain {
+    font-size: 0.95rem;
+  }
+
+  .vflow-idx {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: var(--faint);
+  }
+
+  .vflow-title {
+    margin: 0 0 0.3rem;
+    font-size: 1rem;
+    line-height: 1.25;
+    color: var(--ink);
+  }
+
+  .vflow-body {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: var(--text-2);
+  }
+
+  .vflow-meta {
+    display: inline-block;
+    margin-top: 0.7rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    color: var(--text-2);
+    background: var(--tint);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.14rem 0.55rem;
+  }
+
+  /* Dark variant (inside .section-ink) */
+  .is-dark .vflow-step {
+    background: rgba(255, 255, 255, 0.02);
+    border-color: var(--line-2);
+    box-shadow: none;
+  }
+
+  .is-dark .vflow-node {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.16);
+    color: var(--gold);
+  }
+
+  .is-dark .vflow-title {
+    color: #fff;
+  }
+
+  .is-dark .vflow-body {
+    color: #b4c4b4;
+  }
+
+  .is-dark .vflow-idx {
+    color: rgba(255, 255, 255, 0.45);
+  }
+
+  .is-dark .vflow-meta {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.16);
+    color: #c9d6c9;
+  }
+
+  .is-dark .vflow-step:not(:last-child)::after {
+    background: repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.28) 0 5px,
+      transparent 5px 10px
+    );
+  }
+
+  .is-dark .vflow-step:not(:last-child)::before {
+    border-color: rgba(255, 255, 255, 0.28);
+  }
+
+  /* Two-up for 4 and 5 step flows on medium screens, connectors off */
+  @media (max-width: 1060px) {
+    .vflow[data-n="4"],
+    .vflow[data-n="5"] {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .vflow[data-n="4"] .vflow-step::after,
+    .vflow[data-n="4"] .vflow-step::before,
+    .vflow[data-n="5"] .vflow-step::after,
+    .vflow[data-n="5"] .vflow-step::before {
+      content: none;
+    }
+  }
+
+  /* Vertical rail */
+  @media (max-width: 700px) {
+    .vflow[data-n] {
+      grid-template-columns: 1fr;
+      gap: 1.35rem;
+    }
+
+    .vflow[data-n] .vflow-step:not(:last-child)::after {
+      content: "";
+      top: auto;
+      bottom: calc(-1 * var(--gap) - 0.25rem);
+      margin-top: 0;
+      left: 1.9rem;
+      width: 2px;
+      height: 1.35rem;
+      background: repeating-linear-gradient(
+        180deg,
+        var(--line-2) 0 5px,
+        transparent 5px 10px
+      );
+    }
+
+    .vflow[data-n] .vflow-step:not(:last-child)::before {
+      content: none;
+    }
+
+    .is-dark .vflow-step:not(:last-child)::after {
+      background: repeating-linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.28) 0 5px,
+        transparent 5px 10px
+      );
+    }
+  }
+</style>

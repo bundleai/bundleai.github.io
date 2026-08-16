@@ -1,0 +1,121 @@
+---
+/**
+ * VizStatRow: a strip of big-number stat tiles with hairline dividers.
+ * Numeric values animate via the global [data-count] counter; string values
+ * render as-is (for "£0", "TBA" and similar).
+ * tone="dark" for use inside .section-ink.
+ */
+interface Item {
+  value: number | string;
+  label: string;
+  note?: string;
+  prefix?: string;
+  suffix?: string;
+  decimals?: number;
+}
+
+interface Props {
+  items: Item[];
+  tone?: 'light' | 'dark';
+  class?: string;
+}
+
+const { items, tone = 'light', class: className } = Astro.props;
+
+const zero = (decimals: number) =>
+  (0).toLocaleString('en-GB', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  });
+---
+
+<div class:list={['vstats', tone === 'dark' && 'is-dark', className]}>
+  {
+    items.map((it, i) => (
+      <div class="vstat reveal" style={`--d:${i * 0.05}s`}>
+        <div class="vstat-value">
+          {it.prefix}
+          {typeof it.value === 'number' ? (
+            <span data-count={it.value} data-decimals={it.decimals ?? 0}>
+              {zero(it.decimals ?? 0)}
+            </span>
+          ) : (
+            <span>{it.value}</span>
+          )}
+          {it.suffix}
+        </div>
+        <div class="vstat-label">{it.label}</div>
+        {it.note && <div class="vstat-note">{it.note}</div>}
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .vstats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-l);
+    box-shadow: var(--shadow-s);
+    overflow: hidden;
+  }
+
+  /* Hairlines via clipped shadows, so wrapping never leaves a stray edge */
+  .vstat {
+    padding: 1.35rem 1.4rem;
+    box-shadow: -1px 0 0 var(--line), 0 -1px 0 var(--line);
+  }
+
+  .vstat-value {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(1.9rem, 3vw, 2.6rem);
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    color: var(--ink);
+  }
+
+  .vstat-value span {
+    font-variant-numeric: normal;
+  }
+
+  .vstat-label {
+    margin-top: 0.4rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+
+  .vstat-note {
+    margin-top: 0.35rem;
+    font-size: 0.86rem;
+    line-height: 1.5;
+    color: var(--text-2);
+  }
+
+  .is-dark {
+    background: rgba(255, 255, 255, 0.02);
+    border-color: var(--line-2);
+    box-shadow: none;
+  }
+
+  .is-dark .vstat {
+    box-shadow: -1px 0 0 rgba(255, 255, 255, 0.16), 0 -1px 0 rgba(255, 255, 255, 0.16);
+  }
+
+  .is-dark .vstat-value {
+    color: #fff;
+  }
+
+  .is-dark .vstat-label {
+    color: var(--gold);
+  }
+
+  .is-dark .vstat-note {
+    color: #b4c4b4;
+  }
+</style>

@@ -1,0 +1,521 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <!doctype html>\
+<meta charset="utf-8">\
+<meta name="viewport" content="width=device-width, initial-scale=1">\
+<title>Bundle AI \'97 Investor Profile</title>\
+<link rel="preconnect" href="https://fonts.googleapis.com">\
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">\
+<style>\
+  :root\{\
+    --forest-deep:#0B2018;\
+    --forest:#123125;\
+    --forest-hi:#183c2d;\
+    --line:#204838;\
+    --gold:#C9A227;\
+    --gold-soft:#E4C766;\
+    --cream:#F4EFE3;\
+    --sage:#95AC9C;\
+    --sage-dim:#6E8778;\
+    --serif:"Fraunces","Playfair Display",Georgia,serif;\
+    --sans:"Inter",system-ui,-apple-system,Segoe UI,sans-serif;\
+  \}\
+  *\{box-sizing:border-box\}\
+  html,body\{margin:0\}\
+  body\{\
+    background:\
+      radial-gradient(1100px 620px at 78% -8%, #16402f 0%, transparent 60%),\
+      var(--forest-deep);\
+    color:var(--cream);\
+    font-family:var(--sans);\
+    -webkit-font-smoothing:antialiased;\
+    line-height:1.5;\
+    padding:28px 18px 56px;\
+  \}\
+  .wrap\{max-width:720px;margin:0 auto\}\
+\
+  /* header */\
+  .brand\{display:flex;align-items:center;gap:12px;margin-bottom:22px\}\
+  .mark\{width:30px;height:30px;border-radius:8px;flex:none;\
+    background:linear-gradient(135deg,var(--gold-soft),var(--gold));\
+    display:grid;place-items:center;color:#20180a;font-family:var(--serif);\
+    font-weight:600;font-size:18px;box-shadow:0 6px 20px -8px rgba(201,162,39,.6)\}\
+  .brand b\{font-weight:600;letter-spacing:.2px\}\
+  .brand span\{color:var(--sage);font-size:13px;margin-left:2px\}\
+\
+  /* progress spine */\
+  .spine\{display:flex;align-items:center;gap:0;margin:0 2px 26px\}\
+  .node\{flex:1;height:3px;border-radius:99px;background:var(--line);position:relative;transition:background .4s\}\
+  .node.done\{background:linear-gradient(90deg,var(--gold),var(--gold-soft))\}\
+  .node.now\{background:linear-gradient(90deg,var(--gold),var(--line))\}\
+  .stepmeta\{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px\}\
+  .stepmeta .kx\{font-family:var(--serif);font-size:13px;color:var(--gold-soft);letter-spacing:.5px\}\
+  .stepmeta .cnt\{font-size:12px;color:var(--sage-dim);letter-spacing:.6px\}\
+\
+  /* card */\
+  .card\{background:linear-gradient(180deg,var(--forest),#0f281e);\
+    border:1px solid var(--line);border-radius:18px;padding:28px 26px;\
+    box-shadow:0 30px 60px -40px rgba(0,0,0,.8)\}\
+  h1\{font-family:var(--serif);font-weight:500;font-size:27px;line-height:1.18;margin:0 0 8px;letter-spacing:-.2px\}\
+  .lede\{color:var(--sage);font-size:14.5px;margin:0 0 22px;max-width:52ch\}\
+  .q\{font-size:16px;font-weight:500;margin:22px 0 11px;color:var(--cream)\}\
+  .q:first-of-type\{margin-top:4px\}\
+  .hint\{font-size:12.5px;color:var(--sage-dim);margin:-6px 0 12px\}\
+\
+  /* option rows */\
+  .opts\{display:grid;gap:9px\}\
+  .opts.two\{grid-template-columns:1fr 1fr\}\
+  @media(max-width:520px)\{.opts.two\{grid-template-columns:1fr\}\}\
+  .opt\{border:1px solid var(--line);background:var(--forest-hi);border-radius:12px;\
+    padding:13px 15px;cursor:pointer;transition:border-color .16s,background .16s,transform .06s;\
+    display:flex;gap:12px;align-items:flex-start;color:var(--cream);font-size:14.5px;text-align:left\}\
+  .opt:hover\{border-color:#2f6349\}\
+  .opt:active\{transform:translateY(1px)\}\
+  .opt .tick\{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--sage-dim);\
+    flex:none;margin-top:1px;display:grid;place-items:center;transition:.16s\}\
+  .opt.sel\{border-color:var(--gold);background:linear-gradient(180deg,#1c4433,#173829)\}\
+  .opt.sel .tick\{border-color:var(--gold);background:var(--gold)\}\
+  .opt.sel .tick::after\{content:"";width:7px;height:7px;border-radius:50%;background:#1a1305\}\
+  .opt .body b\{display:block;font-weight:600;margin-bottom:2px\}\
+  .opt .body small\{color:var(--sage);font-weight:400;font-size:12.5px;line-height:1.4\}\
+  .opt.sel .body small\{color:#bcd3c4\}\
+  .opt.sq .tick\{border-radius:5px\}\
+  .opt.sq.sel .tick::after\{border-radius:1px\}\
+\
+  /* chips */\
+  .chips\{display:flex;flex-wrap:wrap;gap:8px\}\
+  .chip\{border:1px solid var(--line);background:var(--forest-hi);color:var(--cream);\
+    border-radius:99px;padding:8px 15px;font-size:13.5px;cursor:pointer;transition:.16s\}\
+  .chip:hover\{border-color:#2f6349\}\
+  .chip.sel\{background:linear-gradient(180deg,var(--gold-soft),var(--gold));color:#20180a;border-color:var(--gold);font-weight:600\}\
+\
+  /* slider */\
+  .sliderwrap\{padding:6px 2px 2px\}\
+  input[type=range]\{width:100%;-webkit-appearance:none;appearance:none;height:5px;border-radius:99px;\
+    background:linear-gradient(90deg,var(--gold) var(--fill,40%),var(--line) var(--fill,40%));outline:none\}\
+  input[type=range]::-webkit-slider-thumb\{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;\
+    background:radial-gradient(circle at 35% 30%,var(--gold-soft),var(--gold));border:2px solid #0f281e;cursor:pointer;\
+    box-shadow:0 4px 12px -3px rgba(201,162,39,.7)\}\
+  input[type=range]::-moz-range-thumb\{width:20px;height:20px;border:2px solid #0f281e;border-radius:50%;\
+    background:var(--gold);cursor:pointer\}\
+  .slval\{display:flex;justify-content:space-between;align-items:baseline;margin-top:12px\}\
+  .slval b\{font-family:var(--serif);font-size:30px;font-weight:500;color:var(--gold-soft)\}\
+  .slval .note\{font-size:12.5px;color:var(--sage);text-align:right;max-width:60%\}\
+  .scale\{display:flex;justify-content:space-between;font-size:11px;color:var(--sage-dim);margin-top:6px\}\
+\
+  /* risk warning + notices */\
+  .notice\{border:1px solid var(--line);border-left:3px solid var(--gold);background:rgba(201,162,39,.06);\
+    border-radius:10px;padding:13px 15px;font-size:13px;color:#d6e0d6;margin:16px 0\}\
+  .notice b\{color:var(--gold-soft)\}\
+  .warn\{border-left-color:#d98a3d;background:rgba(217,138,61,.08)\}\
+  .warn b\{color:#eaa96a\}\
+\
+  /* footer nav */\
+  .nav\{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:26px\}\
+  .btn\{font-family:var(--sans);font-size:14.5px;font-weight:600;border-radius:11px;padding:12px 24px;\
+    cursor:pointer;border:1px solid transparent;transition:.16s\}\
+  .btn.next\{background:linear-gradient(180deg,var(--gold-soft),var(--gold));color:#1e1608;\
+    box-shadow:0 12px 26px -12px rgba(201,162,39,.75)\}\
+  .btn.next:hover\{filter:brightness(1.05)\}\
+  .btn.next:disabled\{opacity:.4;cursor:not-allowed;box-shadow:none;filter:none\}\
+  .btn.back\{background:transparent;border-color:var(--line);color:var(--sage)\}\
+  .btn.back:hover\{border-color:#2f6349;color:var(--cream)\}\
+  .btn.ghost\{background:transparent;color:var(--sage-dim);border:none;font-weight:500;padding:12px 4px\}\
+\
+  .disclaim\{font-size:11px;color:var(--sage-dim);margin-top:20px;text-align:center;line-height:1.5\}\
+  a\{color:var(--gold-soft)\}\
+\
+  /* results */\
+  .rgrid\{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin:18px 0\}\
+  @media(max-width:520px)\{.rgrid\{grid-template-columns:1fr\}\}\
+  .rcell\{border:1px solid var(--line);border-radius:12px;padding:13px 15px;background:var(--forest-hi)\}\
+  .rcell .k\{font-size:11px;letter-spacing:.7px;text-transform:uppercase;color:var(--sage-dim);margin-bottom:5px\}\
+  .rcell .v\{font-family:var(--serif);font-size:17px;color:var(--cream);line-height:1.25\}\
+  .rcell.wide\{grid-column:1 / -1\}\
+  .taglist\{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px\}\
+  .taglist span\{font-family:var(--sans);font-size:12px;background:rgba(201,162,39,.14);color:var(--gold-soft);\
+    border:1px solid rgba(201,162,39,.3);border-radius:99px;padding:3px 10px\}\
+  .fade\{animation:fade .32s ease\}\
+  @keyframes fade\{from\{opacity:0;transform:translateY(6px)\}to\{opacity:1;transform:none\}\}\
+  @media(prefers-reduced-motion:reduce)\{.fade\{animation:none\}*\{transition:none!important\}\}\
+</style>\
+\
+<div class="wrap">\
+  <div class="brand">\
+    <div class="mark">B</div>\
+    <div><b>Bundle AI</b> <span>Investor profile</span></div>\
+  </div>\
+  <div class="spine" id="spine"></div>\
+  <div id="app"></div>\
+  <p class="disclaim">\
+    Capital at risk. Private-market investments are illiquid, are not covered by the FSCS, and you could lose all the money you invest.<br>\
+    This is an onboarding template \'97 confirm all wording and thresholds with your compliance adviser before going live.\
+  </p>\
+</div>\
+\
+<script>\
+const state = \{\
+  investingAs:null, ukTax:null,\
+  category:null, catConfirm:false,\
+  assets:null, allocation:10, seis:null,\
+  a1:null,a2:null,a3:null,a4:null,\
+  goal:null, horizon:null, risk:null,\
+  holdings:20, ticket:null, annual:null,\
+  sectors:[], stages:[], products:[], involvement:null\
+\};\
+\
+/* ---- step definitions ---- */\
+const steps = [\
+  \{key:"Welcome",     render:sWelcome,   valid:()=>true\},\
+  \{key:"About you",   render:sAbout,     valid:()=>state.investingAs && state.ukTax\},\
+  \{key:"Eligibility", render:sCategory,  valid:()=>state.category && (state.category==="none" || state.catConfirm)\},\
+  \{key:"Wealth",      render:sWealth,    valid:()=>state.assets && state.seis\},\
+  \{key:"Understanding",render:sApprop,   valid:()=>state.a1&&state.a2&&state.a3&&state.a4\},\
+  \{key:"Goals",       render:sGoals,     valid:()=>state.goal&&state.horizon&&state.risk\},\
+  \{key:"Portfolio",   render:sPortfolio, valid:()=>state.ticket&&state.annual\},\
+  \{key:"Preferences", render:sPrefs,     valid:()=>state.sectors.length&&state.products.length&&state.involvement\},\
+  \{key:"Your profile",render:sResult,    valid:()=>true, terminal:true\}\
+];\
+let step = 0;\
+\
+/* ---- render engine ---- */\
+const app = document.getElementById("app");\
+const spineEl = document.getElementById("spine");\
+\
+function drawSpine()\{\
+  spineEl.innerHTML = steps.map((_,i)=>\{\
+    const cls = i<step?"done":(i===step?"now":"");\
+    return `<div class="node $\{cls\}"></div>`;\
+  \}).join("");\
+\}\
+\
+function frame(bodyHtml, opts=\{\})\{\
+  const s = steps[step];\
+  const backable = step>0 && !s.terminal;\
+  const nav = s.terminal ? `\
+    <div class="nav">\
+      <button class="btn back" onclick="restart()">Start over</button>\
+      <button class="btn next" onclick="submitProfile()">Create my account \uc0\u8594 </button>\
+    </div>` : `\
+    <div class="nav">\
+      $\{backable?'<button class="btn back" onclick="go(-1)">\uc0\u8592  Back</button>':'<span></span>'\}\
+      <button class="btn next" id="nextBtn" onclick="go(1)">$\{step===0?"Begin":"Continue"\} \uc0\u8594 </button>\
+    </div>`;\
+\
+  app.innerHTML = `\
+    <div class="fade">\
+      <div class="stepmeta">\
+        <span class="kx">$\{s.key\}</span>\
+        <span class="cnt">$\{s.terminal?"Complete":`Step $\{step\} of $\{steps.length-2\}`\}</span>\
+      </div>\
+      <div class="card">$\{bodyHtml\}$\{nav\}</div>\
+    </div>`;\
+  drawSpine();\
+  refreshNext();\
+  window.scrollTo(\{top:0,behavior:"smooth"\});\
+\}\
+\
+function refreshNext()\{\
+  const b = document.getElementById("nextBtn");\
+  if(b) b.disabled = !steps[step].valid();\
+\}\
+function go(d)\{\
+  if(d>0 && !steps[step].valid()) return;\
+  step = Math.max(0, Math.min(steps.length-1, step+d));\
+  steps[step].render();\
+\}\
+function restart()\{ step=0; steps[0].render(); \}\
+\
+/* ---- reusable controls ---- */\
+function optRows(field, list, \{square=false, cols=1\}=\{\})\{\
+  return `<div class="opts $\{cols===2?'two':''\}">` + list.map(o=>\{\
+    const sel = state[field]===o.v ? "sel":"";\
+    const sub = o.d?`<small>$\{o.d\}</small>`:"";\
+    return `<button class="opt $\{square?'sq':''\} $\{sel\}" onclick="pick('$\{field\}','$\{o.v\}')">\
+      <span class="tick"></span><span class="body"><b>$\{o.t\}</b>$\{sub\}</span></button>`;\
+  \}).join("") + `</div>`;\
+\}\
+function pick(field,v)\{ state[field]=v; steps[step].render(); \}\
+\
+function multiChips(field, list)\{\
+  return `<div class="chips">` + list.map(o=>\{\
+    const sel = state[field].includes(o.v)?"sel":"";\
+    return `<button class="chip $\{sel\}" onclick="toggle('$\{field\}','$\{o.v\}')">$\{o.t\}</button>`;\
+  \}).join("") + `</div>`;\
+\}\
+function toggle(field,v)\{\
+  const a=state[field]; const i=a.indexOf(v);\
+  i>=0?a.splice(i,1):a.push(v);\
+  steps[step].render();\
+\}\
+\
+/* =================== STEPS =================== */\
+\
+function sWelcome()\{\
+  frame(`\
+    <h1>Let's build your investor profile.</h1>\
+    <p class="lede">A few questions so we can confirm your eligibility, match deals to how you actually invest, and keep you inside sensible guardrails. Takes about three minutes.</p>\
+    <div class="notice warn">\
+      <b>Before you start.</b> Investing in early-stage and private companies is high risk. You could lose all the money you put in, these holdings are hard to sell, and they are not protected by the Financial Services Compensation Scheme. Bundle AI helps you stay diversified and disciplined \'97 it does not remove the risk.\
+    </div>\
+    <p class="lede" style="margin-bottom:0">Our job isn't to predict winners. It's to give you the discipline the professionals use \'97 spread, allocation control, and a cool head \'97 and let you decide the rest.</p>\
+  `);\
+\}\
+\
+function sAbout()\{\
+  frame(`\
+    <h1>First, the basics.</h1>\
+    <div class="q">Who is investing?</div>\
+    $\{optRows("investingAs",[\
+      \{v:"individual",t:"As an individual",d:"In your own name"\},\
+      \{v:"company",t:"Through a company",d:"Corporate or holding entity"\},\
+      \{v:"trust",t:"As a trustee",d:"On behalf of a trust"\},\
+      \{v:"pension",t:"Via a SIPP / SSAS",d:"Self-invested pension"\}\
+    ],\{cols:2\})\}\
+    <div class="q">Are you a UK tax resident?</div>\
+    <div class="hint">This affects your eligibility for SEIS / EIS tax relief.</div>\
+    $\{optRows("ukTax",[\
+      \{v:"yes",t:"Yes"\},\{v:"no",t:"No"\}\
+    ],\{cols:2\})\}\
+  `);\
+\}\
+\
+function sCategory()\{\
+  const showConfirm = state.category && state.category!=="none";\
+  const statement = \{\
+    hnw:"I confirm I have, in the last financial year, an annual income of \'a3100,000 or more, or net assets of \'a3250,000 or more (excluding my main home, pensions and life-cover benefits).",\
+    soph:"I confirm I meet at least one of the sophisticated-investor criteria described above and understand I am self-certifying to that effect.",\
+    restricted:"I confirm that in the next twelve months I will not invest more than 10% of my net assets in high-risk investments, and I understand why that limit exists to protect me."\
+  \}[state.category];\
+\
+  frame(`\
+    <h1>Are you eligible to invest?</h1>\
+    <p class="lede">UK rules mean we can only show high-risk private-market deals to investors in one of the categories below. Pick the one that fits you. You self-certify \'97 nothing here is shared publicly.</p>\
+    $\{optRows("category",[\
+      \{v:"hnw",t:"High-net-worth investor",d:"Income of \'a3100,000+ last year, or net assets of \'a3250,000+ (excluding home, pension and life cover)."\},\
+      \{v:"soph",t:"Sophisticated investor",d:"You've been in an angel syndicate 6+ months, worked in private-equity or SME finance in the last 2 years, or been a director of a company turning over \'a31m+."\},\
+      \{v:"restricted",t:"Restricted (everyday) investor",d:"Neither of the above \'97 you'll cap high-risk investments at 10% of your net assets over the next 12 months."\},\
+      \{v:"none",t:"None of these apply to me",d:"Let's see where that leaves you."\}\
+    ])\}\
+    $\{state.category==="none"?`\
+      <div class="notice warn"><b>You may not be eligible yet.</b> Access to these investments is restricted for good reason. You're welcome to explore Bundle AI's learning materials and watchlists, and revisit once one of the categories fits.</div>\
+    `:""\}\
+    $\{showConfirm?`\
+      <div class="notice">$\{statement\}</div>\
+      <button class="opt sq $\{state.catConfirm?'sel':''\}" onclick="confirmCat()" style="width:100%">\
+        <span class="tick"></span><span class="body"><b>I confirm the statement above is true.</b></span></button>\
+    `:""\}\
+  `);\
+\}\
+function confirmCat()\{ state.catConfirm=!state.catConfirm; steps[step].render(); \}\
+\
+function sWealth()\{\
+  const fill = (state.allocation/50*100).toFixed(0);\
+  const over = state.category==="restricted" && state.allocation>10;\
+  frame(`\
+    <h1>Your position, roughly.</h1>\
+    <div class="q">Your investable assets \'97 cash and investments you could deploy, excluding your home and pension.</div>\
+    $\{optRows("assets",[\
+      \{v:"u25",t:"Under \'a325,000"\},\
+      \{v:"25-100",t:"\'a325,000 \'96 \'a3100,000"\},\
+      \{v:"100-250",t:"\'a3100,000 \'96 \'a3250,000"\},\
+      \{v:"250-1m",t:"\'a3250,000 \'96 \'a31m"\},\
+      \{v:"1m+",t:"Over \'a31m"\}\
+    ],\{cols:2\})\}\
+\
+    <div class="q">Of that, how much are you comfortable putting into private markets?</div>\
+    <div class="hint">A guardrail, not a target. Private markets should be one slice of a wider portfolio.</div>\
+    <div class="sliderwrap">\
+      <input type="range" min="1" max="50" value="$\{state.allocation\}" style="--fill:$\{fill\}%"\
+        oninput="setAlloc(this.value)">\
+      <div class="slval"><b>$\{state.allocation\}%</b>\
+        <span class="note">$\{state.allocation<=10?"Conservative \'97 in line with the everyday-investor cap.":state.allocation<=25?"Moderate weighting toward private markets.":"A high concentration. Make sure the rest of your wealth is well diversified."\}</span></div>\
+      <div class="scale"><span>1%</span><span>25%</span><span>50%</span></div>\
+    </div>\
+    $\{over?`<div class="notice warn"><b>Heads up.</b> As a restricted investor you've self-certified to a 10% cap on high-risk investments. We'll hold you to that when you allocate.</div>`:""\}\
+\
+    <div class="q">Interested in SEIS / EIS tax relief on qualifying deals?</div>\
+    $\{optRows("seis",[\
+      \{v:"yes",t:"Yes, prioritise it"\},\
+      \{v:"maybe",t:"Show me where it applies"\},\
+      \{v:"no",t:"Not relevant to me"\}\
+    ],\{cols:2\})\}\
+  `);\
+\}\
+function setAlloc(v)\{ state.allocation=+v; steps[step].render(); \}\
+\
+function sApprop()\{\
+  const q = (field,text,list)=>`\
+    <div class="q">$\{text\}</div>\
+    $\{optRows(field,list,\{cols:2\})\}`;\
+  frame(`\
+    <h1>Quick check on the risks.</h1>\
+    <p class="lede">No trick questions \'97 just confirming the important stuff is clear before you invest.</p>\
+    $\{q("a1","Could you lose all the money you invest in a private company?",[\
+      \{v:"yes",t:"Yes"\},\{v:"no",t:"No"\}])\}\
+    $\{q("a2","Can you usually sell these shares quickly, whenever you want?",[\
+      \{v:"yes",t:"Yes"\},\{v:"no",t:"No"\}])\}\
+    $\{q("a3","Are these investments protected by the FSCS if the company fails?",[\
+      \{v:"yes",t:"Yes"\},\{v:"no",t:"No"\}])\}\
+    $\{q("a4","Can your stake be diluted when a company raises money again later?",[\
+      \{v:"yes",t:"Yes"\},\{v:"no",t:"No"\}])\}\
+  `);\
+\}\
+\
+function sGoals()\{\
+  frame(`\
+    <h1>What are you here to do?</h1>\
+    <div class="q">Your main goal</div>\
+    $\{optRows("goal",[\
+      \{v:"growth",t:"Long-term capital growth",d:"Back companies early and compound over years"\},\
+      \{v:"access",t:"Access & learning",d:"Get into deals that used to be closed to you"\},\
+      \{v:"tax",t:"Tax-efficient investing",d:"Lean into SEIS / EIS reliefs"\},\
+      \{v:"diversify",t:"Diversify beyond public markets",d:"Add a different return stream"\}\
+    ])\}\
+    <div class="q">When would you expect to see this money back?</div>\
+    $\{optRows("horizon",[\
+      \{v:"u3",t:"Under 3 years"\},\{v:"3-5",t:"3 \'96 5 years"\},\
+      \{v:"5-7",t:"5 \'96 7 years"\},\{v:"7+",t:"7 years or more"\}\
+    ],\{cols:2\})\}\
+    $\{state.horizon==="u3"?`<div class="notice warn"><b>Worth knowing.</b> Private holdings often take 5\'9610 years to return anything, and can't be sold on demand. A short horizon and this asset class don't sit easily together.</div>`:""\}\
+    <div class="q">How would you describe your appetite for risk?</div>\
+    $\{optRows("risk",[\
+      \{v:"cautious",t:"Cautious",d:"Steady wins. Spread widely, avoid the wild swings."\},\
+      \{v:"balanced",t:"Balanced",d:"Comfortable with volatility for stronger long-term upside."\},\
+      \{v:"adventurous",t:"Adventurous",d:"Happy to take real risk on high-growth bets."\},\
+      \{v:"high",t:"High conviction",d:"Prepared to lose stakes entirely chasing outsized winners."\}\
+    ])\}\
+  `);\
+\}\
+\
+function sPortfolio()\{\
+  const fill = ((state.holdings-1)/49*100).toFixed(0);\
+  const guide = state.holdings<10 ? "Concentrated. In early-stage investing most bets fail, so a handful of positions leans heavily on being right." :\
+                state.holdings<20 ? "Reasonable spread. More positions further reduces reliance on any single outcome." :\
+                "Broad and disciplined. Wide diversification is how you survive the losers to catch the winners.";\
+  frame(`\
+    <h1>Shape of your portfolio.</h1>\
+    <div class="q">How many companies would you like to build toward holding?</div>\
+    <div class="hint">Breadth is the discipline that does the heavy lifting \'97 no single deal should make or break you.</div>\
+    <div class="sliderwrap">\
+      <input type="range" min="1" max="50" value="$\{state.holdings\}" style="--fill:$\{fill\}%"\
+        oninput="setHoldings(this.value)">\
+      <div class="slval"><b>$\{state.holdings\}$\{state.holdings===50?"+":""\}</b>\
+        <span class="note">$\{guide\}</span></div>\
+      <div class="scale"><span>1</span><span>25</span><span>50+</span></div>\
+    </div>\
+    <div class="q">Typical amount per deal</div>\
+    $\{optRows("ticket",[\
+      \{v:"u500",t:"Under \'a3500"\},\{v:"500-2k",t:"\'a3500 \'96 \'a32,000"\},\
+      \{v:"2-10k",t:"\'a32,000 \'96 \'a310,000"\},\{v:"10k+",t:"\'a310,000+"\}\
+    ],\{cols:2\})\}\
+    <div class="q">Roughly how much do you plan to invest across a year?</div>\
+    $\{optRows("annual",[\
+      \{v:"u5k",t:"Under \'a35,000"\},\{v:"5-25k",t:"\'a35,000 \'96 \'a325,000"\},\
+      \{v:"25-100k",t:"\'a325,000 \'96 \'a3100,000"\},\{v:"100k+",t:"\'a3100,000+"\}\
+    ],\{cols:2\})\}\
+  `);\
+\}\
+function setHoldings(v)\{ state.holdings=+v; steps[step].render(); \}\
+\
+function sPrefs()\{\
+  frame(`\
+    <h1>What do you want to see?</h1>\
+    <div class="q">Sectors that interest you</div>\
+    $\{multiChips("sectors",[\
+      \{v:"fintech",t:"Fintech"\},\{v:"ai",t:"AI & deep tech"\},\
+      \{v:"health",t:"Health & biotech"\},\{v:"climate",t:"Climate & energy"\},\
+      \{v:"consumer",t:"Consumer & brands"\},\{v:"saas",t:"Enterprise SaaS"\},\
+      \{v:"proptech",t:"Proptech"\},\{v:"other",t:"Open to anything"\}\
+    ])\}\
+    <div class="q">Stages you're open to</div>\
+    $\{multiChips("stages",[\
+      \{v:"seed",t:"Pre-seed / Seed"\},\{v:"ab",t:"Series A \'96 B"\},\
+      \{v:"growth",t:"Growth / late stage"\},\{v:"preipo",t:"Pre-IPO"\}\
+    ])\}\
+    <div class="q">Which routes into deals interest you?</div>\
+    <div class="hint">Bundle indexes across all of these \'97 pick any that appeal.</div>\
+    $\{multiChips("products",[\
+      \{v:"primary",t:"Primary raises"\},\{v:"secondary",t:"Secondaries"\},\
+      \{v:"syndicate",t:"Syndicates"\},\{v:"preipo",t:"Pre-IPO access"\}\
+    ])\}\
+    <div class="q">How hands-on do you want to be?</div>\
+    $\{optRows("involvement",[\
+      \{v:"auto",t:"Guided",d:"Bundle proposes a diversified allocation inside my rules; I approve."\},\
+      \{v:"mixed",t:"Collaborative",d:"Suggestions welcome, but I make the final call on each deal."\},\
+      \{v:"self",t:"Self-directed",d:"I'll browse and pick everything myself."\}\
+    ])\}\
+  `);\
+\}\
+\
+/* =================== RESULT =================== */\
+function riskProfile()\{\
+  const map=\{cautious:"Cautious",balanced:"Balanced",adventurous:"Adventurous",high:"High conviction"\};\
+  return map[state.risk]||"\'97";\
+\}\
+function suggestedSpread()\{\
+  const base=\{cautious:30,balanced:25,adventurous:18,high:12\}[state.risk]||20;\
+  return base;\
+\}\
+function apUnderstood()\{\
+  return state.a1==="yes"&&state.a2==="no"&&state.a3==="no"&&state.a4==="yes";\
+\}\
+const LB = \{\
+  hnw:"High-net-worth", soph:"Sophisticated", restricted:"Restricted", none:"Not yet eligible",\
+  growth:"Capital growth", access:"Access & learning", tax:"Tax efficiency", diversify:"Diversification"\
+\};\
+const SECN=\{fintech:"Fintech",ai:"AI & deep tech",health:"Health & biotech",climate:"Climate & energy",\
+  consumer:"Consumer",saas:"Enterprise SaaS",proptech:"Proptech",other:"Open"\};\
+const PRN=\{primary:"Primary",secondary:"Secondaries",syndicate:"Syndicates",preipo:"Pre-IPO"\};\
+\
+function sResult()\{\
+  const spread = suggestedSpread();\
+  const nudge = state.holdings < spread\
+    ? `Given a $\{riskProfile().toLowerCase()\} appetite, consider building toward $\{spread\}+ positions rather than $\{state.holdings\} \'97 the extra breadth is what protects you.`\
+    : `Your target of $\{state.holdings\} positions gives you healthy diversification for a $\{riskProfile().toLowerCase()\} approach.`;\
+  const secTags = state.sectors.map(s=>`<span>$\{SECN[s]\}</span>`).join("")||"<span>Any</span>";\
+  const prodTags = state.products.map(p=>`<span>$\{PRN[p]\}</span>`).join("");\
+\
+  frame(`\
+    <h1>Here's your profile.</h1>\
+    <p class="lede">This is the starting point Bundle uses to filter deals and keep you diversified. You can change any of it later.</p>\
+    <div class="rgrid">\
+      <div class="rcell"><div class="k">Investor category</div><div class="v">$\{LB[state.category]||"\'97"\}</div></div>\
+      <div class="rcell"><div class="k">Risk appetite</div><div class="v">$\{riskProfile()\}</div></div>\
+      <div class="rcell"><div class="k">Primary goal</div><div class="v">$\{LB[state.goal]||"\'97"\}</div></div>\
+      <div class="rcell"><div class="k">Private-markets allocation</div><div class="v">$\{state.allocation\}% of investable assets</div></div>\
+      <div class="rcell wide"><div class="k">Target diversification</div><div class="v">Building toward $\{state.holdings\}$\{state.holdings===50?"+":""\} companies</div></div>\
+      <div class="rcell wide"><div class="k">Sectors</div><div class="taglist">$\{secTags\}</div></div>\
+      <div class="rcell wide"><div class="k">Deal routes</div><div class="taglist">$\{prodTags||"<span>Any</span>"\}</div></div>\
+    </div>\
+    <div class="notice"><b>Discipline note.</b> $\{nudge\}</div>\
+    $\{!apUnderstood()?`<div class="notice warn"><b>Worth a recap.</b> A couple of your answers on how these investments work are worth revisiting \'97 you can lose everything, they're hard to sell, they aren't FSCS-protected, and your stake can be diluted. We'll walk you through it before your first commitment.</div>`:""\}\
+    $\{state.category==="none"?`<div class="notice warn"><b>Note.</b> You're not currently in an eligible category, so live deals stay locked. Explore and learn in the meantime.</div>`:""\}\
+  `);\
+\}\
+\
+function submitProfile()\{\
+  // Wire this to your backend / signup flow.\
+  const payload = JSON.stringify(state,null,2);\
+  console.log("Bundle AI investor profile:",payload);\
+  app.innerHTML = `<div class="fade"><div class="card" style="text-align:center">\
+    <div class="mark" style="width:44px;height:44px;font-size:24px;margin:6px auto 16px">B</div>\
+    <h1 style="margin-bottom:8px">You're all set.</h1>\
+    <p class="lede" style="margin:0 auto">Your profile is ready. Create your login to start seeing deals matched to it, with your guardrails already in place.</p>\
+    <div class="nav" style="justify-content:center;margin-top:22px">\
+      <button class="btn next" onclick="alert('Connect this to your signup flow.')">Continue to sign up \uc0\u8594 </button>\
+    </div>\
+    <button class="btn ghost" onclick="restart()" style="margin-top:6px">Review my answers</button>\
+  </div></div>`;\
+  drawSpine();\
+\}\
+\
+/* boot */\
+steps[0].render();\
+</script>}
