@@ -134,6 +134,9 @@ const desc = co?.about
             >
               Trade on {venue} <span class="arrow">↗</span>
             </a>
+            <button type="button" class="btn btn-ghost" data-eq-open>
+              <span aria-hidden="true">◧</span> Equity calculator
+            </button>
             <button
               type="button"
               class="btn btn-ghost"
@@ -292,16 +295,21 @@ const desc = co?.about
           }
         </div>
 
-        {/* ---------------- 5. Equity calculator (rail) ---------------- */}
-        <aside class="co-rail">
-          <section class="card co-card co-calc" aria-labelledby="co-calc-h">
-            <div class="co-card-head">
-              <h2 class="h3" id="co-calc-h">Equity calculator</h2>
-            </div>
-            <CoEquityCalc deal={d} />
-          </section>
-        </aside>
       </div>
+
+      {/* ---------------- 5. Equity calculator (dialog) ---------------- */}
+      <dialog class="eq-dialog" id="eq-dialog" aria-labelledby="co-calc-h">
+        <div class="eq-dialog-head">
+          <div>
+            <p class="eq-dialog-eyebrow">{d.name} · {fmtPrice(d)}</p>
+            <h2 class="h3" id="co-calc-h">Equity calculator</h2>
+          </div>
+          <button type="button" class="eq-dialog-x" data-eq-close aria-label="Close calculator">×</button>
+        </div>
+        <div class="eq-dialog-body">
+          <CoEquityCalc deal={d} />
+        </div>
+      </dialog>
 
       {/* ---------------- 9. Risk footer ---------------- */}
       <aside class="co-risk" role="note" aria-label="Risk warning">
@@ -487,7 +495,7 @@ const desc = co?.about
   /* ---- layout ---- */
   .co-grid {
     display: grid;
-    grid-template-columns: 1.55fr 1fr;
+    grid-template-columns: 1fr;
     gap: 1rem;
     align-items: start;
   }
@@ -496,14 +504,6 @@ const desc = co?.about
     display: grid;
     gap: 1rem;
     min-width: 0;
-  }
-
-  .co-rail {
-    display: grid;
-    gap: 1rem;
-    min-width: 0;
-    position: sticky;
-    top: calc(var(--nav-h) + 1rem);
   }
 
   .co-card {
@@ -685,14 +685,85 @@ const desc = co?.about
     white-space: nowrap;
   }
 
+  /* ---- equity calculator dialog ---- */
+  .eq-dialog {
+    width: min(30rem, calc(100vw - 2rem));
+    max-height: min(85dvh, 46rem);
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--r-l);
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--shadow-l);
+    overflow: hidden;
+  }
+
+  .eq-dialog::backdrop {
+    background: rgba(20, 40, 30, 0.45);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+  }
+
+  .eq-dialog[open] {
+    animation: eq-rise 0.2s cubic-bezier(0.2, 0.6, 0.25, 1);
+  }
+
+  @keyframes eq-rise {
+    from { opacity: 0; transform: translateY(10px); }
+  }
+
+  .eq-dialog-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.1rem 1.3rem 0.9rem;
+    border-bottom: 1px solid var(--line);
+    background: var(--tint-soft);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
+  .eq-dialog-head h2 { margin: 0; }
+
+  .eq-dialog-eyebrow {
+    margin: 0 0 0.15rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+
+  .eq-dialog-x {
+    flex: none;
+    border: 0;
+    background: none;
+    font-size: 1.5rem;
+    line-height: 1;
+    padding: 0.1rem 0.35rem;
+    border-radius: 6px;
+    color: var(--faint);
+    cursor: pointer;
+  }
+
+  .eq-dialog-x:hover { color: var(--ink); background: var(--tint); }
+
+  .eq-dialog-body {
+    padding: 1.2rem 1.3rem 1.4rem;
+    overflow-y: auto;
+    max-height: calc(min(85dvh, 46rem) - 4.5rem);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eq-dialog[open] { animation: none; }
+  }
+
   /* ---- responsive ---- */
   @media (max-width: 1000px) {
     .co-grid {
       grid-template-columns: 1fr;
-    }
-
-    .co-rail {
-      position: static;
     }
   }
 
@@ -773,5 +844,32 @@ const desc = co?.about
       write(on ? list.filter((x) => x !== id) : [...list, id]);
       paint(!on);
     });
+  }
+
+  /* Equity calculator dialog. <dialog> gives focus trapping, Escape and the
+     backdrop for free; we only add the open/close wiring and a click-outside
+     close, which showModal() does not provide on its own. */
+  {
+    const dlg = document.getElementById('eq-dialog') as HTMLDialogElement | null;
+    if (dlg) {
+      const body = dlg.querySelector<HTMLElement>('.eq-dialog-body');
+      const open = () => {
+        dlg.showModal();
+        // preventScroll, otherwise focusing the input scrolls the field's own
+        // label up behind the sticky header the moment the dialog opens.
+        dlg.querySelector<HTMLInputElement>('[data-eq-amount]')?.focus({ preventScroll: true });
+        if (body) body.scrollTop = 0;
+      };
+      document
+        .querySelectorAll<HTMLElement>('[data-eq-open]')
+        .forEach((b) => b.addEventListener('click', open));
+      dlg
+        .querySelectorAll<HTMLElement>('[data-eq-close]')
+        .forEach((b) => b.addEventListener('click', () => dlg.close()));
+      // Clicking the backdrop lands on the dialog element itself, not its content.
+      dlg.addEventListener('click', (e) => {
+        if (e.target === dlg) dlg.close();
+      });
+    }
   }
 </script>
