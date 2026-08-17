@@ -13,6 +13,8 @@ import CoPriceChart from '../../components/CoPriceChart.astro';
 import CoWorthBand from '../../components/CoWorthBand.astro';
 import CoEquityCalc from '../../components/CoEquityCalc.astro';
 import CoSectorPanel from '../../components/CoSectorPanel.astro';
+import CoVenueCompare from '../../components/CoVenueCompare.astro';
+import Icon from '../../components/Icon.astro';
 import { deals, platformName, fmtPrice, fmtChange, dataAsOf, type Deal } from '../../data/deals';
 import { getCompany, estimatedWorth, sectorStats, sectorFor } from '../../data/companies';
 
@@ -38,18 +40,20 @@ const typeLabel =
 
 const lastRound = co?.rounds?.length ? co.rounds[co.rounds.length - 1] : null;
 
-// Key facts: only the ones we actually hold get a tile.
-const facts: Array<{ k: string; v: string; href?: string }> = [];
-if (co?.hq) facts.push({ k: 'Headquarters', v: co.hq });
-if (co?.founded) facts.push({ k: 'Founded', v: String(co.founded) });
-if (co?.employees) facts.push({ k: 'Employees', v: co.employees });
-if (lastRound) {
-  facts.push({ k: 'Last round', v: `${lastRound.stage} · ${lastRound.valuation}` });
-}
-facts.push({ k: 'Min ticket', v: d.minTicket });
-facts.push({ k: 'Deal type', v: `${typeLabel} · ${venue}` });
+// Snapshot tiles: icon + one value each, so the strip is scanned not read.
+// Only facts we actually hold get a tile.
+const facts: Array<{ k: string; v: string; href?: string; icon: string; hue: string }> = [];
+facts.push({ k: 'Valuation', v: d.valuation, icon: 'coins', hue: 'c1' });
+facts.push({ k: 'Min ticket', v: d.minTicket, icon: 'wallet', hue: 'c2' });
+if (co?.employees) facts.push({ k: 'Team', v: co.employees, icon: 'users', hue: 'c3' });
+if (co?.founded) facts.push({ k: 'Founded', v: String(co.founded), icon: 'calendar', hue: 'c4' });
+if (co?.hq) facts.push({ k: 'HQ', v: co.hq, icon: 'map-pin', hue: 'c5' });
+if (lastRound) facts.push({ k: 'Last round', v: lastRound.valuation, icon: 'bars', hue: 'c6' });
 if (co?.website) {
-  facts.push({ k: 'Website', v: co.website.replace(/^https?:\/\/(www\.)?/, ''), href: co.website });
+  facts.push({
+    k: 'Website', v: co.website.replace(/^https?:\/\/(www\.)?/, ''),
+    href: co.website, icon: 'arrow-up-right', hue: 'c3',
+  });
 }
 
 const desc = co?.about
@@ -80,7 +84,7 @@ const desc = co?.about
             </div>
           </div>
 
-          {co?.about && <p class="co-about">{co.about}</p>}
+          {co?.about && <p class="co-about">{co.about.split('. ')[0]}.</p>}
         </div>
 
         <div class="co-head-px">
@@ -150,25 +154,33 @@ const desc = co?.about
         </div>
       </header>
 
-      {/* ---------------- 2. Key facts ---------------- */}
+      {/* ---------------- 2. Snapshot tiles ---------------- */}
       <dl class="co-facts">
         {
           facts.map((f) => (
-            <div class="co-fact">
-              <dt>{f.k}</dt>
-              <dd>
-                {f.href ? (
-                  <a href={f.href} target="_blank" rel="noopener noreferrer">
-                    {f.v} <span class="co-ext">↗</span>
-                  </a>
-                ) : (
-                  f.v
-                )}
-              </dd>
+            <div class="co-fact" style={`--h: var(--${f.hue})`}>
+              <span class="co-fact-ico" aria-hidden="true">
+                <Icon name={f.icon} size={15} />
+              </span>
+              <div class="co-fact-txt">
+                <dt>{f.k}</dt>
+                <dd>
+                  {f.href ? (
+                    <a href={f.href} target="_blank" rel="noopener noreferrer">
+                      {f.v} <span class="co-ext">↗</span>
+                    </a>
+                  ) : (
+                    f.v
+                  )}
+                </dd>
+              </div>
             </div>
           ))
         }
       </dl>
+
+      {/* ---------------- 3. Where to buy it ---------------- */}
+      <CoVenueCompare deal={d} />
 
       <div class="co-grid">
         <div class="co-main">
@@ -189,9 +201,7 @@ const desc = co?.about
                 />
               ) : (
                 <p class="small muted co-empty">
-                  No per-share mark is published for this raise, so there is no basis
-                  for an estimated worth. Crowdfunding rounds are priced on a valuation
-                  cap set by the company, not by a secondary market.
+                  No per-share mark published — this round is priced on a valuation cap.
                 </p>
               )
             }
@@ -242,10 +252,7 @@ const desc = co?.about
                     </ul>
                   </div>
                 </div>
-                <p class="co-pc-note small muted">
-                  Editorial framing of publicly known factors, written by Bundle. Not
-                  research, not a recommendation, and not a complete list of risks.
-                </p>
+                <p class="co-pc-note small muted">Bundle's framing of public factors. Not advice.</p>
               </section>
             )
           }
@@ -285,11 +292,7 @@ const desc = co?.about
                     </li>
                   ))}
                 </ol>
-                <p class="co-news-note small muted">
-                  Headlines summarising public reporting on {d.name}, including
-                  {' '}{d.sector} sector coverage where it moves this company's mark.
-                  Summaries are Bundle's own and are not quotes from the source.
-                </p>
+                <p class="co-news-note small muted">Summaries of public reporting, written by Bundle.</p>
               </section>
             )
           }
@@ -314,15 +317,9 @@ const desc = co?.about
       {/* ---------------- 9. Risk footer ---------------- */}
       <aside class="co-risk" role="note" aria-label="Risk warning">
         <p>
-          <strong>Capital at risk.</strong> These are high-risk, illiquid private
-          investments: you could lose everything, you may be unable to sell, and you
-          are not protected by the FSCS or the Financial Ombudsman Service. Figures
-          shown are indicative venue marks as of {dataAsOf}, not live quotes, offers
-          or financial promotions.
-        </p>
-        <p>
-          Bundle aggregates and never holds your money or gives advice — you invest on
-          {' '}{venue} under its own rules, eligibility checks and fees.
+          <strong>Capital at risk.</strong> High-risk and illiquid: you could lose
+          everything, and you are not FSCS-protected. Figures are indicative venue
+          marks as of {dataAsOf}. You invest on the venue, under its rules.
           <a href="/legal/risk-warning">Take 2 mins to learn more</a>
         </p>
       </aside>
@@ -456,35 +453,51 @@ const desc = co?.about
   .co-facts {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
-    gap: 1px;
+    gap: 0.6rem;
     margin: 0 0 1.25rem;
-    background: var(--line);
-    border: 1px solid var(--line);
-    border-radius: var(--r-l);
-    overflow: hidden;
   }
 
+  /* Each tile carries its own hue so the strip scans as a row of chips
+     rather than a table of text. */
   .co-fact {
-    background: var(--surface);
-    padding: 0.75rem 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.7rem 0.8rem;
+    border-radius: var(--r-m);
+    border: 1px solid color-mix(in srgb, var(--h) 25%, transparent);
+    background: color-mix(in srgb, var(--h) 7%, var(--surface));
     min-width: 0;
   }
 
+  .co-fact-ico {
+    flex: none;
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    color: var(--h);
+    background: color-mix(in srgb, var(--h) 15%, transparent);
+  }
+
+  .co-fact-txt { min-width: 0; }
+
   .co-fact dt {
     font-family: var(--font-mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.09em;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--text-2);
-    margin-bottom: 0.2rem;
   }
 
   .co-fact dd {
-    margin: 0;
+    margin: 0.1rem 0 0;
     font-size: 0.88rem;
-    font-weight: 550;
+    font-weight: 600;
     color: var(--ink);
-    line-height: 1.35;
+    line-height: 1.25;
     overflow-wrap: anywhere;
   }
 

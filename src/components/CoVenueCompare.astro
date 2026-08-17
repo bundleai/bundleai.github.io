@@ -1,0 +1,391 @@
+---
+/**
+ * Cross-venue price comparison.
+ *
+ * The decision this has to support is "where do I buy this, and does it
+ * matter?" — so the answer leads: cheapest venue, how much cheaper, and a bar
+ * per venue you can read at a glance. Detail (fees, structure, access) sits in
+ * the row beneath the bar, not in prose above it.
+ */
+import type { Deal } from '../data/deals';
+import { listingsFor, spreadFor, venueMeta, venueLabel, minAsNumber } from '../data/venues';
+
+interface Props {
+  deal: Deal;
+}
+
+const { deal: d } = Astro.props;
+const rows = listingsFor(d.id);
+const spread = spreadFor(d.id);
+const priced = rows.filter((r) => r.price != null);
+const maxPrice = priced.length ? Math.max(...priced.map((r) => r.price as number)) : 0;
+
+const fmt = (n: number) =>
+  `${d.currency}${n.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+const structureLabel: Record<string, string> = {
+  direct: 'Direct',
+  spv: 'SPV',
+  fund: 'Fund',
+  forward: 'Forward',
+  primary: 'Primary',
+};
+
+// Cheapest minimum is its own decision axis: the best price is useless if the
+// ticket is ten times your budget.
+const minima = rows
+  .map((r) => ({ venue: r.venue, n: minAsNumber(r.minInvestment) }))
+  .filter((x) => x.n != null) as Array<{ venue: string; n: number }>;
+const lowestMin = minima.length ? minima.reduce((a, b) => (b.n < a.n ? b : a)) : null;
+---
+
+{
+  rows.length > 1 && (
+    <section class="vc" aria-labelledby="vc-h">
+      <header class="vc-head">
+        <h2 class="h3" id="vc-h">Where to buy {d.name}</h2>
+        <span class="vc-count">{rows.length} venues</span>
+      </header>
+
+      {spread && (
+        <div class="vc-verdict">
+          <div class="vc-verdict-main">
+            <span class="vc-verdict-label">Cheapest</span>
+            <span class="vc-verdict-venue">{venueLabel(spread.cheapest.venue)}</span>
+            <span class="vc-verdict-price px">{fmt(spread.low)}</span>
+          </div>
+          <div class="vc-verdict-delta">
+            <span class="vc-delta-pct px">−{spread.spreadPct.toFixed(1)}%</span>
+            <span class="vc-delta-note">
+              vs {venueLabel(spread.dearest.venue)} at <b class="px">{fmt(spread.high)}</b>
+            </span>
+          </div>
+        </div>
+      )}
+
+      <ul class="vc-list">
+        {rows.map((r, i) => {
+          const isBest = spread && r.venue === spread.cheapest.venue && r.price != null;
+          const isLowMin = lowestMin && r.venue === lowestMin.venue && rows.length > 1;
+          const pct = r.price != null && maxPrice > 0 ? (r.price / maxPrice) * 100 : 0;
+          const vs =
+            spread && r.price != null && spread.low > 0
+              ? ((r.price - spread.low) / spread.low) * 100
+              : null;
+          return (
+            <li class:list={['vc-row', { best: isBest }]}>
+              <div class="vc-row-top">
+                <span class="vc-venue">
+                  <span class="vc-dot" style={`--i:${i}`} aria-hidden="true" />
+                  <span class="vc-venue-name">{venueLabel(r.venue)}</span>
+                  {isBest && <span class="vc-tag best">Best price</span>}
+                  {isLowMin && !isBest && <span class="vc-tag min">Lowest minimum</span>}
+                </span>
+                <span class="vc-price px">
+                  {r.price != null ? fmt(r.price) : <span class="vc-na">Not published</span>}
+                </span>
+              </div>
+
+              {r.price != null && (
+                <div class="vc-bar" role="img" aria-label={`${fmt(r.price)} on ${venueLabel(r.venue)}`}>
+                  <span style={`width:${pct}%`} />
+                  {vs != null && vs > 0.05 && <b class="vc-vs px">+{vs.toFixed(1)}%</b>}
+                </div>
+              )}
+
+              <dl class="vc-meta">
+                <div>
+                  <dt>Min</dt>
+                  <dd class="px">{r.minInvestment || '—'}</dd>
+                </div>
+                <div>
+                  <dt>Structure</dt>
+                  <dd>{structureLabel[r.structure || ''] || '—'}</dd>
+                </div>
+                <div>
+                  <dt>Access</dt>
+                  <dd>{r.access || venueMeta[r.venue]?.access || '—'}</dd>
+                </div>
+                <div>
+                  <dt>Fees</dt>
+                  <dd>{r.fees || 'Not published'}</dd>
+                </div>
+              </dl>
+
+              <a
+                class="vc-go"
+                href={r.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-trade={d.id}
+                data-deal-id={d.id}
+                data-deal-name={d.name}
+                data-deal-venue={venueLabel(r.venue)}
+                data-deal-sector={d.sector}
+                data-deal-url={r.url}
+                data-deal-currency={d.currency}
+                data-deal-price={r.price ?? ''}
+              >
+                Trade here <span class="arrow">↗</span>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+
+      <p class="vc-foot">
+        Venue marks, not quotes. Structure changes what you own: a fund or SPV
+        holds the shares for you.
+      </p>
+    </section>
+  )
+}
+
+<style>
+  .vc {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-l);
+    padding: 1.2rem 1.3rem 1.3rem;
+  }
+
+  .vc-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .vc-head h2 { margin: 0; }
+
+  .vc-count {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+
+  /* ---- the answer, up top ---- */
+  .vc-verdict {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 0.9rem 1.05rem;
+    margin-bottom: 1.1rem;
+    border-radius: var(--r-m);
+    background: linear-gradient(135deg, rgba(46, 125, 50, 0.13), rgba(46, 125, 50, 0.04));
+    border: 1px solid rgba(46, 125, 50, 0.28);
+  }
+
+  .vc-verdict-main {
+    display: flex;
+    align-items: baseline;
+    gap: 0.55rem;
+    flex-wrap: wrap;
+  }
+
+  .vc-verdict-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--up-ink);
+  }
+
+  .vc-verdict-venue {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 1.05rem;
+  }
+
+  .vc-verdict-price {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--up-ink);
+  }
+
+  .vc-verdict-delta {
+    text-align: right;
+  }
+
+  .vc-delta-pct {
+    display: block;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--up-ink);
+  }
+
+  .vc-delta-note {
+    font-size: 0.76rem;
+    color: var(--text-2);
+  }
+
+  /* ---- one row per venue ---- */
+  .vc-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.7rem;
+  }
+
+  .vc-row {
+    padding: 0.85rem 0.95rem;
+    border: 1px solid var(--line);
+    border-radius: var(--r-m);
+    background: var(--bg);
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .vc-row.best {
+    border-color: rgba(46, 125, 50, 0.4);
+    background: rgba(46, 125, 50, 0.045);
+  }
+
+  .vc-row-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.6rem;
+  }
+
+  .vc-venue {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+
+  /* Each venue gets a stable colour from the chart palette. */
+  .vc-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 3px;
+    flex: none;
+    background: var(--c1);
+  }
+
+  .vc-dot[style*="--i:1"] { background: var(--c2); }
+  .vc-dot[style*="--i:2"] { background: var(--c3); }
+  .vc-dot[style*="--i:3"] { background: var(--c4); }
+  .vc-dot[style*="--i:4"] { background: var(--c5); }
+  .vc-dot[style*="--i:5"] { background: var(--c6); }
+
+  .vc-venue-name {
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 0.95rem;
+  }
+
+  .vc-tag {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.14rem 0.4rem;
+    border-radius: 4px;
+  }
+
+  .vc-tag.best {
+    background: var(--up-tint);
+    color: var(--up-ink);
+  }
+
+  .vc-tag.min {
+    background: var(--gold-soft);
+    color: var(--gold-deep);
+  }
+
+  .vc-price {
+    font-size: 1.02rem;
+    font-weight: 600;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  .vc-na {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--faint);
+  }
+
+  .vc-bar {
+    position: relative;
+    height: 8px;
+    background: var(--tint);
+    border-radius: 999px;
+    overflow: visible;
+  }
+
+  .vc-bar > span {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--c1), var(--c3));
+  }
+
+  .vc-row.best .vc-bar > span {
+    background: linear-gradient(90deg, var(--up), var(--c1));
+  }
+
+  .vc-vs {
+    position: absolute;
+    right: 0;
+    top: -1.35rem;
+    font-size: 0.68rem;
+    color: var(--down-ink);
+    font-weight: 500;
+  }
+
+  .vc-meta {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+    margin: 0.15rem 0 0;
+  }
+
+  .vc-meta div { min-width: 0; }
+
+  .vc-meta dt {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  .vc-meta dd {
+    margin: 0.1rem 0 0;
+    font-size: 0.78rem;
+    color: var(--text);
+    overflow-wrap: anywhere;
+  }
+
+  .vc-go {
+    justify-self: start;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--green);
+  }
+
+  .vc-go:hover { color: var(--green-deep); }
+
+  .vc-foot {
+    margin: 1rem 0 0;
+    font-size: 0.74rem;
+    color: var(--text-2);
+    line-height: 1.5;
+  }
+
+  @media (max-width: 620px) {
+    .vc-meta { grid-template-columns: repeat(2, 1fr); }
+    .vc-verdict-delta { text-align: left; }
+  }
+</style>
