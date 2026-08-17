@@ -6,6 +6,7 @@
  */
 import type { Deal } from '../data/deals';
 import { fmtPrice, fmtChange, platformName } from '../data/deals';
+import CoLogo from './CoLogo.astro';
 
 interface Props {
   deal: Deal;
@@ -34,7 +35,7 @@ const typeLabel =
   data-deal-url={d.url}
 >
   <header class="dc-head">
-    <span class="dc-avatar" style={`--h: var(--${d.hue})`}>{initials}</span>
+    <CoLogo id={d.id} name={d.name} hue={d.hue} size={38} />
     <span class="dc-id">
       <span class="dc-name">{d.name} <span class="dc-code mono">{d.code}</span></span>
       <span class="dc-sector">{d.sector} · {typeLabel}</span>

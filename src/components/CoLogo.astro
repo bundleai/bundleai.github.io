@@ -1,0 +1,92 @@
+---
+/**
+ * Company / venue logo with an initials fallback.
+ *
+ * Logos are self-hosted (see scripts/fetch-logos.mjs). Where we have none, the
+ * old initials avatar is used rather than a placeholder graphic, so a missing
+ * logo never looks like a broken image.
+ *
+ * Favicons arrive with their own backgrounds and wildly different padding, so
+ * the mark sits on a neutral tile with `object-fit: contain` instead of being
+ * stretched to fill.
+ */
+import { logoFor, needsDarkTile } from '../data/logos';
+
+interface Props {
+  id: string;
+  name: string;
+  /** Chart hue token used by the initials fallback, e.g. 'c1'. */
+  hue?: string;
+  size?: number;
+  class?: string;
+}
+
+const { id, name, hue = 'c1', size = 38, class: className } = Astro.props;
+const src = logoFor(id);
+const onDark = needsDarkTile(id);
+const initials = name
+  .split(/\s+/)
+  .map((w) => w[0])
+  .join('')
+  .slice(0, 2)
+  .toUpperCase();
+---
+
+{
+  src ? (
+    <span
+      class:list={['logo-tile', { 'on-dark': onDark }, className]}
+      style={`--sz:${size}px`}
+      aria-hidden="true"
+    >
+      <img src={src} alt="" width={size} height={size} loading="lazy" decoding="async" />
+    </span>
+  ) : (
+    <span
+      class:list={['logo-tile', 'is-initials', className]}
+      style={`--sz:${size}px; --h: var(--${hue})`}
+      aria-hidden="true"
+    >
+      {initials}
+    </span>
+  )
+}
+
+<style>
+  .logo-tile {
+    flex: none;
+    width: var(--sz);
+    height: var(--sz);
+    border-radius: calc(var(--sz) * 0.26);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid var(--line);
+    box-shadow: 0 1px 2px rgba(20, 40, 30, 0.06);
+  }
+
+  /* Some marks are pure white on transparent and vanish on a light tile. */
+  .logo-tile.on-dark {
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+
+  .logo-tile img {
+    width: 72%;
+    height: 72%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .logo-tile.is-initials {
+    font-family: var(--font-mono);
+    font-size: calc(var(--sz) * 0.34);
+    font-weight: 500;
+    color: var(--h);
+    background: color-mix(in srgb, var(--h) 13%, #fff);
+    border-color: color-mix(in srgb, var(--h) 28%, transparent);
+    box-shadow: none;
+  }
+</style>

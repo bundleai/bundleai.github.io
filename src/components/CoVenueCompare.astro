@@ -9,6 +9,7 @@
  */
 import type { Deal } from '../data/deals';
 import { listingsFor, spreadFor, venueMeta, venueLabel, minAsNumber } from '../data/venues';
+import CoLogo from './CoLogo.astro';
 
 interface Props {
   deal: Deal;
@@ -103,7 +104,7 @@ const mixedDates = stamps.length > 1;
             <li class:list={['vc-row', { best: isBest }]}>
               <div class="vc-row-top">
                 <span class="vc-venue">
-                  <span class="vc-dot" style={`--i:${i}`} aria-hidden="true" />
+                  <CoLogo id={r.venue} name={venueLabel(r.venue)} hue={`c${(i % 6) + 1}`} size={24} />
                   <span class="vc-venue-name">{venueLabel(r.venue)}</span>
                   {isBest && <span class="vc-tag best">{isWide ? 'Lowest mark' : 'Best price'}</span>}
                   {isLowMin && !isBest && <span class="vc-tag min">Lowest minimum</span>}

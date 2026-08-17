@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
 import Ticker from '../components/Ticker.astro';
 import DealsData from '../components/DealsData.astro';
+import CoLogo from '../components/CoLogo.astro';
 import { deals, dataAsOf, platforms, fmtPrice, fmtChange, platformName } from '../data/deals';
 
 const sectors = [...new Set(deals.map((d) => d.sector))].sort();
@@ -116,9 +117,7 @@ const typeLabel = (t: string) =>
                 >
                   <td>
                     <span class="co">
-                      <span class="co-avatar" style={`--h: var(--${d.hue})`}>
-                        {d.name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2)}
-                      </span>
+                      <CoLogo id={d.id} name={d.name} hue={d.hue} size={32} />
                       <span class="co-id">
                         <span class="co-name">{d.name}</span>
                         <span class="co-sector">{d.sector}</span>

@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
 import Ticker from '../components/Ticker.astro';
 import DealCard from '../components/DealCard.astro';
+import CoLogo from '../components/CoLogo.astro';
 import { deals, dataAsOf, platforms, fmtPrice, fmtChange, platformName } from '../data/deals';
 
 const trending = deals.filter((d) => d.trending).slice(0, 4);
@@ -138,7 +139,7 @@ const edges = [
                     {t.rows.map((d) => (
                       <li>
                         <a href={`/company/${d.id}`} class="board-row">
-                          <span class="br-avatar" style={`--h: var(--${d.hue})`}>{d.name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2)}</span>
+                          <CoLogo id={d.id} name={d.name} hue={d.hue} size={30} />
                           <span class="br-id">
                             <span class="br-name">{d.name}</span>
                             <span class="br-src">{platformName(d.platform)} · {d.sector}</span>

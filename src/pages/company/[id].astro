@@ -16,6 +16,7 @@ import CoSectorPanel from '../../components/CoSectorPanel.astro';
 import CoVenueCompare from '../../components/CoVenueCompare.astro';
 import Icon from '../../components/Icon.astro';
 import CoSignals from '../../components/CoSignals.astro';
+import CoLogo from '../../components/CoLogo.astro';
 import { deals, platformName, fmtPrice, fmtChange, dataAsOf, type Deal } from '../../data/deals';
 import { getCompany, estimatedWorth, sectorStats, sectorFor } from '../../data/companies';
 
@@ -71,7 +72,7 @@ const desc = co?.about
       <header class="co-head panel">
         <div class="co-head-main">
           <div class="co-id">
-            <span class="co-avatar" style={`--h: var(--${d.hue})`}>{initials}</span>
+            <CoLogo id={d.id} name={d.name} hue={d.hue} size={52} />
             <div class="co-id-txt">
               <h1 class="co-name">
                 {d.name} <span class="co-code mono">{d.code}</span>

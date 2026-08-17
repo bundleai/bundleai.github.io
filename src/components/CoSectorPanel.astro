@@ -9,6 +9,7 @@
 import type { SectorStat } from '../data/companies';
 import type { Deal } from '../data/deals';
 import { platformName, fmtPrice, fmtChange } from '../data/deals';
+import CoLogo from './CoLogo.astro';
 
 interface Props {
   sector: string;
@@ -118,9 +119,7 @@ const trendWord = stat?.trend === 'up' ? 'Rising' : stat?.trend === 'down' ? 'Fa
           {peers.map((p) => (
             <li>
               <a href={`/company/${p.id}`} class="sec-peer">
-                <span class="sec-peer-av" style={`--h: var(--${p.hue})`}>
-                  {p.name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2)}
-                </span>
+                <CoLogo id={p.id} name={p.name} hue={p.hue} size={26} />
                 <span class="sec-peer-id">
                   <span class="sec-peer-n">{p.name}</span>
                   <span class="sec-peer-s">{platformName(p.platform)}</span>
