@@ -329,7 +329,16 @@
   /* ---------- engine ---------- */
   function mount(root, opts) {
     opts = opts || {};
-    var ctx = { state: opts.state || blank(), step: 0 };
+    // Merge over blank() rather than trusting the caller's object: a profile
+    // saved by an older build (or one missing keys a step now reads) would
+    // otherwise leave fields undefined and wedge that step's validator.
+    var seeded = blank();
+    if (opts.state) {
+      Object.keys(opts.state).forEach(function (k) {
+        if (opts.state[k] !== undefined && opts.state[k] !== null) seeded[k] = opts.state[k];
+      });
+    }
+    var ctx = { state: seeded, step: 0 };
     var saved = null;
     try { saved = JSON.parse(localStorage.getItem('bundle.profileDraft') || 'null'); } catch (e) { }
     if (saved && !opts.state) {

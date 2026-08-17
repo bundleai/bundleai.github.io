@@ -44,6 +44,9 @@ const boardTabs = [
 ];
 
 const venuesOnBoard = new Set(spreadByVenue(deals, 8).map((d) => d.platform)).size;
+// Only count venues that actually carry a listing today, not every venue we
+// have a definition for, so the headline stat can't overstate coverage.
+const liveVenues = new Set(deals.map((d) => d.platform)).size;
 
 const steps = [
   {
@@ -81,7 +84,7 @@ const edges = [
     <div class="container">
       <div class="hero-grid">
         <div class="hero-copy">
-          <p class="eyebrow no-rule reveal"><span class="live-dot"></span> Live across {platforms.length} venues</p>
+          <p class="eyebrow no-rule reveal"><span class="live-dot"></span> Live across {liveVenues} venues</p>
           <h1 class="display reveal" style="--d:.05s">
             Every private-market deal.<br /><span class="text-grad">One terminal.</span>
           </h1>
@@ -102,7 +105,7 @@ const edges = [
           </form>
           <ul class="hero-stats reveal px" style="--d:.22s">
             <li><strong>{deals.length}</strong> live deals</li>
-            <li><strong>{platforms.length}</strong> venues tracked</li>
+            <li><strong>{liveVenues}</strong> venues live</li>
             <li><strong>3</strong> market types</li>
           </ul>
         </div>
