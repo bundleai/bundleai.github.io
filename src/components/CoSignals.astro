@@ -1,0 +1,154 @@
+---
+/**
+ * At-a-glance signal strip.
+ *
+ * Four traffic-light readings a user can take in without reading: momentum,
+ * price against the last round, how the sector is moving, and stage risk.
+ * Each is derived from data already on the page — this is a summary layer,
+ * not new claims.
+ */
+import type { Deal } from '../data/deals';
+import type { Company, SectorStat } from '../data/companies';
+
+interface Props {
+  deal: Deal;
+  co?: Company;
+  stat?: SectorStat;
+}
+
+const { deal: d, co, stat } = Astro.props;
+
+type Tone = 'good' | 'bad' | 'warn' | 'flat';
+interface Signal {
+  label: string;
+  value: string;
+  note: string;
+  tone: Tone;
+}
+
+const signals: Signal[] = [];
+
+// 1. Momentum — the venue's own published move.
+if (d.change != null && d.change !== 0) {
+  signals.push({
+    label: 'Momentum',
+    value: `${d.change > 0 ? '+' : ''}${d.change.toFixed(2)}%`,
+    note: 'latest venue move',
+    tone: d.change > 0 ? 'good' : 'bad',
+  });
+} else if (d.closes) {
+  signals.push({ label: 'Closing', value: d.closes, note: 'until the round shuts', tone: 'warn' });
+} else if (d.status) {
+  signals.push({ label: 'Status', value: d.status, note: 'on the venue', tone: 'good' });
+}
+
+// 2. Price against the last primary round.
+if (d.price != null && co?.lastRoundPps) {
+  const pct = ((d.price - co.lastRoundPps) / co.lastRoundPps) * 100;
+  signals.push({
+    label: 'vs last round',
+    value: `${pct > 0 ? '+' : ''}${pct.toFixed(0)}%`,
+    note: pct > 0 ? 'above round price' : 'below round price',
+    tone: pct > 0 ? 'warn' : 'good',
+  });
+}
+
+// 3. Sector direction.
+if (stat) {
+  signals.push({
+    label: 'Sector',
+    value: `${stat.avgChange > 0 ? '+' : ''}${stat.avgChange.toFixed(1)}%`,
+    note: `${d.sector} average`,
+    tone: stat.trend === 'up' ? 'good' : stat.trend === 'down' ? 'bad' : 'flat',
+  });
+}
+
+// 4. Stage risk — plain and unflattering.
+const stageRisk: Record<string, { v: string; t: Tone; n: string }> = {
+  crowdfunding: { v: 'Very high', t: 'bad', n: 'early stage, often fails' },
+  secondary: { v: 'High', t: 'warn', n: 'established, still illiquid' },
+  'pre-ipo': { v: 'High', t: 'warn', n: 'late stage, illiquid' },
+};
+const sr = stageRisk[d.type];
+if (sr) signals.push({ label: 'Risk', value: sr.v, note: sr.n, tone: sr.t });
+---
+
+{
+  signals.length > 0 && (
+    <ul class="sig" aria-label="Signals at a glance">
+      {signals.map((s) => (
+        <li class:list={['sig-item', s.tone]}>
+          <span class="sig-label">{s.label}</span>
+          <span class="sig-value px">{s.value}</span>
+          <span class="sig-note">{s.note}</span>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+<style>
+  .sig {
+    list-style: none;
+    margin: 0 0 1.25rem;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: 0.6rem;
+  }
+
+  .sig-item {
+    display: grid;
+    gap: 0.1rem;
+    padding: 0.7rem 0.85rem;
+    border-radius: var(--r-m);
+    border: 1px solid var(--tone-line);
+    background: var(--tone-bg);
+    border-left: 3px solid var(--tone);
+  }
+
+  .sig-item.good {
+    --tone: var(--up);
+    --tone-bg: var(--up-tint);
+    --tone-line: rgba(46, 125, 50, 0.25);
+  }
+
+  .sig-item.bad {
+    --tone: var(--down);
+    --tone-bg: var(--down-tint);
+    --tone-line: rgba(211, 47, 47, 0.25);
+  }
+
+  .sig-item.warn {
+    --tone: var(--gold);
+    --tone-bg: var(--gold-soft);
+    --tone-line: rgba(201, 162, 39, 0.35);
+  }
+
+  .sig-item.flat {
+    --tone: var(--faint);
+    --tone-bg: var(--tint-soft);
+    --tone-line: var(--line);
+  }
+
+  .sig-label {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+
+  .sig-value {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.15;
+  }
+
+  .sig-note {
+    font-size: 0.7rem;
+    color: var(--text-2);
+    line-height: 1.3;
+  }
+</style>

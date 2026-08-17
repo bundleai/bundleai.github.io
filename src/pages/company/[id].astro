@@ -15,6 +15,7 @@ import CoEquityCalc from '../../components/CoEquityCalc.astro';
 import CoSectorPanel from '../../components/CoSectorPanel.astro';
 import CoVenueCompare from '../../components/CoVenueCompare.astro';
 import Icon from '../../components/Icon.astro';
+import CoSignals from '../../components/CoSignals.astro';
 import { deals, platformName, fmtPrice, fmtChange, dataAsOf, type Deal } from '../../data/deals';
 import { getCompany, estimatedWorth, sectorStats, sectorFor } from '../../data/companies';
 
@@ -154,7 +155,10 @@ const desc = co?.about
         </div>
       </header>
 
-      {/* ---------------- 2. Snapshot tiles ---------------- */}
+      {/* ---------------- 2. Signals at a glance ---------------- */}
+      <CoSignals deal={d} co={co} stat={stat} />
+
+      {/* ---------------- 3. Snapshot tiles ---------------- */}
       <dl class="co-facts">
         {
           facts.map((f) => (
