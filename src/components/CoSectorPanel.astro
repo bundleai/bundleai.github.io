@@ -20,7 +20,24 @@ interface Props {
 const { sector, stat, all, peers } = Astro.props;
 
 // Only sectors carrying at least one priced deal can show a move.
-const ranked = all.filter((s) => s.priced > 0);
+const priced = all.filter((s) => s.priced > 0);
+
+// Every tracked sector is too many bars to scan. Show the strongest four, the
+// weakest three, and always this company's own sector wherever it lands.
+const TOP = 4;
+const BOTTOM = 3;
+const ranked =
+  priced.length <= TOP + BOTTOM + 1
+    ? priced
+    : (() => {
+        const keep = new Set([
+          ...priced.slice(0, TOP),
+          ...priced.slice(-BOTTOM),
+          ...priced.filter((x) => x.sector === sector),
+        ]);
+        return priced.filter((x) => keep.has(x));
+      })();
+const hidden = priced.length - ranked.length;
 const maxAbs = Math.max(0.5, ...ranked.map((s) => Math.abs(s.avgChange)));
 const trendWord = stat?.trend === 'up' ? 'Rising' : stat?.trend === 'down' ? 'Falling' : 'Flat';
 ---
@@ -88,7 +105,7 @@ const trendWord = stat?.trend === 'up' ? 'Rising' : stat?.trend === 'down' ? 'Fa
             );
           })}
         </ul>
-        <p class="sec-cap small muted">Average of venue-published moves. Unpriced sectors excluded.</p>
+        <p class="sec-cap small muted">Best and worst movers{hidden > 0 ? `, ${hidden} more sectors hidden` : ''}. Average of venue-published moves.</p>
       </div>
     )
   }
