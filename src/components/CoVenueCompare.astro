@@ -37,6 +37,17 @@ const minima = rows
   .map((r) => ({ venue: r.venue, n: minAsNumber(r.minInvestment) }))
   .filter((x) => x.n != null) as Array<{ venue: string; n: number }>;
 const lowestMin = minima.length ? minima.reduce((a, b) => (b.n < a.n ? b : a)) : null;
+
+// A gap this wide across venues is far more likely to be a different share
+// class or a stale mark than free money, so the UI must not present it as a
+// saving. 25% is well outside the spread the tracked venues normally show.
+const WIDE = 25;
+const isWide = spread != null && spread.spreadPct > WIDE;
+
+// Venues stamp their marks on different days; a staler mark drifts from the
+// others for reasons that have nothing to do with which is cheaper.
+const stamps = [...new Set(rows.map((r) => r.asOf).filter(Boolean))] as string[];
+const mixedDates = stamps.length > 1;
 ---
 
 {
@@ -47,7 +58,23 @@ const lowestMin = minima.length ? minima.reduce((a, b) => (b.n < a.n ? b : a)) :
         <span class="vc-count">{rows.length} venues</span>
       </header>
 
-      {spread && (
+      {spread && isWide && (
+        <div class="vc-verdict caution">
+          <div class="vc-verdict-main">
+            <span class="vc-verdict-label warn">Marks disagree</span>
+            <span class="vc-verdict-venue">
+              {fmt(spread.low)} to {fmt(spread.high)}
+            </span>
+          </div>
+          <p class="vc-caution-note">
+            A {spread.spreadPct.toFixed(0)}% gap usually means a different share
+            class or a stale mark, not a saving. Check what each venue is selling
+            before treating this as a price difference.
+          </p>
+        </div>
+      )}
+
+      {spread && !isWide && (
         <div class="vc-verdict">
           <div class="vc-verdict-main">
             <span class="vc-verdict-label">Cheapest</span>
@@ -78,26 +105,24 @@ const lowestMin = minima.length ? minima.reduce((a, b) => (b.n < a.n ? b : a)) :
                 <span class="vc-venue">
                   <span class="vc-dot" style={`--i:${i}`} aria-hidden="true" />
                   <span class="vc-venue-name">{venueLabel(r.venue)}</span>
-                  {isBest && <span class="vc-tag best">Best price</span>}
+                  {isBest && <span class="vc-tag best">{isWide ? 'Lowest mark' : 'Best price'}</span>}
                   {isLowMin && !isBest && <span class="vc-tag min">Lowest minimum</span>}
                 </span>
-                <span class="vc-price px">
-                  {r.price != null ? fmt(r.price) : <span class="vc-na">Not published</span>}
+                <span class="vc-price-wrap">
+                  <span class="vc-price px">
+                    {r.price != null ? fmt(r.price) : <span class="vc-na">Not published</span>}
+                  </span>
+                  {vs != null && vs > 0.05 && <span class="vc-vs px">+{vs.toFixed(1)}%</span>}
                 </span>
               </div>
 
               {r.price != null && (
                 <div class="vc-bar" role="img" aria-label={`${fmt(r.price)} on ${venueLabel(r.venue)}`}>
                   <span style={`width:${pct}%`} />
-                  {vs != null && vs > 0.05 && <b class="vc-vs px">+{vs.toFixed(1)}%</b>}
                 </div>
               )}
 
               <dl class="vc-meta">
-                <div>
-                  <dt>Min</dt>
-                  <dd class="px">{r.minInvestment || '—'}</dd>
-                </div>
                 <div>
                   <dt>Structure</dt>
                   <dd>{structureLabel[r.structure || ''] || '—'}</dd>
@@ -107,8 +132,18 @@ const lowestMin = minima.length ? minima.reduce((a, b) => (b.n < a.n ? b : a)) :
                   <dd>{r.access || venueMeta[r.venue]?.access || '—'}</dd>
                 </div>
                 <div>
-                  <dt>Fees</dt>
-                  <dd>{r.fees || 'Not published'}</dd>
+                  <dt>Live orders</dt>
+                  <dd class="px">
+                    {r.liveOrders != null ? (
+                      <span class:list={{ 'vc-liq': r.liveOrders > 0 }}>{r.liveOrders}</span>
+                    ) : (
+                      <span class="vc-na">n/p</span>
+                    )}
+                  </dd>
+                </div>
+                <div>
+                  <dt>{r.minInvestment ? 'Min' : 'Priced'}</dt>
+                  <dd class="px">{r.minInvestment || r.asOf || '—'}</dd>
                 </div>
               </dl>
 
@@ -134,8 +169,10 @@ const lowestMin = minima.length ? minima.reduce((a, b) => (b.n < a.n ? b : a)) :
       </ul>
 
       <p class="vc-foot">
-        Venue marks, not quotes. Structure changes what you own: a fund or SPV
-        holds the shares for you.
+        Indicative venue estimates, not executable quotes.
+        {mixedDates ? ' Marks carry different dates, so a staler one can look cheap.' : ''}
+        {' '}No venue publishes fees or minimums publicly. Live orders show
+        liquidity, not price.
       </p>
     </section>
   )
@@ -180,6 +217,23 @@ const lowestMin = minima.length ? minima.reduce((a, b) => (b.n < a.n ? b : a)) :
     background: linear-gradient(135deg, rgba(46, 125, 50, 0.13), rgba(46, 125, 50, 0.04));
     border: 1px solid rgba(46, 125, 50, 0.28);
   }
+
+  .vc-verdict.caution {
+    background: linear-gradient(135deg, rgba(201, 162, 39, 0.16), rgba(201, 162, 39, 0.05));
+    border-color: rgba(201, 162, 39, 0.4);
+    display: block;
+  }
+
+  .vc-verdict-label.warn { color: var(--gold-deep); }
+
+  .vc-caution-note {
+    margin: 0.4rem 0 0;
+    font-size: 0.78rem;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .vc-liq { color: var(--up-ink); font-weight: 600; }
 
   .vc-verdict-main {
     display: flex;
@@ -335,11 +389,15 @@ const lowestMin = minima.length ? minima.reduce((a, b) => (b.n < a.n ? b : a)) :
     background: linear-gradient(90deg, var(--up), var(--c1));
   }
 
+  .vc-price-wrap {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.45rem;
+    white-space: nowrap;
+  }
+
   .vc-vs {
-    position: absolute;
-    right: 0;
-    top: -1.35rem;
-    font-size: 0.68rem;
+    font-size: 0.72rem;
     color: var(--down-ink);
     font-weight: 500;
   }
