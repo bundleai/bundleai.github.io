@@ -49,6 +49,15 @@ const isWide = spread != null && spread.spreadPct > WIDE;
 // others for reasons that have nothing to do with which is cheaper.
 const stamps = [...new Set(rows.map((r) => r.asOf).filter(Boolean))] as string[];
 const mixedDates = stamps.length > 1;
+
+// Forge is the mark quoted everywhere else on the page (the header price, the
+// chart, the worth band), so it is the number a reader is holding in their
+// head. Measuring every other venue against it is far more useful than
+// measuring against whichever venue happens to be cheapest.
+const forgeRow = rows.find((r) => r.venue === 'forge' && r.price != null);
+const forgePrice = forgeRow?.price ?? null;
+const vsForge = (price?: number | null): number | null =>
+  price != null && forgePrice ? ((price - forgePrice) / forgePrice) * 100 : null;
 ---
 
 {
@@ -83,10 +92,23 @@ const mixedDates = stamps.length > 1;
             <span class="vc-verdict-price px">{fmt(spread.low)}</span>
           </div>
           <div class="vc-verdict-delta">
-            <span class="vc-delta-pct px">−{spread.spreadPct.toFixed(1)}%</span>
-            <span class="vc-delta-note">
-              vs {venueLabel(spread.dearest.venue)} at <b class="px">{fmt(spread.high)}</b>
-            </span>
+            {forgePrice && spread.cheapest.venue !== 'forge' ? (
+              <>
+                <span class="vc-delta-pct px">
+                  {(vsForge(spread.low) as number).toFixed(1)}%
+                </span>
+                <span class="vc-delta-note">
+                  vs the Forge price of <b class="px">{fmt(forgePrice)}</b>
+                </span>
+              </>
+            ) : (
+              <>
+                <span class="vc-delta-pct px">−{spread.spreadPct.toFixed(1)}%</span>
+                <span class="vc-delta-note">
+                  vs {venueLabel(spread.dearest.venue)} at <b class="px">{fmt(spread.high)}</b>
+                </span>
+              </>
+            )}
           </div>
         </div>
       )}
@@ -96,10 +118,8 @@ const mixedDates = stamps.length > 1;
           const isBest = spread && r.venue === spread.cheapest.venue && r.price != null;
           const isLowMin = lowestMin && r.venue === lowestMin.venue && rows.length > 1;
           const pct = r.price != null && maxPrice > 0 ? (r.price / maxPrice) * 100 : 0;
-          const vs =
-            spread && r.price != null && spread.low > 0
-              ? ((r.price - spread.low) / spread.low) * 100
-              : null;
+          // Delta against the Forge price, the mark quoted elsewhere on the page.
+          const vs = r.venue === 'forge' ? null : vsForge(r.price);
           return (
             <li class:list={['vc-row', { best: isBest }]}>
               <div class="vc-row-top">
@@ -107,13 +127,20 @@ const mixedDates = stamps.length > 1;
                   <CoLogo id={r.venue} name={venueLabel(r.venue)} hue={`c${(i % 6) + 1}`} size={24} />
                   <span class="vc-venue-name">{venueLabel(r.venue)}</span>
                   {isBest && <span class="vc-tag best">{isWide ? 'Lowest mark' : 'Best price'}</span>}
-                  {isLowMin && !isBest && <span class="vc-tag min">Lowest minimum</span>}
+                  {r.venue === 'forge' && <span class="vc-tag ref">Reference price</span>}
+                  {isLowMin && !isBest && r.venue !== 'forge' && (
+                    <span class="vc-tag min">Lowest minimum</span>
+                  )}
                 </span>
                 <span class="vc-price-wrap">
                   <span class="vc-price px">
                     {r.price != null ? fmt(r.price) : <span class="vc-na">Not published</span>}
                   </span>
-                  {vs != null && vs > 0.05 && <span class="vc-vs px">+{vs.toFixed(1)}%</span>}
+                  {vs != null && Math.abs(vs) >= 0.05 && (
+                    <span class:list={['vc-vs', 'px', vs < 0 ? 'cheaper' : 'dearer']}>
+                      {vs > 0 ? '+' : ''}{vs.toFixed(1)}% vs Forge
+                    </span>
+                  )}
                 </span>
               </div>
 
@@ -399,8 +426,16 @@ const mixedDates = stamps.length > 1;
 
   .vc-vs {
     font-size: 0.72rem;
-    color: var(--down-ink);
     font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .vc-vs.cheaper { color: var(--up-ink); }
+  .vc-vs.dearer { color: var(--down-ink); }
+
+  .vc-tag.ref {
+    background: var(--tint);
+    color: var(--text-2);
   }
 
   .vc-meta {

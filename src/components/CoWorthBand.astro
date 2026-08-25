@@ -17,9 +17,11 @@ interface Props {
   mark: number;
   lastRoundPps?: number;
   asOf: string;
+  /** Venue the mark came from, so the figure is attributed not anonymous. */
+  venue?: string;
 }
 
-const { band, currency, mark, lastRoundPps, asOf } = Astro.props;
+const { band, currency, mark, lastRoundPps, asOf, venue } = Astro.props;
 
 const fmt = (n: number): string =>
   `${currency}${n.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -41,7 +43,7 @@ const premLabel =
       <span class="wb-v px">{fmt(band.low)}</span>
     </div>
     <div class="wb-fig wb-fig-mid">
-      <span class="wb-k">Venue mark</span>
+      <span class="wb-k">{venue ?? 'Venue'} price</span>
       <span class="wb-v px">{fmt(band.mid)}</span>
     </div>
     <div class="wb-fig wb-fig-end">
@@ -50,7 +52,7 @@ const premLabel =
     </div>
   </div>
 
-  <div class="wb-bar" role="img" aria-label={`Indicative range from ${fmt(band.low)} to ${fmt(band.high)}, venue mark ${fmt(mark)}`}>
+  <div class="wb-bar" role="img" aria-label={`Indicative range from ${fmt(band.low)} to ${fmt(band.high)}, ${venue ?? 'venue'} price ${fmt(mark)}`}>
     <div class="wb-track"></div>
     {
       roundPct != null && (
@@ -70,7 +72,7 @@ const premLabel =
   </div>
 
   <ul class="wb-legend">
-    <li><span class="wb-sw wb-sw-mark"></span> Venue mark {fmt(mark)}</li>
+    <li><span class="wb-sw wb-sw-mark"></span> {venue ?? 'Venue'} price {fmt(mark)}</li>
     {
       lastRoundPps != null && (
         <li><span class="wb-sw wb-sw-round"></span> Last primary round {fmt(lastRoundPps)}</li>
@@ -90,7 +92,7 @@ const premLabel =
   }
 
   <p class="wb-basis small muted">
-    <strong>Derived, not a valuation.</strong> Venue mark as of {asOf}. Not an offer or advice.
+    <strong>Derived, not a valuation.</strong> {venue ?? 'Venue'} price as of {asOf}. Not an offer or advice.
   </p>
 </div>
 

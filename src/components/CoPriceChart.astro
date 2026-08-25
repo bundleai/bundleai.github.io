@@ -15,9 +15,11 @@ interface Props {
   currency: string;
   hue: string;
   asOf: string;
+  /** Venue the latest mark came from, e.g. 'Forge Global'. */
+  venue?: string;
 }
 
-const { points = [], currency, hue, asOf } = Astro.props;
+const { points = [], currency, hue, asOf, venue } = Astro.props;
 
 const MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 
@@ -134,14 +136,15 @@ const gid = `co-chart-${Math.random().toString(36).slice(2, 8)}`;
 
       <figcaption class="pc-cap small">
         <span class="pc-legend">
-          <span class="pc-key" /> Reported reference points
+          <span class="pc-key" /> Round prices{venue ? ` + ${venue} price` : ''}
         </span>
         <span class="muted">
           Low {fmt(lo)} · High {fmt(hi)} · Latest {fmt(points[points.length - 1].price)}
         </span>
       </figcaption>
       <p class="pc-note small muted">
-        Reported round prices plus the venue mark ({asOf}). Not a traded price history.
+        Reported round prices plus the {venue ? `${venue} price` : 'venue mark'} ({asOf}).
+        Not a traded price history.
       </p>
     </figure>
   ) : (

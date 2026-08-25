@@ -8,7 +8,7 @@
  *  - `rounds` are publicly reported primary rounds. `pps` (price per share) is
  *    only present where a venue published it.
  *  - `history` holds ONLY real reference points: publicly reported round prices
- *    plus the current venue mark (refreshed 16 Aug 2026). It is not a continuous series, and the
+ *    plus the current Forge Price (refreshed 16 Aug 2026). It is not a continuous series, and the
  *    chart must be labelled as reference points, not a traded price history.
  *  - `news` items summarise public reporting; they are headlines, not quotes.
  *  - `pros` / `cons` are editorial framing of publicly known factors. They are
@@ -90,7 +90,7 @@ export const companies: Record<string, Company> = {
     history: [
       { date: 'Oct 2024', price: 127.0, label: 'Round mark' },
       { date: 'Mar 2025', price: 242.0, label: 'Round mark' },
-      { date: 'Aug 2026', price: 721.85, label: 'Venue mark' },
+      { date: 'Aug 2026', price: 721.85, label: 'Forge price' },
     ],
   },
 
@@ -124,7 +124,7 @@ export const companies: Record<string, Company> = {
     history: [
       { date: 'Dec 2024', price: 92.0, label: 'Series J' },
       { date: 'Jan 2026', price: 191.0, label: 'Series K' },
-      { date: 'Aug 2026', price: 264.9, label: 'Venue mark' },
+      { date: 'Aug 2026', price: 264.9, label: 'Forge price' },
     ],
     lastRoundPps: 191.0,
   },
@@ -161,7 +161,7 @@ export const companies: Record<string, Company> = {
     history: [
       { date: 'Aug 2024', price: 790.0, label: 'Secondary' },
       { date: 'Nov 2025', price: 1381.0, label: 'Tender' },
-      { date: 'Aug 2026', price: 2200.0, label: 'Venue mark' },
+      { date: 'Aug 2026', price: 2200.0, label: 'Forge price' },
     ],
     lastRoundPps: 1381.0,
   },
@@ -196,7 +196,7 @@ export const companies: Record<string, Company> = {
     history: [
       { date: 'Feb 2025', price: 37.2, label: 'Tender' },
       { date: 'Feb 2026', price: 43.4, label: 'Tender' },
-      { date: 'Aug 2026', price: 72.45, label: 'Venue mark' },
+      { date: 'Aug 2026', price: 72.45, label: 'Forge price' },
     ],
     lastRoundPps: 43.4,
   },
@@ -232,7 +232,7 @@ export const companies: Record<string, Company> = {
     history: [
       { date: 'Jun 2025', price: 41.0, label: 'Series G' },
       { date: 'Feb 2026', price: 95.0, label: 'Series H' },
-      { date: 'Aug 2026', price: 130.03, label: 'Venue mark' },
+      { date: 'Aug 2026', price: 130.03, label: 'Forge price' },
     ],
     lastRoundPps: 95.0,
   },
@@ -266,7 +266,7 @@ export const companies: Record<string, Company> = {
     history: [
       { date: 'Jul 2025', price: 61.0, label: 'Series E' },
       { date: 'Mar 2026', price: 112.0, label: 'Series F' },
-      { date: 'Aug 2026', price: 125.55, label: 'Venue mark' },
+      { date: 'Aug 2026', price: 125.55, label: 'Forge price' },
     ],
     lastRoundPps: 112.0,
   },
@@ -298,7 +298,7 @@ export const companies: Record<string, Company> = {
     rounds: [{ date: 'Sep 2025', stage: 'Late-stage round', valuation: '$20bn' }],
     history: [
       { date: 'Sep 2025', price: 64.0, label: 'Round mark' },
-      { date: 'Aug 2026', price: 67.31, label: 'Venue mark' },
+      { date: 'Aug 2026', price: 67.31, label: 'Forge price' },
     ],
     lastRoundPps: 64.0,
   },
@@ -333,7 +333,7 @@ export const companies: Record<string, Company> = {
     history: [
       { date: 'Mar 2025', price: 73.0, label: 'Series F-1' },
       { date: 'Jan 2026', price: 148.0, label: 'Series G' },
-      { date: 'Aug 2026', price: 164.25, label: 'Venue mark' },
+      { date: 'Aug 2026', price: 164.25, label: 'Forge price' },
     ],
     lastRoundPps: 148.0,
   },

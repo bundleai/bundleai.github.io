@@ -199,6 +199,7 @@ const desc = co?.about
               band ? (
                 <CoWorthBand
                   band={band}
+                  venue={venue}
                   currency={d.currency}
                   mark={d.price as number}
                   lastRoundPps={co?.lastRoundPps}
@@ -216,10 +217,11 @@ const desc = co?.about
           <section class="card co-card" aria-labelledby="co-chart-h">
             <div class="co-card-head">
               <h2 class="h3" id="co-chart-h">Price reference points</h2>
-              <span class="small muted">as of {dataAsOf}</span>
+              <span class="small muted">{venue} price · {dataAsOf}</span>
             </div>
             <CoPriceChart
               points={co?.history}
+              venue={venue}
               currency={d.currency}
               hue={d.hue}
               asOf={dataAsOf}
