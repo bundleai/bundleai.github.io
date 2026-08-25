@@ -176,7 +176,7 @@ const vsForge = (price?: number | null): number | null =>
               </dl>
 
               <a
-                class="vc-go"
+                class:list={['vc-go', isBest ? 'primary' : 'ghost']}
                 href={r.url}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -189,7 +189,7 @@ const vsForge = (price?: number | null): number | null =>
                 data-deal-currency={d.currency}
                 data-deal-price={r.price ?? ''}
               >
-                Trade here <span class="arrow">↗</span>
+                Trade on {venueLabel(r.venue)} <span class="arrow">↗</span>
               </a>
             </li>
           );
@@ -462,11 +462,57 @@ const vsForge = (price?: number | null): number | null =>
     overflow-wrap: anywhere;
   }
 
+  /* A text link here read as body copy and got skipped; this is the action
+     the whole row exists to offer, so it is a real button. The cheapest row
+     gets the filled treatment so the eye lands on it first. */
   .vc-go {
-    justify-self: start;
-    font-size: 0.82rem;
+    justify-self: stretch;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-top: 0.15rem;
+    padding: 0.6rem 1.1rem;
+    border-radius: var(--r-m);
+    font-size: 0.88rem;
     font-weight: 600;
+    border: 1.5px solid var(--green);
+    transition: background-color 0.15s ease, color 0.15s ease, transform 0.12s ease,
+      box-shadow 0.15s ease;
+  }
+
+  .vc-go.primary {
+    background: var(--green);
+    color: #fff;
+    box-shadow: 0 1px 2px rgba(20, 40, 30, 0.18);
+  }
+
+  .vc-go.primary:hover {
+    background: var(--green-deep);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(20, 40, 30, 0.22);
+  }
+
+  .vc-go.ghost {
+    background: var(--surface);
     color: var(--green);
+  }
+
+  .vc-go.ghost:hover {
+    background: var(--green);
+    color: #fff;
+    transform: translateY(-1px);
+  }
+
+  .vc-go:active { transform: translateY(0); }
+
+  .vc-go .arrow { transition: transform 0.15s ease; }
+  .vc-go:hover .arrow { transform: translate(2px, -2px); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vc-go, .vc-go .arrow { transition: none; }
+    .vc-go:hover { transform: none; }
   }
 
   .vc-go:hover { color: var(--green-deep); }
