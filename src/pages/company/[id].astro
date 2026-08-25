@@ -128,7 +128,7 @@ const desc = co?.about
 
           <div class="co-cta">
             <a
-              class="btn btn-primary btn-lg co-trade"
+              class="btn btn-primary"
               href={d.url}
               target="_blank"
               rel="noopener noreferrer"
@@ -144,12 +144,12 @@ const desc = co?.about
             >
               Trade on {venue} <span class="arrow">↗</span>
             </a>
-            <button type="button" class="btn btn-ghost btn-sm" data-eq-open>
+            <button type="button" class="btn btn-ghost" data-eq-open>
               <span aria-hidden="true">◧</span> Equity calculator
             </button>
             <button
               type="button"
-              class="btn btn-ghost btn-sm"
+              class="btn btn-ghost"
               data-watch={d.id}
               data-watch-name={d.name}
               aria-pressed="false"
@@ -753,23 +753,6 @@ const desc = co?.about
     text-decoration: underline;
     text-underline-offset: 2px;
     white-space: nowrap;
-  }
-
-  /* The trade CTA is the point of the page: give it weight the two utility
-     buttons beside it do not have. */
-  .co-trade {
-    box-shadow: 0 2px 6px rgba(20, 40, 30, 0.2);
-    flex: 0 0 100%;
-    justify-content: center;
-  }
-
-  .co-trade:hover {
-    box-shadow: 0 6px 16px rgba(20, 40, 30, 0.26);
-    transform: translateY(-1px);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .co-trade:hover { transform: none; }
   }
 
   /* ---- equity calculator dialog ---- */

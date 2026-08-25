@@ -11,8 +11,6 @@
  */
 import type { Deal } from '../data/deals';
 import type { Company, SectorStat } from '../data/companies';
-import { deals } from '../data/deals';
-import { parseValuationBn } from '../data/companies';
 import { listingsFor, spreadFor } from '../data/venues';
 
 interface Props {
@@ -69,21 +67,31 @@ if (d.price != null && co?.lastRoundPps) {
   });
 }
 
-/* 3. Where this sits by valuation among everything Bundle tracks. */
-const valued = deals
-  .map((x) => ({ id: x.id, bn: parseValuationBn(x.valuation) }))
-  .filter((x) => x.bn > 0)
-  .sort((a, b) => b.bn - a.bn);
-const rank = valued.findIndex((x) => x.id === d.id);
-if (rank > -1) {
-  const pctile = 1 - rank / valued.length;
+/* 3. Whether you could actually buy it: open orders across every venue.
+      A price you cannot transact at is not much of a price, and this is the
+      only liquidity signal any venue publishes without a login. */
+const rows = listingsFor(d.id);
+const orderRows = rows.filter((r) => r.liveOrders != null);
+if (orderRows.length) {
+  const orders = orderRows.reduce((sum, r) => sum + (r.liveOrders ?? 0), 0);
   dials.push({
-    key: 'rank',
-    label: 'Size rank',
-    value: `#${rank + 1}`,
-    sub: `of ${valued.length} tracked`,
-    fill: pctile,
-    tone: 'neutral',
+    key: 'liquidity',
+    label: orders > 0 ? 'Live orders' : 'No open orders',
+    value: String(orders),
+    sub: orders > 0 ? 'buyers and sellers waiting' : 'nothing quoted right now',
+    // 60 open orders reads as a busy book for a private name.
+    fill: Math.min(orders / 60, 1),
+    tone: orders >= 20 ? 'up' : orders > 0 ? 'gold' : 'down',
+  });
+} else if (d.investors != null) {
+  // Crowdfunding rounds publish backer counts instead of an order book.
+  dials.push({
+    key: 'backers',
+    label: 'Investors in',
+    value: String(d.investors),
+    sub: 'backing this round',
+    fill: Math.min(d.investors / 500, 1),
+    tone: 'up',
   });
 }
 

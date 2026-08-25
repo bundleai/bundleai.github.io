@@ -233,37 +233,3 @@ const typeLabel =
     color: var(--text-2);
   }
 </style>
-
-<script>
-  /**
-   * Card body opens the company dashboard; the Trade button (data-trade) is
-   * handled separately by PortfolioModal and must not also navigate.
-   * Guarded so multiple component instances register the listener only once.
-   */
-  // @ts-ignore
-  if (!window.__bundleCompanyNav) {
-    // @ts-ignore
-    window.__bundleCompanyNav = true;
-
-    const go = (el: Element) => {
-      const href = el.getAttribute('data-company');
-      if (href) location.href = href;
-    };
-
-    document.addEventListener('click', (e) => {
-      const target = e.target as HTMLElement;
-      if (target.closest('[data-trade], a, button')) return;
-      const card = target.closest('[data-company]');
-      if (card) go(card);
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key !== 'Enter' && e.key !== ' ') return;
-      const target = e.target as HTMLElement;
-      const card = target.closest?.('[data-company]');
-      if (!card || target.closest('[data-trade], a, button')) return;
-      e.preventDefault();
-      go(card);
-    });
-  }
-</script>

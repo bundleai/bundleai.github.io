@@ -224,6 +224,32 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
         (t as HTMLElement).click();
       });
 
+      // Rows and cards carrying [data-company] open the company dashboard.
+      // This lives here rather than in DealCard because the screener builds its
+      // own table rows and never renders that component, so the handler never
+      // shipped to /deals and the rows were inert.
+      const openCompany = (el: Element) => {
+        const href = el.getAttribute('data-company');
+        if (href) location.href = href;
+      };
+
+      document.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        // Anything already interactive wins: the Trade button must not navigate.
+        if (target.closest('[data-trade], a, button, input, select, label')) return;
+        const row = target.closest('[data-company]');
+        if (row) openCompany(row);
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        const target = e.target as HTMLElement;
+        const row = target.closest?.('[data-company]');
+        if (!row || target.closest('[data-trade], a, button, input, select')) return;
+        e.preventDefault();
+        openCompany(row);
+      });
+
       // Generic tabs: [data-tabs] > [role=tablist] buttons + panels by aria-controls
       document.querySelectorAll<HTMLElement>('[data-tabs]').forEach((root) => {
         const tabs = Array.from(
