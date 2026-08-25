@@ -2,13 +2,35 @@
 /**
  * Scrolling market tape of aggregated deals. Duplicated list for a seamless
  * CSS loop; pauses on hover; static (scrollable) when reduced motion is set.
+ *
+ * The tape is the clearest signal that Bundle aggregates, so it must not read
+ * as one venue's feed. Two rules keep it honest:
+ *  - crowdfunding rows belong on it too. They carry no per-share mark, so they
+ *    show amount raised and investor count instead of price and move.
+ *  - rows round-robin across venues, otherwise the 24 Forge listings run first
+ *    and everything else scrolls past long after anyone has stopped looking.
  */
-import { deals, dataAsOf, fmtPrice, fmtChange, platformName } from '../data/deals';
+import { deals, dataAsOf, fmtPrice, fmtChange, platformName, type Deal } from '../data/deals';
 
-const tape = deals.filter((d) => d.price != null);
+const byVenue = new Map<string, Deal[]>();
+deals.forEach((d) => {
+  const list = byVenue.get(d.platform) ?? [];
+  list.push(d);
+  byVenue.set(d.platform, list);
+});
+
+const queues = [...byVenue.values()];
+const tape: Deal[] = [];
+for (let round = 0; queues.some((q) => q.length > round); round++) {
+  queues.forEach((q) => {
+    if (q[round]) tape.push(q[round]);
+  });
+}
+
+const venueCount = byVenue.size;
 ---
 
-<div class="ticker" role="marquee" aria-label={`Aggregated market tape, indicative venue marks as of ${dataAsOf}`}>
+<div class="ticker" role="marquee" aria-label={`Aggregated market tape: ${tape.length} deals across ${venueCount} venues, indicative venue data as of ${dataAsOf}`}>
   <div class="tape">
     {
       [0, 1].map((copy) => (
@@ -18,10 +40,18 @@ const tape = deals.filter((d) => d.price != null);
               <a href={`/company/${d.id}`}>
                 <span class="t-code mono">{d.code}</span>
                 <span class="t-name">{d.name}</span>
-                <span class="t-price px">{fmtPrice(d)}</span>
-                <span class:list={['t-change', 'px', (d.change ?? 0) > 0 ? 'up' : (d.change ?? 0) < 0 ? 'down' : 'flat']}>
-                  {fmtChange(d)}
-                </span>
+                <span class="t-price px">{d.price != null ? fmtPrice(d) : (d.raised ?? '—')}</span>
+                {
+                  d.price != null ? (
+                    <span class:list={['t-change', 'px', (d.change ?? 0) > 0 ? 'up' : (d.change ?? 0) < 0 ? 'down' : 'flat']}>
+                      {fmtChange(d)}
+                    </span>
+                  ) : (
+                    <span class="t-change px flat">
+                      {d.closes ? `${d.closes} left` : d.investors != null ? `${d.investors} inv` : 'raising'}
+                    </span>
+                  )
+                }
                 <span class="t-src">{platformName(d.platform)}</span>
               </a>
             </li>
