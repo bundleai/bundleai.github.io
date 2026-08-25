@@ -28,10 +28,17 @@ for (let round = 0; queues.some((q) => q.length > round); round++) {
 }
 
 const venueCount = byVenue.size;
+
+// The loop translates by 50% (one full copy of the run), so a fixed duration
+// means speed scales with row count: adding venues silently sped the tape up.
+// Pin seconds-per-row instead, and the tape reads at the same pace whether it
+// carries 20 deals or 200.
+const SECONDS_PER_ROW = 4.2;
+const scrollSeconds = Math.round(tape.length * SECONDS_PER_ROW);
 ---
 
 <div class="ticker" role="marquee" aria-label={`Aggregated market tape: ${tape.length} deals across ${venueCount} venues, indicative venue data as of ${dataAsOf}`}>
-  <div class="tape">
+  <div class="tape" style={`--scroll-secs:${scrollSeconds}s`}>
     {
       [0, 1].map((copy) => (
         <ul class="tape-run" aria-hidden={copy === 1 ? 'true' : undefined}>
@@ -146,7 +153,7 @@ const venueCount = byVenue.size;
 
   @media (prefers-reduced-motion: no-preference) {
     .tape {
-      animation: tape-scroll 55s linear infinite;
+      animation: tape-scroll var(--scroll-secs, 120s) linear infinite;
     }
 
     .ticker:hover .tape {
