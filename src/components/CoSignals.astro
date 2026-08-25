@@ -42,16 +42,9 @@ if (d.change != null && d.change !== 0) {
   signals.push({ label: 'Status', value: d.status, note: 'on the venue', tone: 'good' });
 }
 
-// 2. Price against the last primary round.
-if (d.price != null && co?.lastRoundPps) {
-  const pct = ((d.price - co.lastRoundPps) / co.lastRoundPps) * 100;
-  signals.push({
-    label: 'vs last round',
-    value: `${pct > 0 ? '+' : ''}${pct.toFixed(0)}%`,
-    note: pct > 0 ? 'above round price' : 'below round price',
-    tone: pct > 0 ? 'warn' : 'good',
-  });
-}
+// Price against the last primary round is deliberately NOT here: CoVitals
+// renders it as a dial directly below, and showing it twice made the two rows
+// read as one repeated strip.
 
 // 3. Sector direction.
 if (stat) {

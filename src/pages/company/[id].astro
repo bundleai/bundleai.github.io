@@ -16,6 +16,7 @@ import CoSectorPanel from '../../components/CoSectorPanel.astro';
 import CoVenueCompare from '../../components/CoVenueCompare.astro';
 import Icon from '../../components/Icon.astro';
 import CoSignals from '../../components/CoSignals.astro';
+import CoVitals from '../../components/CoVitals.astro';
 import CoLogo from '../../components/CoLogo.astro';
 import { deals, platformName, fmtPrice, fmtChange, dataAsOf, type Deal } from '../../data/deals';
 import { getCompany, estimatedWorth, sectorStats, sectorFor } from '../../data/companies';
@@ -69,7 +70,10 @@ const desc = co?.about
       <a href="/deals" class="co-back small">← Deal screener</a>
 
       {/* ---------------- 1. Header ---------------- */}
-      <header class="co-head panel">
+      <header class="co-head panel" style={`--h: var(--${d.hue})`}>
+        <span class="co-head-mark" aria-hidden="true">
+          <CoLogo id={d.id} name={d.name} hue={d.hue} size={230} />
+        </span>
         <div class="co-head-main">
           <div class="co-id">
             <CoLogo id={d.id} name={d.name} hue={d.hue} size={52} />
@@ -158,6 +162,9 @@ const desc = co?.about
 
       {/* ---------------- 2. Signals at a glance ---------------- */}
       <CoSignals deal={d} co={co} stat={stat} />
+
+      {/* ---------------- 2b. Vitals dials ---------------- */}
+      <CoVitals deal={d} co={co} stat={stat} />
 
       {/* ---------------- 3. Snapshot tiles ---------------- */}
       <dl class="co-facts">
@@ -350,13 +357,56 @@ const desc = co?.about
   }
 
   /* ---- header ---- */
+  /* Every company page was the same white card. Washing the header in the
+     company's own hue and floating its mark behind the content gives each one
+     an identity you recognise before reading the name. */
   .co-head {
+    position: relative;
+    overflow: hidden;
     display: grid;
     grid-template-columns: 1.35fr 1fr;
     gap: clamp(1.25rem, 3vw, 2.5rem);
     align-items: start;
     padding: clamp(1.2rem, 2.5vw, 1.6rem);
     margin-bottom: 0.9rem;
+    background:
+      radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--h) 13%, transparent), transparent 60%),
+      linear-gradient(180deg, color-mix(in srgb, var(--h) 5%, var(--surface)), var(--surface) 70%);
+    border-color: color-mix(in srgb, var(--h) 22%, var(--line));
+  }
+
+  .co-head::after {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--h), color-mix(in srgb, var(--h) 25%, transparent));
+  }
+
+  /* The mark, oversized and faded, as a watermark rather than decoration. */
+  .co-head-mark {
+    position: absolute;
+    right: -2.5rem;
+    bottom: -3.5rem;
+    opacity: 0.05;
+    pointer-events: none;
+    filter: grayscale(1);
+    z-index: 0;
+  }
+
+  .co-head-mark :global(.logo-tile) {
+    border: 0;
+    box-shadow: none;
+    background: none;
+  }
+
+  .co-head > *:not(.co-head-mark) {
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (max-width: 700px) {
+    .co-head-mark { display: none; }
   }
 
   .co-id {

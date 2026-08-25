@@ -1,0 +1,251 @@
+---
+/**
+ * Vitals band: four dial readings that carry the page's colour.
+ *
+ * Every figure is derived from data already shown elsewhere on the page, so
+ * this is a summary layer rather than a new set of claims. Each dial is an SVG
+ * arc — no chart library, no runtime JS.
+ *
+ * Dials that cannot be computed for a given deal are dropped rather than
+ * rendered empty, so a crowdfunding raise shows two and OpenAI shows four.
+ */
+import type { Deal } from '../data/deals';
+import type { Company, SectorStat } from '../data/companies';
+import { deals } from '../data/deals';
+import { parseValuationBn } from '../data/companies';
+import { listingsFor, spreadFor } from '../data/venues';
+
+interface Props {
+  deal: Deal;
+  co?: Company;
+  stat?: SectorStat;
+}
+
+const { deal: d, co, stat } = Astro.props;
+
+type Tone = 'up' | 'down' | 'gold' | 'neutral';
+
+interface Dial {
+  key: string;
+  label: string;
+  value: string;
+  sub: string;
+  /** 0–1, how far round the arc sweeps. */
+  fill: number;
+  tone: Tone;
+}
+
+const dials: Dial[] = [];
+
+/* 1. Growth since the first reported round — the "journey" number. */
+const hist = co?.history ?? [];
+if (hist.length >= 2) {
+  const first = hist[0].price;
+  const last = hist[hist.length - 1].price;
+  if (first > 0) {
+    const mult = last / first;
+    dials.push({
+      key: 'growth',
+      label: 'Since first round',
+      value: `${mult.toFixed(1)}×`,
+      sub: `${hist[0].date} to now`,
+      // 10x fills the dial; beyond that it simply stays full.
+      fill: Math.min(mult / 10, 1),
+      tone: mult >= 1 ? 'up' : 'down',
+    });
+  }
+}
+
+/* 2. Premium or discount to the last primary round. */
+if (d.price != null && co?.lastRoundPps) {
+  const pct = ((d.price - co.lastRoundPps) / co.lastRoundPps) * 100;
+  dials.push({
+    key: 'premium',
+    label: pct >= 0 ? 'Premium to round' : 'Discount to round',
+    value: `${pct > 0 ? '+' : ''}${pct.toFixed(0)}%`,
+    sub: 'vs last primary price',
+    fill: Math.min(Math.abs(pct) / 100, 1),
+    tone: pct > 0 ? 'gold' : 'up',
+  });
+}
+
+/* 3. Where this sits by valuation among everything Bundle tracks. */
+const valued = deals
+  .map((x) => ({ id: x.id, bn: parseValuationBn(x.valuation) }))
+  .filter((x) => x.bn > 0)
+  .sort((a, b) => b.bn - a.bn);
+const rank = valued.findIndex((x) => x.id === d.id);
+if (rank > -1) {
+  const pctile = 1 - rank / valued.length;
+  dials.push({
+    key: 'rank',
+    label: 'Size rank',
+    value: `#${rank + 1}`,
+    sub: `of ${valued.length} tracked`,
+    fill: pctile,
+    tone: 'neutral',
+  });
+}
+
+/* 4. How far apart the venues price it — the aggregator's own signal. */
+const spread = spreadFor(d.id);
+if (spread) {
+  dials.push({
+    key: 'spread',
+    label: 'Venue spread',
+    value: `${spread.spreadPct.toFixed(1)}%`,
+    sub: `across ${listingsFor(d.id).length} venues`,
+    fill: Math.min(spread.spreadPct / 30, 1),
+    tone: spread.spreadPct > 25 ? 'down' : 'up',
+  });
+} else if (stat) {
+  dials.push({
+    key: 'sector',
+    label: `${d.sector} move`,
+    value: `${stat.avgChange > 0 ? '+' : ''}${stat.avgChange.toFixed(1)}%`,
+    sub: `${stat.count} deals tracked`,
+    fill: Math.min(Math.abs(stat.avgChange) / 20, 1),
+    tone: stat.trend === 'up' ? 'up' : stat.trend === 'down' ? 'down' : 'neutral',
+  });
+}
+
+// Arc geometry: a 270° dial starting bottom-left, the usual gauge convention.
+const R = 34;
+const C = 2 * Math.PI * R;
+const SWEEP = 0.75; // 270 of 360 degrees
+const track = C * SWEEP;
+---
+
+{
+  dials.length > 0 && (
+    <ul class="vit" aria-label="Key measures">
+      {dials.map((dl) => (
+        <li class:list={['vit-item', dl.tone]}>
+          <span class="vit-dial" aria-hidden="true">
+            <svg viewBox="0 0 88 88" width="76" height="76">
+              <circle
+                class="vit-track"
+                cx="44" cy="44" r={R}
+                stroke-dasharray={`${track} ${C}`}
+                transform="rotate(135 44 44)"
+              />
+              <circle
+                class="vit-fill"
+                cx="44" cy="44" r={R}
+                stroke-dasharray={`${track * dl.fill} ${C}`}
+                transform="rotate(135 44 44)"
+              />
+            </svg>
+            <span class="vit-value px">{dl.value}</span>
+          </span>
+          <span class="vit-label">{dl.label}</span>
+          <span class="vit-sub">{dl.sub}</span>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+<style>
+  .vit {
+    list-style: none;
+    margin: 0 0 1.25rem;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: 0.6rem;
+  }
+
+  .vit-item {
+    display: grid;
+    justify-items: center;
+    gap: 0.1rem;
+    padding: 1rem 0.75rem 0.85rem;
+    border-radius: var(--r-m);
+    border: 1px solid var(--tone-line);
+    background: var(--tone-bg);
+    text-align: center;
+  }
+
+  .vit-item.up {
+    --tone: var(--up);
+    --tone-bg: linear-gradient(180deg, rgba(46, 125, 50, 0.12), rgba(46, 125, 50, 0.03));
+    --tone-line: rgba(46, 125, 50, 0.26);
+  }
+
+  .vit-item.down {
+    --tone: var(--down);
+    --tone-bg: linear-gradient(180deg, rgba(211, 47, 47, 0.11), rgba(211, 47, 47, 0.03));
+    --tone-line: rgba(211, 47, 47, 0.26);
+  }
+
+  .vit-item.gold {
+    --tone: var(--gold);
+    --tone-bg: linear-gradient(180deg, rgba(201, 162, 39, 0.16), rgba(201, 162, 39, 0.04));
+    --tone-line: rgba(201, 162, 39, 0.34);
+  }
+
+  .vit-item.neutral {
+    --tone: var(--c3);
+    --tone-bg: linear-gradient(180deg, rgba(42, 111, 176, 0.1), rgba(42, 111, 176, 0.03));
+    --tone-line: rgba(42, 111, 176, 0.24);
+  }
+
+  .vit-dial {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.3rem;
+  }
+
+  .vit-dial svg {
+    overflow: visible;
+  }
+
+  .vit-track,
+  .vit-fill {
+    fill: none;
+    stroke-width: 7;
+    stroke-linecap: round;
+  }
+
+  .vit-track {
+    stroke: color-mix(in srgb, var(--tone) 16%, transparent);
+  }
+
+  .vit-fill {
+    stroke: var(--tone);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .vit-fill {
+      animation: vit-sweep 0.9s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+    }
+  }
+
+  @keyframes vit-sweep {
+    from { stroke-dasharray: 0 9999; }
+  }
+
+  .vit-value {
+    position: absolute;
+    font-size: 1.02rem;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+
+  .vit-label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.25;
+  }
+
+  .vit-sub {
+    font-size: 0.7rem;
+    color: var(--text-2);
+    line-height: 1.3;
+  }
+</style>
