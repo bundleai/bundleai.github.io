@@ -1,0 +1,143 @@
+---
+/**
+ * Emits everything the assistant is allowed to answer from, as JSON.
+ *
+ * The assistant is grounded: it composes answers from this payload and nothing
+ * else. That is what stops it inventing prices, and it means the answers can
+ * never drift from what the pages themselves show, because both read the same
+ * source of truth.
+ */
+import { deals, platformName, dataAsOf } from '../data/deals';
+import { companies, sectorStats } from '../data/companies';
+import { listingsFor, spreadFor, venueLabel, venueMeta } from '../data/venues';
+import { lessons } from '../data/lessons';
+
+const payload = {
+  asOf: dataAsOf,
+
+  deals: deals.map((d) => {
+    const rows = listingsFor(d.id);
+    const spread = spreadFor(d.id);
+    const co = companies[d.id];
+    return {
+      id: d.id,
+      name: d.name,
+      code: d.code,
+      sector: d.sector,
+      type: d.type,
+      venue: platformName(d.platform),
+      currency: d.currency,
+      price: d.price ?? null,
+      change: d.change ?? null,
+      valuation: d.valuation,
+      raised: d.raised ?? null,
+      investors: d.investors ?? null,
+      closes: d.closes ?? null,
+      minTicket: d.minTicket,
+      url: d.url,
+      hq: co?.hq ?? null,
+      founded: co?.founded ?? null,
+      employees: co?.employees ?? null,
+      about: co?.about ?? null,
+      pros: co?.pros ?? [],
+      cons: co?.cons ?? [],
+      venues: rows.map((r) => ({
+        name: venueLabel(r.venue),
+        price: r.price ?? null,
+        url: r.url,
+        structure: r.structure ?? null,
+        access: r.access ?? venueMeta[r.venue]?.access ?? null,
+        liveOrders: r.liveOrders ?? null,
+      })),
+      cheapest: spread ? { venue: venueLabel(spread.cheapest.venue), price: spread.low } : null,
+      spreadPct: spread ? Number(spread.spreadPct.toFixed(1)) : null,
+    };
+  }),
+
+  sectors: sectorStats().map((s) => ({
+    sector: s.sector,
+    count: s.count,
+    avgChange: Number(s.avgChange.toFixed(2)),
+    valuation: s.totalValuation,
+    trend: s.trend,
+  })),
+
+  venues: Object.values(venueMeta).map((v) => ({
+    id: v.id,
+    name: v.name,
+    model: v.model,
+    access: v.access,
+    region: v.region,
+  })),
+
+  lessons: lessons.map((l) => ({
+    slug: l.slug,
+    title: l.title,
+    blurb: l.blurb,
+    minutes: l.minutes,
+    takeaways: l.takeaways ?? [],
+    text: (l.text ?? []).slice(0, 3),
+  })),
+
+  /* Answers to the things people ask about Bundle itself. Kept here rather
+     than in the script so the wording matches the site's own pages. */
+  faqs: [
+    {
+      q: 'what is bundle how does it work aggregator',
+      a: "Bundle aggregates private-market deals from other platforms. It scans crowdfunding sites, secondary marketplaces and pre-IPO venues, normalises every listing, and shows them side by side so you can compare. When you want to invest, Bundle sends you to the venue that lists the deal, and you invest there under that venue's rules.",
+      link: '/how-it-works',
+      linkLabel: 'How it works',
+    },
+    {
+      q: 'how does bundle make money fees cost free charge',
+      a: "Bundle is free for investors. Where a venue runs a referral programme, Bundle may earn a fee when you complete an investment it routed to them, paid out of the venue's own take. It is never a markup on the price you pay, and deals with no referral programme are listed exactly the same way.",
+      link: '/pricing',
+      linkLabel: 'Pricing',
+    },
+    {
+      q: 'is bundle regulated fca authorised do you hold my money custody safe',
+      a: 'Bundle never holds your money or your shares and does not execute trades. You invest directly on the venue that lists the deal, under its own regulatory permissions and custody arrangements. Bundle Technologies Ltd is a technology company, not a broker; anything requiring FCA authorisation is offered through the venue or partner that holds that permission.',
+      link: '/trust',
+      linkLabel: 'Trust & Safety',
+    },
+    {
+      q: 'are prices live real time accurate quotes',
+      a: 'The prices are real but not live. They are taken from each venue\'s own public pages and carry the date the venue stamped them. Private-market pricing is indicative by nature: these are venue estimates, not executable quotes, and different venues publish on different dates.',
+      link: '/deals',
+      linkLabel: 'Deal screener',
+    },
+    {
+      q: 'what are the risks lose money safe risky danger',
+      a: 'The same risks as investing on any of the underlying venues. Private companies fail often, shares are illiquid and can be impossible to sell for years, dilution is normal, and you can lose everything you invest. You are not covered by the FSCS. Aggregation makes the market easier to see; it does not make it safer.',
+      link: '/legal/risk-warning',
+      linkLabel: 'Risk warning',
+    },
+    {
+      q: 'which venues platforms do you cover track sources',
+      a: 'Bundle currently tracks listings from Crowdcube, Wefunder, Republic and StartEngine on the primary side, and Forge Global, Hiive and Nasdaq Private Market on the secondary and pre-IPO side.',
+      link: '/deals',
+      linkLabel: 'Deal screener',
+    },
+    {
+      q: 'how do i start invest sign up account portfolio plan',
+      a: 'Build a portfolio plan first: a few short questions set your ticket size, target spread and the sectors you care about, and the screener then ranks every live deal against that plan. Investing itself happens on the venue.',
+      link: '/portfolio',
+      linkLabel: 'Build my portfolio',
+    },
+    {
+      q: 'do you give advice recommend should i buy tips',
+      a: 'No. Bundle does not give investment advice or make recommendations, and nothing on the site is a personal recommendation. It shows you the market and the numbers behind each listing so you can make your own decision, ideally after reading the venue\'s own documents.',
+      link: '/trust',
+      linkLabel: 'Trust & Safety',
+    },
+    {
+      q: 'founder raising claim listing my company',
+      a: 'If you are raising on a venue Bundle tracks, your round can appear on the screener. Claiming the listing lets you verify the data and add context, and it is free. There is also a free AI pitch health check.',
+      link: '/founders',
+      linkLabel: 'For founders',
+    },
+  ],
+};
+---
+
+<script type="application/json" id="bundle-chat-data" set:html={JSON.stringify(payload)} />
