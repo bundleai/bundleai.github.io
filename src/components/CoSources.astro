@@ -1,0 +1,169 @@
+---
+/**
+ * Source list for the editorial sections (pros/cons, recent developments).
+ *
+ * Sources are DERIVED from data we actually hold — the company's own site and
+ * the venue pages we scraped for this listing — rather than hand-written
+ * citations. That is deliberate: a hand-typed reference list on a page like
+ * this is exactly the sort of thing that quietly rots into fabrication, and
+ * every link here is one we can point at today.
+ *
+ * Where a claim rests on general public reporting rather than a specific page
+ * we can link, the note says so plainly instead of inventing a citation.
+ */
+import type { Deal } from '../data/deals';
+import type { Company } from '../data/companies';
+import { listingsFor, venueLabel } from '../data/venues';
+
+interface Props {
+  deal: Deal;
+  co?: Company;
+  /** Extra line explaining how this particular section was put together. */
+  basis: string;
+}
+
+const { deal: d, co, basis } = Astro.props;
+
+interface Src {
+  label: string;
+  url: string;
+  kind: string;
+}
+
+const srcs: Src[] = [];
+
+if (co?.website && /^https?:\/\//.test(co.website)) {
+  srcs.push({
+    label: co.website.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, ''),
+    url: co.website,
+    kind: 'Company',
+  });
+}
+
+listingsFor(d.id).forEach((l) => {
+  if (!l.url || srcs.some((s) => s.url === l.url)) return;
+  srcs.push({ label: venueLabel(l.venue), url: l.url, kind: 'Venue' });
+});
+
+// Any news item carrying its own link is a source in its own right.
+(co?.news ?? []).forEach((n) => {
+  if (n.url && !srcs.some((s) => s.url === n.url)) {
+    srcs.push({ label: n.source, url: n.url, kind: 'Report' });
+  }
+});
+---
+
+<details class="src-box">
+  <summary>
+    <span class="src-sum">Sources &amp; basis</span>
+    <span class="src-n">{srcs.length}</span>
+  </summary>
+  <div class="src-body">
+    <p class="src-basis">{basis}</p>
+    {
+      srcs.length > 0 && (
+        <ul class="src-list">
+          {srcs.map((s) => (
+            <li>
+              <span class="src-kind">{s.kind}</span>
+              <a href={s.url} target="_blank" rel="noopener noreferrer">
+                {s.label} <span aria-hidden="true">↗</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+    <p class="src-note">
+      Checked {new Date().getFullYear()}. Venue figures carry the date shown
+      beside them; company facts are compiled from the company's own material
+      and public reporting, and are not independently audited by Bundle.
+    </p>
+  </div>
+</details>
+
+<style>
+  .src-box {
+    margin-top: 0.9rem;
+    border-top: 1px dashed var(--line);
+    padding-top: 0.7rem;
+  }
+
+  .src-box summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    cursor: pointer;
+    list-style: none;
+    font-size: 0.8rem;
+    color: var(--text-2);
+  }
+
+  .src-box summary::-webkit-details-marker { display: none; }
+
+  .src-sum {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-color: var(--line-2);
+  }
+
+  .src-box summary:hover .src-sum { color: var(--ink); }
+
+  .src-n {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    background: var(--tint);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.05rem 0.4rem;
+    color: var(--text-2);
+  }
+
+  .src-body { padding-top: 0.6rem; }
+
+  .src-basis {
+    margin: 0 0 0.6rem;
+    font-size: 0.8rem;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .src-list {
+    list-style: none;
+    margin: 0 0 0.6rem;
+    padding: 0;
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .src-list li {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .src-kind {
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-2);
+    background: var(--tint-soft);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 0.08rem 0.35rem;
+    min-width: 3.9rem;
+    text-align: center;
+  }
+
+  .src-list a { overflow-wrap: anywhere; }
+
+  .src-note {
+    margin: 0;
+    font-size: 0.72rem;
+    color: var(--text-2);
+    line-height: 1.5;
+  }
+</style>

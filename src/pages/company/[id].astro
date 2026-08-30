@@ -18,6 +18,7 @@ import Icon from '../../components/Icon.astro';
 import CoSignals from '../../components/CoSignals.astro';
 import CoVitals from '../../components/CoVitals.astro';
 import CoLogo from '../../components/CoLogo.astro';
+import CoSources from '../../components/CoSources.astro';
 import { deals, platformName, fmtPrice, fmtChange, dataAsOf, type Deal } from '../../data/deals';
 import { getCompany, estimatedWorth, sectorStats, sectorFor } from '../../data/companies';
 
@@ -42,6 +43,12 @@ const typeLabel =
   d.type === 'crowdfunding' ? 'Crowdfunding' : d.type === 'pre-ipo' ? 'Pre-IPO' : 'Secondary';
 
 const lastRound = co?.rounds?.length ? co.rounds[co.rounds.length - 1] : null;
+
+// The equity calculator only makes sense on a primary raise. On a secondary or
+// pre-IPO block you are buying existing shares from a holder at a per-share
+// mark: your money does not enter the company, so it buys no new equity and
+// the post-money arithmetic does not apply.
+const isPrimary = d.type === 'crowdfunding';
 
 // Snapshot tiles: icon + one value each, so the strip is scanned not read.
 // Only facts we actually hold get a tile.
@@ -144,9 +151,11 @@ const desc = co?.about
             >
               Trade on {venue} <span class="arrow">↗</span>
             </a>
-            <button type="button" class="btn btn-ghost" data-eq-open>
-              <span aria-hidden="true">◧</span> Equity calculator
-            </button>
+            {isPrimary && (
+              <button type="button" class="btn btn-ghost" data-eq-open>
+                <span aria-hidden="true">◧</span> Equity calculator
+              </button>
+            )}
             <button
               type="button"
               class="btn btn-ghost"
@@ -266,7 +275,11 @@ const desc = co?.about
                     </ul>
                   </div>
                 </div>
-                <p class="co-pc-note small muted">Bundle's framing of public factors. Not advice.</p>
+                <CoSources
+                  deal={d}
+                  co={co}
+                  basis="Bundle's own framing of publicly known factors, written from the company's material, the venue listings below and general public reporting. It is an opinion, not research or advice, and not a complete list of risks."
+                />
               </section>
             )
           }
@@ -306,7 +319,11 @@ const desc = co?.about
                     </li>
                   ))}
                 </ol>
-                <p class="co-news-note small muted">Summaries of public reporting, written by Bundle.</p>
+                <CoSources
+                  deal={d}
+                  co={co}
+                  basis="Headlines summarised by Bundle from public reporting and the venue pages listed below. Wording is ours, not a quote from the source."
+                />
               </section>
             )
           }
@@ -315,10 +332,11 @@ const desc = co?.about
       </div>
 
       {/* ---------------- 5. Equity calculator (dialog) ---------------- */}
+      {isPrimary && (
       <dialog class="eq-dialog" id="eq-dialog" aria-labelledby="co-calc-h">
         <div class="eq-dialog-head">
           <div>
-            <p class="eq-dialog-eyebrow">{d.name} · {fmtPrice(d)}</p>
+            <p class="eq-dialog-eyebrow">{d.name} · primary raise</p>
             <h2 class="h3" id="co-calc-h">Equity calculator</h2>
           </div>
           <button type="button" class="eq-dialog-x" data-eq-close aria-label="Close calculator">×</button>
@@ -327,6 +345,7 @@ const desc = co?.about
           <CoEquityCalc deal={d} />
         </div>
       </dialog>
+      )}
 
       {/* ---------------- 9. Risk footer ---------------- */}
       <aside class="co-risk" role="note" aria-label="Risk warning">
