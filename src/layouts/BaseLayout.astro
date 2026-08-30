@@ -227,6 +227,22 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
         (t as HTMLElement).click();
       });
 
+      // "Build my portfolio" opens the wizard in place rather than navigating.
+      // Anyone who already has a plan keeps going to /portfolio, because for
+      // them that URL is their dashboard, not a form.
+      document.addEventListener('click', (e) => {
+        const a = (e.target as HTMLElement).closest?.('a[href^="/portfolio"]');
+        if (!a) return;
+        const href = a.getAttribute('href') || '';
+        // ?edit=1 is the deliberate "change my answers" route; leave it alone.
+        if (href.indexOf('edit=') > -1) return;
+        // @ts-ignore, global from /auth.js
+        const Auth = window.BundleAuth;
+        if (Auth?.signedIn?.() && Auth.profile?.()) return;
+        e.preventDefault();
+        document.dispatchEvent(new CustomEvent('bundle:open-portfolio'));
+      });
+
       // Rows and cards carrying [data-company] open the company dashboard.
       // This lives here rather than in DealCard because the screener builds its
       // own table rows and never renders that component, so the handler never

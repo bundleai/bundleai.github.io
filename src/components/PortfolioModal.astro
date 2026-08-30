@@ -31,15 +31,25 @@
   let pendingDeal: Record<string, string> | null = null;
   let lastFocus: HTMLElement | null = null;
 
+  // The deal-specific header overwrites these, so keep the originals to put
+  // back when the modal is opened straight from a "Build my portfolio" button.
+  const baseTitle = titleEl?.textContent ?? '';
+  const baseSub = subEl?.textContent ?? '';
+
   const openModal = (deal: Record<string, string> | null) => {
     pendingDeal = deal;
     lastFocus = document.activeElement as HTMLElement;
 
-    if (deal && titleEl && subEl) {
-      titleEl.textContent = `Before you trade ${deal.name}`;
-      subEl.textContent =
-        'Why one deal is never a plan, then a few questions so we can check this ' +
-        'one fits yours. We hand you to ' + deal.venue + ' to execute.';
+    if (titleEl && subEl) {
+      if (deal) {
+        titleEl.textContent = `Before you trade ${deal.name}`;
+        subEl.textContent =
+          'Why one deal is never a plan, then a few questions so we can check this ' +
+          'one fits yours. We hand you to ' + deal.venue + ' to execute.';
+      } else {
+        titleEl.textContent = baseTitle;
+        subEl.textContent = baseSub;
+      }
     }
 
     modal!.hidden = false;
