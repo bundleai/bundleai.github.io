@@ -4,7 +4,7 @@
  *
  * Every figure is derived from data already shown elsewhere on the page, so
  * this is a summary layer rather than a new set of claims. Each dial is an SVG
- * arc — no chart library, no runtime JS.
+ * arc, with no chart library and no runtime JS.
  *
  * Dials that cannot be computed for a given deal are dropped rather than
  * rendered empty, so a crowdfunding raise shows two and OpenAI shows four.
@@ -35,7 +35,7 @@ interface Dial {
 
 const dials: Dial[] = [];
 
-/* 1. Growth since the first reported round — the "journey" number. */
+/* 1. Growth since the first reported round: the "journey" number. */
 const hist = co?.history ?? [];
 if (hist.length >= 2) {
   const first = hist[0].price;
@@ -95,7 +95,7 @@ if (orderRows.length) {
   });
 }
 
-/* 4. How far apart the venues price it — the aggregator's own signal. */
+/* 4. How far apart the venues price it: the aggregator's own signal. */
 const spread = spreadFor(d.id);
 if (spread) {
   dials.push({

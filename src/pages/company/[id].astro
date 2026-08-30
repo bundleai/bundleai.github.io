@@ -68,7 +68,7 @@ if (co?.website) {
 
 const desc = co?.about
   ? `${d.name}: ${co.about.slice(0, 130)}`
-  : `${d.name} (${d.code}) — ${typeLabel.toLowerCase()} deal listed on ${venue}, aggregated by Bundle. Indicative venue data, capital at risk.`;
+  : `${d.name} (${d.code}), ${typeLabel.toLowerCase()} deal listed on ${venue}, aggregated by Bundle. Indicative venue data, capital at risk.`;
 ---
 
 <BaseLayout title={`${d.name} · Company dashboard`} description={desc}>
@@ -110,7 +110,7 @@ const desc = co?.about
                 </>
               ) : (
                 <>
-                  <span class="co-px px">{d.raised ?? '—'}</span>
+                  <span class="co-px px">{d.raised ?? '-'}</span>
                   <span class="co-px-unit">
                     raised{d.investors != null ? ` · ${d.investors} investors` : ''}
                   </span>
@@ -223,7 +223,7 @@ const desc = co?.about
                 />
               ) : (
                 <p class="small muted co-empty">
-                  No per-share mark published — this round is priced on a valuation cap.
+                  No per-share mark published: this round is priced on a valuation cap.
                 </p>
               )
             }
@@ -894,7 +894,7 @@ const desc = co?.about
 
 <script>
   /* Watchlist: local to this device, same storage convention as /auth.js.
-     Deliberately a no-op beyond localStorage — Bundle holds nothing. */
+     Deliberately a no-op beyond localStorage, since Bundle holds nothing. */
   const KEY = 'bundle.watchlist';
 
   const read = (): string[] => {
@@ -910,7 +910,7 @@ const desc = co?.about
     try {
       localStorage.setItem(KEY, JSON.stringify(list));
     } catch {
-      /* storage unavailable (private mode, blocked cookies) — button still toggles */
+      /* storage unavailable (private mode, blocked cookies), button still toggles */
     }
   };
 

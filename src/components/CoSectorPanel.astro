@@ -125,7 +125,7 @@ const trendWord = stat?.trend === 'up' ? 'Rising' : stat?.trend === 'down' ? 'Fa
                   <span class="sec-peer-s">{platformName(p.platform)}</span>
                 </span>
                 <span class="sec-peer-px">
-                  <span class="px">{p.price != null ? fmtPrice(p) : p.raised ?? '—'}</span>
+                  <span class="px">{p.price != null ? fmtPrice(p) : p.raised ?? '-'}</span>
                   {p.change != null && p.change !== 0 && (
                     <span class:list={['px', 'sec-peer-ch', p.change > 0 ? 'up' : 'down']}>
                       {fmtChange(p)}

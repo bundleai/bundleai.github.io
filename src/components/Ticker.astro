@@ -47,7 +47,7 @@ const scrollSeconds = Math.round(tape.length * SECONDS_PER_ROW);
               <a href={`/company/${d.id}`}>
                 <span class="t-code mono">{d.code}</span>
                 <span class="t-name">{d.name}</span>
-                <span class="t-price px">{d.price != null ? fmtPrice(d) : (d.raised ?? '—')}</span>
+                <span class="t-price px">{d.price != null ? fmtPrice(d) : (d.raised ?? '-')}</span>
                 {
                   d.price != null ? (
                     <span class:list={['t-change', 'px', (d.change ?? 0) > 0 ? 'up' : (d.change ?? 0) < 0 ? 'down' : 'flat']}>

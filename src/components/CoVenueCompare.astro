@@ -3,7 +3,7 @@
  * Cross-venue price comparison.
  *
  * The decision this has to support is "where do I buy this, and does it
- * matter?" — so the answer leads: cheapest venue, how much cheaper, and a bar
+ * matter?" So the answer leads: cheapest venue, how much cheaper, and a bar
  * per venue you can read at a glance. Detail (fees, structure, access) sits in
  * the row beneath the bar, not in prose above it.
  */
@@ -153,11 +153,11 @@ const vsForge = (price?: number | null): number | null =>
               <dl class="vc-meta">
                 <div>
                   <dt>Structure</dt>
-                  <dd>{structureLabel[r.structure || ''] || '—'}</dd>
+                  <dd>{structureLabel[r.structure || ''] || '-'}</dd>
                 </div>
                 <div>
                   <dt>Access</dt>
-                  <dd>{r.access || venueMeta[r.venue]?.access || '—'}</dd>
+                  <dd>{r.access || venueMeta[r.venue]?.access || '-'}</dd>
                 </div>
                 <div>
                   <dt>Live orders</dt>
@@ -171,7 +171,7 @@ const vsForge = (price?: number | null): number | null =>
                 </div>
                 <div>
                   <dt>{r.minInvestment ? 'Min' : 'Priced'}</dt>
-                  <dd class="px">{r.minInvestment || r.asOf || '—'}</dd>
+                  <dd class="px">{r.minInvestment || r.asOf || '-'}</dd>
                 </div>
               </dl>
 

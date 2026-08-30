@@ -51,7 +51,7 @@
   }
 
   function money(cur, n) {
-    if (n == null || !isFinite(n)) return '—';
+    if (n == null || !isFinite(n)) return '-';
     return cur + n.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
@@ -131,7 +131,7 @@
       if (rows.length) {
         out.push('Listed on ' + rows.length + ' venues:');
         out.push('<ul>' + rows.map(function (v) {
-          return '<li>' + esc(v.name) + ' — <b>' + money(deal.currency, v.price) + '</b>' +
+          return '<li>' + esc(v.name) + ': <b>' + money(deal.currency, v.price) + '</b>' +
             (v.liveOrders != null ? ' · ' + v.liveOrders + ' live orders' : '') + '</li>';
         }).join('') + '</ul>');
         if (deal.cheapest) {
@@ -230,7 +230,7 @@
     bits.push('<ul>' + shown.map(function (x) {
       var val = x.price != null ? money(x.currency, x.price) + '/share'
         : x.raised ? x.raised + ' raised' : x.valuation;
-      return '<li>' + link('/company/' + x.id, x.name) + ' — ' + esc(val) +
+      return '<li>' + link('/company/' + x.id, x.name) + ': ' + esc(val) +
         (x.change != null && x.change !== 0 ? ' <span class="' + (x.change > 0 ? 'up' : 'down') + '">' +
           (x.change > 0 ? '+' : '') + x.change + '%</span>' : '') +
         ' · ' + esc(x.venue) + ' · min ' + esc(x.minTicket) + '</li>';
@@ -263,7 +263,7 @@
       if (norm(x.venue) === norm(v.name)) return true;
       return (x.venues || []).some(function (r) { return norm(r.name) === norm(v.name); });
     });
-    var bits = ['<b>' + esc(v.name) + '</b> — ' + esc(v.model) + ' · ' + esc(v.region) +
+    var bits = ['<b>' + esc(v.name) + '</b>: ' + esc(v.model) + ' · ' + esc(v.region) +
       ' · access: ' + esc(v.access) + '.'];
     bits.push(mine.length
       ? 'Bundle tracks <b>' + mine.length + '</b> ' + (mine.length === 1 ? 'listing' : 'listings') + ' there.'
@@ -325,7 +325,7 @@
 
     if (ADVICE.test(norm(q))) {
       return {
-        html: 'I can\'t tell you what to invest in — Bundle gives no advice or recommendations, ' +
+        html: 'I can\'t tell you what to invest in. Bundle gives no advice or recommendations, ' +
           'and no one can tell you where a private company\'s price goes.<br>' +
           'What I can do is show you the numbers: prices across venues, how a sector is moving, ' +
           'what a company\'s round documents say. Ask me about a specific company and I\'ll lay out both sides.',
@@ -489,7 +489,7 @@
         var d = load();
         bubble('bot',
           'I can answer from Bundle\'s listing data' +
-          (d ? ' — <b>' + d.deals.length + '</b> deals across ' + d.venues.length + ' venues, as of ' + esc(d.asOf) : '') +
+          (d ? ': <b>' + d.deals.length + '</b> deals across ' + d.venues.length + ' venues, as of ' + esc(d.asOf) : '') +
           '. Ask about a company, where it is cheapest, a sector, or how any of this works.');
         chips();
       }

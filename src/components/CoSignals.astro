@@ -4,7 +4,7 @@
  *
  * Four traffic-light readings a user can take in without reading: momentum,
  * price against the last round, how the sector is moving, and stage risk.
- * Each is derived from data already on the page — this is a summary layer,
+ * Each is derived from data already on the page, so this is a summary layer,
  * not new claims.
  */
 import type { Deal } from '../data/deals';
@@ -28,7 +28,7 @@ interface Signal {
 
 const signals: Signal[] = [];
 
-// 1. Momentum — the venue's own published move.
+// 1. Momentum: the venue's own published move.
 if (d.change != null && d.change !== 0) {
   signals.push({
     label: 'Momentum',
@@ -56,7 +56,7 @@ if (stat) {
   });
 }
 
-// 4. Stage risk — plain and unflattering.
+// 4. Stage risk, plain and unflattering.
 const stageRisk: Record<string, { v: string; t: Tone; n: string }> = {
   crowdfunding: { v: 'Very high', t: 'bad', n: 'early stage, often fails' },
   secondary: { v: 'High', t: 'warn', n: 'established, still illiquid' },

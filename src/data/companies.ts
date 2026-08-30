@@ -74,7 +74,7 @@ export const companies: Record<string, Company> = {
     ],
     cons: [
       'Enormous cash burn; profitability timeline remains unclear',
-      'Priced for near-perfect execution — little room for disappointment',
+      'Priced for near-perfect execution, with little room for disappointment',
       'Competition from Google, Anthropic and open-weight models is intensifying',
       'Complex capped-profit/PBC structure sits between holders and economics',
     ],
@@ -356,7 +356,7 @@ export const companies: Record<string, Company> = {
     cons: [
       'Pre-revenue-stage risk: most companies at this stage fail outright',
       'Hardware deployment into agriculture is slow and capital-hungry',
-      'No secondary market — expect to hold for a decade or lose it all',
+      'No secondary market, so expect to hold for a decade or lose it all',
     ],
     news: [
       { date: 'Jul 2026', title: 'Live raise on Crowdcube, £41.1k committed from 111 investors', source: 'Crowdcube' },
@@ -451,7 +451,7 @@ export const companies: Record<string, Company> = {
       'Heavy-equipment electrification is a large, regulation-driven market',
     ],
     cons: [
-      'Has raised $18.4m from the crowd across repeated rounds — heavy dilution',
+      'Has raised $18.4m from the crowd across repeated rounds, meaning heavy dilution',
       'Long industrial sales cycles delay any return',
       'Capital-intensive hardware manufacturing with thin margins',
     ],
@@ -500,7 +500,7 @@ export const companies: Record<string, Company> = {
     ],
     cons: [
       'Deep-tech hardware with a long, uncertain path to commercial scale',
-      'Smallest raise on the tape at $258.6k — limited runway',
+      'Smallest raise on the tape at $258.6k, so limited runway',
       'European industrial sales cycles are slow and relationship-driven',
     ],
     news: [
@@ -512,7 +512,7 @@ export const companies: Record<string, Company> = {
 export const getCompany = (id: string): Company | undefined => companies[id];
 
 /* -------------------------------------------------------------------------
-   Estimated worth — derived from the venue's published mark, never a valuation
+   Estimated worth, derived from the venue's published mark, never a valuation
    ------------------------------------------------------------------------- */
 
 export interface WorthBand {
@@ -556,7 +556,7 @@ export const estimatedWorth = (deal: Deal): WorthBand | undefined => {
 };
 
 /* -------------------------------------------------------------------------
-   Sector analytics — computed from the tracked deal set
+   Sector analytics, computed from the tracked deal set
    ------------------------------------------------------------------------- */
 
 export interface SectorStat {
