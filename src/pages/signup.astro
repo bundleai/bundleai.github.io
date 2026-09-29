@@ -20,11 +20,11 @@ import Logo from '../components/Logo.astro';
           </p>
         </div>
 
-        <div class="su-tabs" role="tablist" aria-label="Account">
-          <button type="button" class="su-tab" data-mode="signup" role="tab" aria-selected="true">
+        <div class="su-tabs" role="group" aria-label="Sign up or sign in">
+          <button type="button" class="su-tab" data-mode="signup" aria-pressed="true">
             Sign up
           </button>
-          <button type="button" class="su-tab" data-mode="signin" role="tab" aria-selected="false">
+          <button type="button" class="su-tab" data-mode="signin" aria-pressed="false">
             Sign in
           </button>
         </div>
@@ -42,6 +42,24 @@ import Logo from '../components/Logo.astro';
             <label for="su-password">Password</label>
             <input id="su-password" type="password" name="password" autocomplete="new-password" placeholder="At least 8 characters" required />
           </div>
+          <div class="su-consent" id="su-consent">
+            <label class="su-check" for="su-marketing">
+              <input type="checkbox" id="su-marketing" name="marketing" />
+              <span>
+                <strong>Optional.</strong> Email me the Bundle briefing, about
+                twice a month. Not required to open an account, and you can
+                unsubscribe from any email.
+              </span>
+            </label>
+            <p class="su-legal">
+              Creating an account means you agree to the
+              <a href="/legal/terms">terms of use</a> and the
+              <a href="/legal/privacy">privacy policy</a>. You can
+              <a href="/legal/data-deletion">delete your account and all its data</a>
+              at any time, in one click.
+            </p>
+          </div>
+
           <button type="submit" class="btn btn-gold su-submit" id="su-submit">
             Create account &amp; save <span class="arrow">→</span>
           </button>
@@ -109,6 +127,42 @@ import Logo from '../components/Logo.astro';
   .su-form { display: grid; gap: 1rem; }
   .su-submit { width: 100%; margin-top: 0.35rem; }
 
+  .su-consent {
+    display: grid;
+    gap: 0.6rem;
+    padding: 0.85rem 0.9rem;
+    background: var(--tint-soft);
+    border: 1px solid var(--line);
+    border-radius: var(--r-s);
+  }
+
+  .su-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    font-size: 0.8rem;
+    line-height: 1.55;
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  .su-check input {
+    margin-top: 0.2rem;
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--green);
+  }
+
+  .su-check strong { color: var(--ink); font-weight: 600; }
+
+  .su-legal {
+    margin: 0;
+    font-size: 0.76rem;
+    line-height: 1.55;
+    color: var(--text-2);
+  }
+
   .su-err {
     margin: 0;
     font-size: 0.85rem;
@@ -127,6 +181,7 @@ import Logo from '../components/Logo.astro';
   const submit = document.getElementById('su-submit');
   const lede = document.getElementById('su-lede');
   const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('.su-tab'));
+  const consentBlock = document.getElementById('su-consent');
   let mode: 'signup' | 'signin' = 'signup';
 
   const params = new URLSearchParams(location.search);
@@ -140,8 +195,9 @@ import Logo from '../components/Logo.astro';
 
   const setMode = (m: 'signup' | 'signin') => {
     mode = m;
-    tabs.forEach((t) => t.setAttribute('aria-selected', String(t.dataset.mode === m)));
+    tabs.forEach((t) => t.setAttribute('aria-pressed', String(t.dataset.mode === m)));
     if (nameField) nameField.hidden = m === 'signin';
+    if (consentBlock) consentBlock.hidden = m === 'signin';
     if (submit) {
       submit.innerHTML =
         m === 'signup'
@@ -173,6 +229,16 @@ import Logo from '../components/Logo.astro';
 
     // @ts-ignore
     window.BundleAuth.signIn(email, mode === 'signup' ? name : undefined);
+
+    // Marketing consent is recorded as its own decision with its own
+    // timestamp, so it can be evidenced and withdrawn independently of the
+    // account. An unticked box is a recorded "no", not an absence.
+    if (mode === 'signup') {
+      const wants = (document.getElementById('su-marketing') as HTMLInputElement)?.checked;
+      // @ts-ignore
+      window.BundleAuth.setMarketingConsent(!!wants);
+    }
+
     location.href = next;
   });
 </script>

@@ -1,0 +1,292 @@
+---
+/**
+ * Working "your data" controls: see it, take it, delete it.
+ *
+ * Not a form that emails a request to someone. Bundle holds nothing on a
+ * server, so the only copy of your data is in this browser and the buttons
+ * below act on it directly and immediately. That is also the honest version:
+ * a rights request form implying we hold a server copy would be misleading.
+ *
+ * Deletion asks twice on purpose. That is friction in the user's favour, the
+ * opposite of the friction a dark pattern adds: the destructive action is the
+ * one guarded, and the easy path is keeping your data.
+ */
+interface Props {
+  /** Heading level so this can sit under an h1 or an h2 without skipping. */
+  heading?: 'h2' | 'h3';
+  compact?: boolean;
+}
+const { heading = 'h2', compact = false } = Astro.props;
+const H = heading;
+---
+
+<div class:list={['dc', compact && 'dc-compact']} id="data-controls">
+  <H class="h3 dc-title">Your data, right now</H>
+  <p class="dc-lede small">
+    Everything Bundle knows about you is stored in this browser and has never
+    been sent to us. These buttons act on it directly: nothing is queued, and
+    there is no request to wait on.
+  </p>
+
+  <div class="dc-state" id="dc-state" aria-live="polite">
+    <p class="dc-empty small muted">Checking what is stored on this device…</p>
+  </div>
+
+  <div class="dc-actions">
+    <button type="button" class="btn btn-ghost btn-sm" id="dc-export">
+      Download a copy
+    </button>
+    <button type="button" class="btn btn-sm dc-danger" id="dc-delete">
+      Delete everything
+    </button>
+  </div>
+
+  <p class="dc-note small muted">
+    The download is a JSON file. Deleting removes your account, plan, holdings,
+    watchlist and lesson progress from this browser and cannot be undone. Your
+    cookie answer and display preferences are kept so you are not handed the
+    banner again; the confirmation offers to clear those too.
+  </p>
+</div>
+
+<div class="modal" id="dc-modal" hidden role="dialog" aria-modal="true" aria-labelledby="dc-modal-title">
+  <div class="modal-scrim" data-dc-close></div>
+  <div class="modal-panel dc-panel">
+    <header class="modal-head">
+      <div>
+        <p class="modal-title" id="dc-modal-title">Delete everything?</p>
+        <p class="modal-sub">This cannot be undone. Download a copy first if you want one.</p>
+      </div>
+      <button type="button" class="modal-close" data-dc-close aria-label="Close">✕</button>
+    </header>
+    <div class="dc-modal-body">
+      <p class="small dc-about">About to be removed from this browser:</p>
+      <ul class="dc-list" id="dc-list"></ul>
+      <label class="dc-check" for="dc-wipe-prefs">
+        <input type="checkbox" id="dc-wipe-prefs" />
+        <span>Also clear my cookie answer and display preferences.</span>
+      </label>
+      <div class="dc-modal-actions">
+        <button type="button" class="btn btn-ghost btn-sm" data-dc-close>Keep my data</button>
+        <button type="button" class="btn btn-sm dc-danger" id="dc-confirm">
+          Delete permanently
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const root = document.getElementById('data-controls');
+  const modal = document.getElementById('dc-modal');
+
+  if (root && modal) {
+    const state = document.getElementById('dc-state');
+    const list = document.getElementById('dc-list');
+    const wipePrefs = document.getElementById('dc-wipe-prefs') as HTMLInputElement | null;
+    let lastFocus: HTMLElement | null = null;
+
+    // Plain-English name for each key, matching the cookie policy's table.
+    const LABELS: Record<string, string> = {
+      'bundle.user': 'Your account (email and display name)',
+      'bundle.profile': 'Your saved investor profile',
+      'bundle.profileDraft': 'A part-finished questionnaire',
+      'bundle.holdings': 'Holdings you recorded after visiting a venue',
+      'bundle.lessons': 'Academy lessons completed',
+      'bundle.watchlist': 'Your watchlist',
+      'bundle.pendingTrade': 'An unanswered "did you trade?" prompt',
+      'bundle.navHintSeen': 'That you have seen the dashboard pointer',
+      'bundle.marketing': 'Your newsletter consent record',
+      'bundle.display': 'Text size, contrast and motion preferences',
+      'bundle.consent': 'Your cookie banner answer',
+    };
+
+    const label = (k: string) => LABELS[k] || k;
+
+    const present = (): string[] => {
+      // @ts-ignore, global from /auth.js
+      return window.BundleAuth?.dataPresent?.() ?? [];
+    };
+
+    const paint = () => {
+      if (!state) return;
+      const keys = present();
+      if (!keys.length) {
+        state.innerHTML =
+          '<p class="dc-empty small muted">Nothing is stored on this device right now.</p>';
+        return;
+      }
+      state.innerHTML =
+        '<ul class="dc-have">' +
+        keys.map((k) => `<li><span class="dc-dot" aria-hidden="true"></span>${label(k)}</li>`).join('') +
+        '</ul>';
+    };
+
+    const close = () => {
+      modal.hidden = true;
+      document.body.style.overflow = '';
+      lastFocus?.focus();
+    };
+
+    document.getElementById('dc-export')?.addEventListener('click', () => {
+      // @ts-ignore
+      const payload = window.BundleAuth?.exportData?.();
+      if (!payload) return;
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `bundle-my-data-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+
+    document.getElementById('dc-delete')?.addEventListener('click', () => {
+      lastFocus = document.activeElement as HTMLElement;
+      const keys = present();
+      if (list) {
+        list.innerHTML = keys.length
+          ? keys.map((k) => `<li>${label(k)}</li>`).join('')
+          : '<li class="muted">Nothing is stored on this device.</li>';
+      }
+      if (wipePrefs) wipePrefs.checked = false;
+      modal.hidden = false;
+      document.body.style.overflow = 'hidden';
+      (modal.querySelector('.modal-close') as HTMLElement)?.focus();
+    });
+
+    document.getElementById('dc-confirm')?.addEventListener('click', () => {
+      // @ts-ignore
+      window.BundleAuth?.eraseAll?.(!wipePrefs?.checked);
+      close();
+      paint();
+      if (state) {
+        const done = document.createElement('p');
+        done.className = 'dc-done small';
+        done.textContent = 'Deleted. Nothing of yours is left in this browser.';
+        state.appendChild(done);
+      }
+    });
+
+    modal.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('[data-dc-close]')) close();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !modal.hidden) close();
+    });
+
+    paint();
+    document.addEventListener('bundle:auth', paint);
+  }
+</script>
+
+<style>
+  .dc {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-l);
+    padding: 1.5rem;
+  }
+
+  .dc-compact { padding: 1.2rem; }
+
+  .dc-title { margin: 0 0 0.35rem; }
+
+  .dc-lede {
+    margin: 0 0 1rem;
+    color: var(--text);
+    max-width: 44rem;
+  }
+
+  .dc-state { margin-bottom: 1.1rem; }
+
+  .dc-have {
+    list-style: none;
+    margin: 0;
+    padding: 0.85rem 0.95rem;
+    background: var(--tint-soft);
+    border: 1px solid var(--line);
+    border-radius: var(--r-s);
+    display: grid;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+    color: var(--text);
+  }
+
+  .dc-have li { display: flex; align-items: center; gap: 0.5rem; }
+
+  .dc-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--green);
+    flex: none;
+  }
+
+  .dc-empty { margin: 0; }
+
+  .dc-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 0.85rem;
+  }
+
+  /* The destructive action is outlined, not filled: visible and reachable,
+     but never the button your eye lands on first. */
+  .dc-danger {
+    background: var(--surface);
+    border: 1px solid var(--down);
+    color: var(--down-ink);
+  }
+
+  .dc-danger:hover {
+    background: var(--down);
+    border-color: var(--down);
+    color: #fff;
+  }
+
+  .dc-note { margin: 0; max-width: 44rem; }
+
+  .dc-done { margin: 0.7rem 0 0; color: var(--up-ink); font-weight: 550; }
+
+  .dc-panel { max-width: 30rem; }
+  .dc-modal-body { padding: 1.1rem 1.25rem 1.25rem; }
+  .dc-about { margin: 0 0 0.5rem; color: var(--text); }
+
+  .dc-list {
+    margin: 0 0 1rem;
+    padding-left: 1.1rem;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  .dc-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    font-size: 0.83rem;
+    line-height: 1.5;
+    color: var(--text);
+    cursor: pointer;
+    margin-bottom: 1.1rem;
+  }
+
+  .dc-check input {
+    margin-top: 0.15rem;
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--green);
+  }
+
+  .dc-modal-actions {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+</style>

@@ -10,6 +10,17 @@
   var DKEY = 'bundle.profileDraft';
   var HKEY = 'bundle.holdings';
   var LSKEY = 'bundle.lessons';
+  var MKEY = 'bundle.marketing';
+
+  /* Every key this site is allowed to write, in one list. "Delete my data"
+     walks THIS, not a prefix scan, so a key added without being documented in
+     the cookie policy is a key that deletion would miss: the list is the
+     thing that keeps the policy and the code honest about each other. */
+  var OWNED = [
+    'bundle.user', 'bundle.profile', 'bundle.profileDraft', 'bundle.holdings',
+    'bundle.lessons', 'bundle.watchlist', 'bundle.pendingTrade',
+    'bundle.navHintSeen', 'bundle.marketing', 'bundle.display', 'bundle.consent',
+  ];
 
   function read(k) {
     try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; }
@@ -55,6 +66,16 @@
       return all;
     },
 
+    /* Marketing consent is its own record with its own timestamp, separate
+       from the account, so it can be evidenced and withdrawn on its own.
+       An unticked box is stored as an explicit false, not as nothing. */
+    marketingConsent: function () { return read(MKEY); },
+    setMarketingConsent: function (on) {
+      write(MKEY, { granted: !!on, at: Date.now() });
+      document.dispatchEvent(new CustomEvent('bundle:marketing'));
+      return read(MKEY);
+    },
+
     holdings: function () { return read(HKEY) || []; },
     addHolding: function (h) {
       var all = Auth.holdings();
@@ -81,6 +102,53 @@
     gateTo: function (next) {
       location.href = Auth.gateUrl(next);
     },
+
+    /* ---- Your data: portability and erasure ----
+       Both are local and immediate, because the data is local. There is no
+       server copy to request, queue or chase. */
+
+    /** Everything this site holds about you, as a plain object. */
+    exportData: function () {
+      var out = {
+        exported: new Date().toISOString(),
+        note: 'Everything bundle.ai stores in this browser. It was never transmitted to Bundle.',
+        data: {},
+      };
+      OWNED.forEach(function (k) {
+        var v = read(k);
+        if (v !== null) out.data[k] = v;
+      });
+      return out;
+    },
+
+    /** Which of the owned keys currently exist, for showing before deleting. */
+    dataPresent: function () {
+      return OWNED.filter(function (k) {
+        try { return localStorage.getItem(k) !== null; } catch (e) { return false; }
+      });
+    },
+
+    /**
+     * Erase. `keepConsent` leaves the cookie answer and display preferences
+     * in place, so someone deleting their account is not handed the banner
+     * again as if they were new; passing false wipes those too.
+     */
+    eraseAll: function (keepConsent) {
+      var spare = keepConsent === false ? [] : ['bundle.consent', 'bundle.display'];
+      var removed = [];
+      OWNED.forEach(function (k) {
+        if (spare.indexOf(k) > -1) return;
+        try {
+          if (localStorage.getItem(k) !== null) removed.push(k);
+          localStorage.removeItem(k);
+        } catch (e) { }
+      });
+      document.dispatchEvent(new CustomEvent('bundle:auth'));
+      document.dispatchEvent(new CustomEvent('bundle:erased', { detail: removed }));
+      return removed;
+    },
+
+    ownedKeys: function () { return OWNED.slice(); },
   };
 
   window.BundleAuth = Auth;

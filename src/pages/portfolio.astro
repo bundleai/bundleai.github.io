@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import DataControls from '../components/DataControls.astro';
 import DealsData from '../components/DealsData.astro';
 ---
 
@@ -62,6 +63,14 @@ import DealsData from '../components/DealsData.astro';
         Capital at risk, private-market investments are illiquid and not
         FSCS-protected.
       </p>
+
+      <div class="pf-data">
+        <DataControls heading="h2" compact />
+        <p class="small muted pf-data-more">
+          More detail in the <a href="/legal/data-deletion">data deletion policy</a>
+          and the <a href="/legal/privacy">privacy policy</a>.
+        </p>
+      </div>
     </div>
   </section>
 </BaseLayout>
@@ -83,6 +92,9 @@ import DealsData from '../components/DealsData.astro';
   }
 
   .pf-head h1 { margin: 0; }
+
+  .pf-data { margin-top: clamp(2rem, 4vw, 3rem); }
+  .pf-data-more { margin: 0.75rem 0 0; }
 
   .pf-why {
     list-style: none;

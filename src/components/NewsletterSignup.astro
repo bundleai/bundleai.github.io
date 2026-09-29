@@ -1,0 +1,239 @@
+---
+/**
+ * Email subscription with real consent.
+ *
+ * The consent rules this implements, in the order they matter:
+ *  - Opt-in is a separate, unticked box. Entering an email is not agreement.
+ *  - The box says what you will get and how often, at the point of asking,
+ *    rather than hiding it in a policy.
+ *  - Consent is not bundled with anything else: this subscribes you to one
+ *    mailing list and nothing more.
+ *  - Unsubscribing is named here, not just in the footer of the emails.
+ *
+ * Where the address goes is stated plainly. With no list endpoint configured
+ * the form opens a pre-addressed message in your own mail client, because a
+ * form that pretends to have subscribed you has not subscribed you.
+ */
+import { site } from '../data/site';
+
+interface Props {
+  /** 'panel' is the standalone card; 'footer' is the compact dark-surface one. */
+  variant?: 'panel' | 'footer';
+  /** Recorded with the submission so we know which form someone used. */
+  source?: string;
+  id?: string;
+}
+
+const { variant = 'panel', source = 'site', id = 'news' } = Astro.props;
+const live = site.newsletterEndpoint !== '';
+---
+
+<form
+  class:list={['nl', `nl-${variant}`]}
+  data-newsletter
+  data-endpoint={site.newsletterEndpoint}
+  data-mailto={site.subscribeEmail}
+  data-source={source}
+  novalidate
+>
+  {
+    variant === 'panel' && (
+      <div class="nl-head">
+        <p class="eyebrow no-rule">The Bundle briefing</p>
+        <h2 class="h3 nl-title">{site.newsletter.cadence}. Nothing else.</h2>
+        <p class="small muted nl-lede">
+          What we cover: {site.newsletter.covers}. No deal pushes, no "act now",
+          and we never sell or share your address.
+        </p>
+      </div>
+    )
+  }
+
+  <div class="nl-row">
+    <div class="field nl-field">
+      <label for={`${id}-email`}>Email address</label>
+      <input
+        id={`${id}-email`}
+        name="email"
+        type="email"
+        autocomplete="email"
+        inputmode="email"
+        placeholder="you@example.com"
+        required
+        aria-describedby={`${id}-consent-text ${id}-status`}
+      />
+    </div>
+    <button type="submit" class="btn btn-primary nl-submit">Subscribe</button>
+  </div>
+
+  <label class="nl-consent" for={`${id}-consent`}>
+    <input type="checkbox" id={`${id}-consent`} name="consent" required />
+    <span id={`${id}-consent-text`}>
+      Yes, email me the Bundle briefing, {site.newsletter.cadence.toLowerCase()}.
+      I can unsubscribe from any email, or by writing to
+      <a href={`mailto:${site.privacyEmail}`}>{site.privacyEmail}</a>, and
+      leaving is as easy as joining.
+    </span>
+  </label>
+
+  <p class="nl-fine">
+    {
+      live
+        ? 'Your address is used for this newsletter and nothing else.'
+        : 'There is no mailing list running yet, so this opens a pre-addressed message in your own email app. Nothing is collected by this page.'
+    }
+    {' '}
+    See the <a href="/legal/privacy">privacy policy</a>.
+  </p>
+
+  <p class="nl-status" id={`${id}-status`} role="status" aria-live="polite"></p>
+</form>
+
+<script>
+  /* One handler for every newsletter form on the page. */
+  document.querySelectorAll<HTMLFormElement>('form[data-newsletter]').forEach((form) => {
+    const status = form.querySelector<HTMLElement>('.nl-status');
+    const email = form.querySelector<HTMLInputElement>('input[type="email"]');
+    const consent = form.querySelector<HTMLInputElement>('input[name="consent"]');
+    const endpoint = form.dataset.endpoint || '';
+    const mailto = form.dataset.mailto || '';
+
+    const say = (msg: string, bad = false) => {
+      if (!status) return;
+      status.textContent = msg;
+      status.classList.toggle('is-bad', bad);
+    };
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const value = (email?.value || '').trim();
+
+      if (!/^\S+@\S+\.\S+$/.test(value)) {
+        say('Enter a valid email address.', true);
+        email?.focus();
+        return;
+      }
+      // Consent is checked here, not assumed from the submit. An address
+      // without a ticked box is not a subscriber.
+      if (!consent?.checked) {
+        say('Tick the box to confirm you want the newsletter.', true);
+        consent?.focus();
+        return;
+      }
+
+      if (endpoint) {
+        say('Subscribing…');
+        fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: value,
+            consent: true,
+            source: form.dataset.source || 'site',
+            ts: new Date().toISOString(),
+          }),
+        })
+          .then((r) => {
+            if (!r.ok) throw new Error(String(r.status));
+            form.reset();
+            say('You are on the list. Unsubscribe from any email.');
+          })
+          .catch(() => say('That did not go through. Try again, or email us directly.', true));
+        return;
+      }
+
+      const subject = encodeURIComponent('Subscribe to the Bundle briefing');
+      const body = encodeURIComponent(
+        `Please add ${value} to the Bundle briefing.\n\n` +
+          'I am confirming I want this newsletter and understand I can unsubscribe at any time.'
+      );
+      window.location.href = `mailto:${mailto}?subject=${subject}&body=${body}`;
+      say(`Your email app should open with a message to ${mailto}. Send it and you are on the list.`);
+    });
+  });
+</script>
+
+<style>
+  .nl { display: grid; gap: 0.7rem; }
+
+  .nl-head { display: grid; gap: 0.3rem; margin-bottom: 0.3rem; }
+  .nl-title { margin: 0; }
+  .nl-lede { margin: 0.2rem 0 0; }
+
+  .nl-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .nl-field { flex: 1 1 15rem; margin: 0; }
+  .nl-submit { flex: none; }
+
+  .nl-consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    font-size: 0.82rem;
+    line-height: 1.55;
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  .nl-consent input {
+    margin-top: 0.22rem;
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--green);
+  }
+
+  .nl-fine {
+    margin: 0;
+    font-size: 0.75rem;
+    line-height: 1.55;
+    color: var(--text-2);
+  }
+
+  .nl-status {
+    margin: 0;
+    font-size: 0.82rem;
+    color: var(--up-ink);
+  }
+
+  .nl-status:empty { display: none; }
+  .nl-status.is-bad { color: var(--down-ink); }
+
+  /* Footer sits on --ink, so the whole form is re-tinted for that surface. */
+  .nl-footer .nl-consent { color: #c9d6c9; }
+  .nl-footer .nl-fine { color: #8fa48f; }
+  .nl-footer .nl-status { color: #cfe3cf; }
+  .nl-footer .nl-status.is-bad { color: #f0b3b3; }
+  .nl-footer :global(.field label) { color: #c9d6c9; }
+
+  .nl-footer :global(.field input) {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+  }
+
+  .nl-footer :global(.field input::placeholder) { color: #8fa48f; }
+
+  .nl-footer :global(.field input:focus) {
+    border-color: var(--gold);
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .nl-footer .nl-consent a,
+  .nl-footer .nl-fine a { color: var(--gold); text-decoration: underline; }
+
+  .nl-footer .nl-submit {
+    background: var(--gold);
+    color: var(--ink);
+    border-color: var(--gold);
+  }
+
+  .nl-footer .nl-submit:hover { background: #ddbb4f; }
+
+  .nl-footer .nl-consent input { accent-color: var(--gold); }
+</style>

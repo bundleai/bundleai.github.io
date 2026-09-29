@@ -1,0 +1,147 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import DataControls from '../../components/DataControls.astro';
+---
+
+<BaseLayout
+  title="Data deletion"
+  description="Delete your Bundle account and everything stored with it, in one click, with no request to file. Plus the retention rules and your UK GDPR rights."
+>
+  <PageHero
+    eyebrow="Legal"
+    title="Delete my data"
+    lead="Last updated: 29 September 2026 · One button, immediate, no request to file and nobody to email first."
+  />
+
+  <section class="section tight">
+    <div class="container narrow">
+      <div class="reveal">
+        <DataControls heading="h2" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container narrow">
+      <div class="prose reveal">
+        <h2>Why it is instant</h2>
+        <p>
+          Bundle is a static site with no application server behind it. Your
+          account, your plan, your holdings and your progress are written to
+          your own browser's local storage and have never been transmitted to
+          us. There is no database row to find, no backup to purge and no
+          processor to instruct, which is why the button above simply does it
+          rather than opening a ticket.
+        </p>
+        <p>
+          The one practical consequence worth knowing: because the data lives
+          in the browser, deleting it here deletes it <em>here</em>. If you have
+          used Bundle on a phone and a laptop, each one holds its own copy and
+          each needs clearing.
+        </p>
+
+        <h2>What gets deleted</h2>
+        <p>
+          Everything in the table on the <a href="/legal/cookies">cookie policy</a>:
+          your account, investor profile, any unfinished questionnaire,
+          recorded holdings, watchlist, Academy progress, newsletter consent
+          record and the one-off interface hints.
+        </p>
+        <p>
+          By default your cookie answer and display preferences survive, so
+          that deleting your account does not hand you the consent banner again
+          as though you had never visited. The confirmation dialog offers to
+          clear those too, and clearing your browser's site data for bundle.ai
+          removes absolutely everything either way.
+        </p>
+
+        <h2>Email and correspondence</h2>
+        <p>
+          Two things do sit outside your browser, and the button cannot reach
+          either.
+        </p>
+        <ul>
+          <li>
+            <strong>Newsletter.</strong> If you subscribed, your address is on
+            that list. Unsubscribe from any email, or write to
+            <a href="mailto:privacy@bundle.ai">privacy@bundle.ai</a>, and it is
+            removed rather than suppressed.
+          </li>
+          <li>
+            <strong>Correspondence.</strong> If you have emailed us, that thread
+            exists in our mailbox. Ask and we will delete it, unless we are
+            required to keep it, in which case we will say which obligation
+            applies and for how long.
+          </li>
+        </ul>
+
+        <h2>Retention, in one table</h2>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr><th>What</th><th>Where it lives</th><th>Kept for</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Account, plan, holdings, progress</td>
+                <td>Your browser</td>
+                <td>Until you delete it, here or in browser settings</td>
+              </tr>
+              <tr>
+                <td>Newsletter subscription</td>
+                <td>Our mailing list</td>
+                <td>Until you unsubscribe or ask for removal</td>
+              </tr>
+              <tr>
+                <td>Consent records (cookies, newsletter)</td>
+                <td>Your browser, and the list for newsletter consent</td>
+                <td>Kept while the consent stands, as evidence that it was given</td>
+              </tr>
+              <tr>
+                <td>Email correspondence</td>
+                <td>Our mailbox</td>
+                <td>Up to two years after a thread closes, or sooner on request</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Your rights under UK GDPR</h2>
+        <p>
+          You have the right to be told what we hold, to get a copy, to have it
+          corrected, to have it erased, to have it in a portable format, and to
+          restrict or object to certain processing. The two buttons above are
+          the copy right and the erasure right, exercised directly. For anything
+          else, one email to
+          <a href="mailto:privacy@bundle.ai">privacy@bundle.ai</a> is enough; no
+          form, no identity-verification hoop unless we genuinely cannot tell
+          who is asking.
+        </p>
+        <p>
+          We aim to answer well inside the one-month statutory deadline. You can
+          also complain to the Information Commissioner's Office
+          (<a href="https://ico.org.uk" rel="noopener">ico.org.uk</a>), though we
+          would rather have the chance to put it right first.
+        </p>
+
+        <h2>If Bundle ever holds data on a server</h2>
+        <p>
+          Accounts are local today because there is nothing yet that needs a
+          server. If that changes, this page changes with it, before the feature
+          ships, not after: what is stored, where, for how long, and how to get
+          it deleted. The commitment that will not change is that erasure stays
+          a button rather than becoming a process.
+        </p>
+
+        <h2>Related</h2>
+        <p>
+          <a href="/legal/privacy">Privacy policy</a> ·
+          <a href="/legal/cookies">Cookie policy</a> ·
+          <a href="/legal/terms">Terms of use</a> ·
+          <a href="/legal/refunds">Refund policy</a>
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

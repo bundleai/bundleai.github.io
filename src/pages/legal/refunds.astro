@@ -1,0 +1,200 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+
+/* The important thing a refund policy must not do here is imply Bundle can
+   refund an investment. It cannot: the money never touches Bundle. So this
+   page separates the two questions clearly, and is explicit that cancellation
+   rights on an investment belong to the venue's own terms. */
+
+const cases = [
+  {
+    tone: 'good',
+    q: 'You paid Bundle for something',
+    a: 'Full refund within 14 days of the charge, no questions and no retention offer. Beyond 14 days, a pro-rata refund of the unused part of the term. Refunds go back to the original payment method within 10 working days.',
+  },
+  {
+    tone: 'good',
+    q: 'You cancel a Bundle subscription',
+    a: 'Cancel any time, in the account settings, in as many clicks as it took to subscribe. Access continues until the end of the period you have paid for, and nothing renews after that.',
+  },
+  {
+    tone: 'flat',
+    q: 'You were charged in error',
+    a: 'Tell us and we refund the whole amount, including any bank charge you incurred because of it. This is not capped by the 14-day window.',
+  },
+  {
+    tone: 'warn',
+    q: 'You invested through a venue and want the money back',
+    a: 'Bundle cannot refund this and never holds it. Your cancellation rights are the venue\'s, under the terms you accepted there. Crowdfunding platforms commonly allow withdrawal while a raise is still open; secondary and pre-IPO transactions are usually final once matched. Contact the venue first, and quickly.',
+  },
+  {
+    tone: 'warn',
+    q: 'An investment lost money',
+    a: 'There is no refund for investment loss, from Bundle or from anyone. These are high-risk, illiquid holdings, you can lose everything you put in, and they are not covered by the FSCS.',
+  },
+];
+
+const tones: Record<string, { chip: string; label: string }> = {
+  good: { chip: 'badge-up', label: 'Refundable' },
+  flat: { chip: 'badge-line', label: 'Always put right' },
+  warn: { chip: 'badge-sand', label: 'Not ours to refund' },
+};
+---
+
+<BaseLayout
+  title="Refund policy"
+  description="Bundle is free for investors. What happens if you ever pay Bundle for something, how to cancel, and why an investment made on a venue is the venue's to refund, not Bundle's."
+>
+  <PageHero
+    eyebrow="Legal"
+    title="Refunds and cancellation"
+    lead="Last updated: 29 September 2026 · Bundle is free for investors today. This covers what happens if that ever changes, and the sharper question of who can refund an investment."
+  />
+
+  <section class="section tight">
+    <div class="container narrow">
+      <div class="card rf-lede reveal">
+        <p class="rf-big">
+          Bundle charges investors nothing. There is no card on file, no trial
+          that converts and no fee taken out of what you invest.
+        </p>
+        <p class="small muted">
+          Revenue comes from venue referral fees paid out of the venue's own
+          take, never as a markup on the price you pay. See
+          <a href="/pricing">pricing</a>. Because there is no charge, there is
+          normally nothing to refund. The rest of this page exists so the terms
+          are already written the day a paid tier launches, and so the line
+          between Bundle and the venues is unambiguous.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container narrow">
+      <h2 class="h2 reveal">Five situations, five plain answers</h2>
+      <ul class="rf-list reveal">
+        {
+          cases.map((c) => (
+            <li class="rf-case">
+              <div class="rf-case-head">
+                <h3 class="rf-q">{c.q}</h3>
+                <span class:list={['badge', tones[c.tone].chip]}>{tones[c.tone].label}</span>
+              </div>
+              <p class="rf-a">{c.a}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container narrow">
+      <div class="prose reveal">
+        <h2>Your statutory rights</h2>
+        <p>
+          If a paid Bundle service is ever sold to you as a consumer at a
+          distance, the Consumer Contracts Regulations 2013 give you 14 days to
+          change your mind. Our 14-day window above is that right, not a
+          replacement for it, and nothing on this page limits what the Consumer
+          Rights Act 2015 entitles you to if a paid service is not as described
+          or not carried out with reasonable care.
+        </p>
+        <p>
+          We will not ask you to waive the cancellation period to get access,
+          and we will not make you telephone anyone to cancel.
+        </p>
+
+        <h2>The venue boundary, stated once more</h2>
+        <p>
+          When you press Trade, Bundle hands you to the venue that lists the
+          deal. Everything after that point, the price, the fees, the paperwork,
+          the custody of your shares and any right to cancel, is governed by
+          that venue's terms and its regulatory permissions. Bundle is not a
+          party to your investment, does not hold client money or client assets,
+          and cannot reverse a transaction made on a venue.
+        </p>
+        <p>
+          If a venue will not deal with you fairly, tell us anyway at
+          <a href="mailto:hello@bundle.ai">hello@bundle.ai</a>. We cannot refund
+          you, but how a venue treats people is exactly the sort of thing that
+          should affect whether we keep listing it.
+        </p>
+
+        <h2>How to ask</h2>
+        <p>
+          Email <a href="mailto:billing@bundle.ai">billing@bundle.ai</a> with
+          what you were charged and when. We aim to reply within two working
+          days and to process approved refunds within ten. If we turn one down,
+          we will say why in plain terms and tell you how to escalate.
+        </p>
+
+        <h2>Related</h2>
+        <p>
+          <a href="/pricing">Pricing</a> ·
+          <a href="/legal/terms">Terms of use</a> ·
+          <a href="/legal/risk-warning">Risk warning</a> ·
+          <a href="/legal/data-deletion">Delete my data</a>
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .rf-lede { padding: 1.5rem; }
+
+  .rf-big {
+    margin: 0 0 0.6rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 2.6vw, 1.7rem);
+    line-height: 1.35;
+    color: var(--ink);
+  }
+
+  .rf-lede .small { margin: 0; }
+
+  .rf-list {
+    list-style: none;
+    margin: 1.4rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .rf-case {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-m);
+    padding: 1.1rem 1.2rem;
+  }
+
+  .rf-case-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.8rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .rf-q {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--ink);
+  }
+
+  .rf-case-head .badge { flex: none; margin-top: 0.1rem; }
+
+  .rf-a {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: var(--text);
+  }
+
+  @media (max-width: 520px) {
+    .rf-case-head { flex-direction: column; gap: 0.4rem; }
+  }
+</style>

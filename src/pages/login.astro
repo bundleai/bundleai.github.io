@@ -37,7 +37,7 @@ import Logo from '../components/Logo.astro';
               placeholder="Your password"
             />
           </div>
-          <button type="button" id="login-btn" class="btn btn-primary login-submit">
+          <button type="submit" id="login-btn" class="btn btn-primary login-submit">
             Log in
           </button>
           <div class="login-note" id="login-note" aria-live="polite"></div>
@@ -46,6 +46,10 @@ import Logo from '../components/Logo.astro';
         <p class="small muted login-alt">
           No account yet? <a href="/portfolio">Build your portfolio</a> and we'll
           save it as you go.
+        </p>
+        <p class="small muted login-legal">
+          By logging in you agree to the <a href="/legal/terms">terms of use</a>
+          and <a href="/legal/privacy">privacy policy</a>.
         </p>
       </div>
     </div>
@@ -118,7 +122,6 @@ import Logo from '../components/Logo.astro';
   // Accounts live on this device (see /auth.js), so a log in restores whatever
   // plan, holdings and lesson progress this browser already holds.
   const form = document.getElementById('login-form') as HTMLFormElement | null;
-  const btn = document.getElementById('login-btn');
   const note = document.getElementById('login-note');
   const next = new URLSearchParams(location.search).get('next') || '/portfolio';
 
@@ -140,7 +143,6 @@ import Logo from '../components/Logo.astro';
     location.href = next;
   };
 
-  btn?.addEventListener('click', attempt);
   form?.addEventListener('submit', (e) => {
     e.preventDefault();
     attempt();

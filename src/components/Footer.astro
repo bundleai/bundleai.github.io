@@ -1,5 +1,6 @@
 ---
 import Logo from './Logo.astro';
+import NewsletterSignup from './NewsletterSignup.astro';
 
 const year = 2026;
 
@@ -47,6 +48,7 @@ const cols = [
       { href: '/about', label: 'About' },
       { href: '/careers', label: 'Careers' },
       { href: '/contact', label: 'Contact' },
+      { href: '/accessibility', label: 'Accessibility' },
       { href: '/login', label: 'Log in' },
     ],
   },
@@ -98,6 +100,20 @@ const cols = [
     </nav>
   </div>
 
+  <div class="container footer-news">
+    <hr class="hr" />
+    <div class="news-grid">
+      <div class="news-copy">
+        <p class="news-kicker">The Bundle briefing</p>
+        <p class="news-sub">
+          Twice a month: new venues added, what changed in the UK rules, and the
+          occasional Academy piece. No deal pushes. Unsubscribe in one click.
+        </p>
+      </div>
+      <NewsletterSignup variant="footer" source="footer" id="nl-footer" />
+    </div>
+  </div>
+
   <div class="container footer-legal">
     <hr class="hr" />
     <p class="legal-copy">
@@ -123,8 +139,15 @@ const cols = [
       <span>© {year} Bundle Technologies Ltd. All rights reserved.</span>
       <span class="legal-links">
         <a href="/legal/risk-warning">Risk warnings</a>
-        <a href="/legal/privacy">Privacy</a>
         <a href="/legal/terms">Terms</a>
+        <a href="/legal/privacy">Privacy</a>
+        <a href="/legal/cookies">Cookies</a>
+        <a href="/legal/data-deletion">Delete my data</a>
+        <a href="/legal/refunds">Refunds</a>
+        <a href="/accessibility">Accessibility</a>
+        <button type="button" class="legal-btn" data-cookie-prefs>
+          Cookie preferences
+        </button>
       </span>
     </div>
   </div>
@@ -249,10 +272,56 @@ const cols = [
     color: #8fa48f;
   }
 
+  .footer-news { padding-bottom: 0.5rem; }
+
+  .news-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.25fr;
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    align-items: start;
+    padding-top: 1.75rem;
+  }
+
+  .news-kicker {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: #8fa48f;
+    margin: 0 0 0.6rem;
+  }
+
+  .news-sub {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #a8bba8;
+    max-width: 26rem;
+  }
+
   .legal-links {
     display: inline-flex;
-    gap: 1.25rem;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    align-items: center;
   }
+
+  /* Reopening consent is a dialog, not a page, so it is a button. It is
+     styled as the links beside it because that is what it behaves like. */
+  .legal-btn {
+    border: 0;
+    background: none;
+    padding: 0;
+    font: inherit;
+    font-size: inherit;
+    color: #a8bba8;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+  }
+
+  .legal-btn:hover { color: #ffffff; }
 
   .legal-links a {
     color: #a8bba8;
@@ -270,6 +339,11 @@ const cols = [
     .footer-cols {
       grid-template-columns: repeat(3, 1fr);
       row-gap: 2rem;
+    }
+
+    .news-grid {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
     }
   }
 
