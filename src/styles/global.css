@@ -3226,3 +3226,85 @@ main,
   .bc-launch:hover { transform: none; }
   .bc-dots i { animation: none; opacity: 0.6; }
 }
+
+/* ==========================================================================
+   Display preferences (/accessibility, and the floating panel)
+
+   EVERY rule below is scoped to a data-attribute that JS only sets when
+   someone deliberately turns an option on. With no attribute present, not one
+   of these selectors matches, so the site renders exactly as designed. That
+   is the whole contract of this block: do not add an unguarded rule here.
+   ========================================================================== */
+
+/* Text size. The layout is rem-based throughout, so moving the root size
+   scales type, spacing and controls together instead of breaking the grid. */
+html[data-a11y-text="large"]  { font-size: 112.5%; }
+html[data-a11y-text="xlarge"] { font-size: 125%; }
+
+/* Motion. Mirrors the prefers-reduced-motion block above, for people whose
+   operating system setting says one thing and who want another here. */
+html[data-a11y-motion="reduce"] { scroll-behavior: auto; }
+
+html[data-a11y-motion="reduce"] .reveal {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+html[data-a11y-motion="reduce"] *,
+html[data-a11y-motion="reduce"] *::before,
+html[data-a11y-motion="reduce"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+html[data-a11y-motion="reduce"] .tape { animation: none !important; }
+html[data-a11y-motion="reduce"] .ticker { overflow-x: auto; }
+
+/* Contrast. Darker secondary text and stronger hairlines, using the existing
+   palette rather than a second theme: same design, more separation. */
+html[data-a11y-contrast="high"] {
+  --text: #1d2e23;
+  --text-2: #3a4c3e;
+  --faint: #4b5d4e;
+  --line: #a9bcae;
+  --line-2: #8ca291;
+  --gold-deep: #7d6210;
+  --up-ink: #17491b;
+  --down-ink: #8a1a1a;
+}
+
+html[data-a11y-contrast="high"] .muted,
+html[data-a11y-contrast="high"] .small.muted { color: var(--text-2); }
+
+html[data-a11y-contrast="high"] :focus-visible {
+  outline-width: 3px;
+  outline-offset: 3px;
+}
+
+/* Links. Colour alone is a weak signal; this marks links in running text.
+   Chrome (nav, buttons, chips, cards) is excluded: underlining a button
+   label would change the design rather than clarify it. */
+html[data-a11y-links="underline"] .prose a,
+html[data-a11y-links="underline"] p a,
+html[data-a11y-links="underline"] li a,
+html[data-a11y-links="underline"] dd a,
+html[data-a11y-links="underline"] figcaption a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+html[data-a11y-links="underline"] .btn,
+html[data-a11y-links="underline"] .badge,
+html[data-a11y-links="underline"] .src-chip,
+html[data-a11y-links="underline"] .bc-act {
+  text-decoration: none;
+}
+
+/* Market tape. WCAG 2.2.2 asks for a pause control on anything that moves for
+   more than five seconds; the tape also pauses on hover and on keyboard focus,
+   and this is the persistent version of the same switch. */
+html[data-a11y-tape="pause"] .tape { animation-play-state: paused !important; }
+html[data-a11y-tape="pause"] .ticker { overflow-x: auto; }

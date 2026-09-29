@@ -1,0 +1,212 @@
+---
+/**
+ * Cookie and storage consent.
+ *
+ * Bundle sets no cookies. What it remembers (your plan, your holdings, this
+ * decision) sits in this browser's localStorage and never leaves the device,
+ * so nothing non-essential is running when this banner appears. It is a
+ * standing decision, recorded before anything optional is ever added, not a
+ * notice about trackers that already fired.
+ *
+ * Two rules keep it out of dark-pattern territory:
+ *  - "Essential only" and "Accept all" are the same size, weight and colour.
+ *    Refusing is never one click further away than accepting.
+ *  - Optional categories default to OFF, both in the form and in the store.
+ *    No record means no consent.
+ */
+---
+
+<div
+  class="ck"
+  id="cookie-banner"
+  hidden
+  role="dialog"
+  aria-modal="false"
+  aria-labelledby="ck-title"
+  aria-describedby="ck-body"
+>
+  <div class="ck-card">
+    <p class="ck-title" id="ck-title">Cookies and on-device storage</p>
+    <p class="ck-body" id="ck-body">
+      Bundle sets no cookies. It stores your plan, your holdings and this
+      choice in your own browser so the site works. Nothing optional runs
+      unless you switch it on.
+    </p>
+
+    <div class="ck-detail">
+      <ul class="ck-cats">
+        <li>
+          <span class="ck-cat">
+            <span class="ck-cat-name">Essential</span>
+            <span class="ck-cat-note">Your saved plan, holdings and this decision. Cannot be turned off, never leaves your device.</span>
+          </span>
+          <span class="badge badge-line ck-always">Always on</span>
+        </li>
+        <li>
+          <label class="ck-cat-row">
+            <input type="checkbox" data-consent-cat="analytics" />
+            <span class="ck-cat">
+              <span class="ck-cat-name">Analytics</span>
+              <span class="ck-cat-note">Aggregate page counts, so we can see which pages earn their place. No profiles, no cross-site tracking.</span>
+            </span>
+          </label>
+        </li>
+        <li>
+          <label class="ck-cat-row">
+            <input type="checkbox" data-consent-cat="personalisation" />
+            <span class="ck-cat">
+              <span class="ck-cat-name">Personalisation</span>
+              <span class="ck-cat-note">Remembering screener filters and recently viewed companies between visits.</span>
+            </span>
+          </label>
+        </li>
+      </ul>
+      <button type="button" class="btn btn-ghost btn-sm ck-save" data-consent-action="save">
+        Save my choices
+      </button>
+    </div>
+
+    <div class="ck-actions">
+      <button type="button" class="btn btn-ghost btn-sm ck-btn" data-consent-action="essential">
+        Essential only
+      </button>
+      <button type="button" class="btn btn-ghost btn-sm ck-btn" data-consent-action="all">
+        Accept all
+      </button>
+    </div>
+
+    <p class="ck-foot">
+      <button type="button" class="ck-link" data-consent-action="details" aria-expanded="false">
+        Choose what to allow
+      </button>
+      <span aria-hidden="true">·</span>
+      <a href="/legal/cookies">Cookie policy</a>
+    </p>
+  </div>
+</div>
+
+<style>
+  .ck {
+    position: fixed;
+    left: clamp(0.85rem, 2vw, 1.5rem);
+    bottom: clamp(0.85rem, 2vw, 1.5rem);
+    z-index: 320;
+    width: min(27rem, calc(100vw - 1.7rem));
+  }
+
+  .ck[hidden] { display: none !important; }
+
+  .ck-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-l);
+    box-shadow: 0 18px 48px rgba(20, 40, 30, 0.25);
+    padding: 1.1rem 1.15rem 0.95rem;
+  }
+
+  .ck-title {
+    margin: 0 0 0.4rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--ink);
+  }
+
+  .ck-body {
+    margin: 0;
+    font-size: 0.84rem;
+    line-height: 1.55;
+    color: var(--text);
+  }
+
+  /* Detail is collapsed, not hidden behind a second page: the granular
+     choice is one click away, same as the blanket one. */
+  .ck-detail { display: none; }
+  .ck.show-detail .ck-detail { display: block; }
+  .ck.show-detail .ck-actions { display: none; }
+
+  .ck-cats {
+    list-style: none;
+    margin: 0.85rem 0 0.85rem;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .ck-cats > li {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.6rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .ck-cat-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    cursor: pointer;
+  }
+
+  .ck-cat-row input {
+    margin-top: 0.2rem;
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--green);
+  }
+
+  .ck-cat { display: grid; gap: 0.12rem; }
+
+  .ck-cat-name {
+    font-size: 0.85rem;
+    font-weight: 570;
+    color: var(--ink);
+  }
+
+  .ck-cat-note {
+    font-size: 0.76rem;
+    line-height: 1.5;
+    color: var(--text-2);
+  }
+
+  .ck-always { flex: none; margin-top: 0.1rem; }
+  .ck-save { width: 100%; }
+
+  /* Equal weight, equal width. Neither answer is the designed-for one. */
+  .ck-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-top: 0.95rem;
+  }
+
+  .ck-btn { width: 100%; justify-content: center; }
+
+  .ck-foot {
+    margin: 0.7rem 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.76rem;
+    color: var(--text-2);
+  }
+
+  .ck-link {
+    border: 0;
+    background: none;
+    padding: 0;
+    font: inherit;
+    color: var(--green);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+  }
+
+  .ck-link:hover { color: var(--green-deep); }
+
+  @media (max-width: 560px) {
+    .ck { left: 0.6rem; right: 0.6rem; bottom: 0.6rem; width: auto; }
+  }
+</style>

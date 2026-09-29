@@ -1,0 +1,245 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import A11yControls from '../components/A11yControls.astro';
+
+/* An accessibility statement is only worth publishing if it is specific, so
+   this one names what has been done, what is known to be imperfect, and what
+   has not been tested. Claiming full WCAG 2.2 AA conformance without an audit
+   would be the easy sentence and the wrong one. */
+
+const done = [
+  {
+    t: 'Keyboard access throughout',
+    b: 'Every control, including screener rows, deal cards, dialogs, tabs and the assistant, can be reached and operated with Tab, Enter, Space, the arrow keys and Escape.',
+  },
+  {
+    t: 'Visible focus',
+    b: 'A two-pixel green outline follows the keyboard, never suppressed, and thickens when you turn contrast up.',
+  },
+  {
+    t: 'Skip to content',
+    b: 'The first Tab on any page offers a skip link past the navigation.',
+  },
+  {
+    t: 'Colour is never the only signal',
+    b: 'Price direction, risk flags and status all carry a label, an arrow or an icon as well as a colour.',
+  },
+  {
+    t: 'Contrast targets',
+    b: 'Body and heading text meets WCAG AA. Two deliberate deviations from our own brand spec were made for this: the premium button uses dark ink on gold instead of white, and the gold chart colour is a darker step.',
+  },
+  {
+    t: 'Motion is stoppable',
+    b: 'The market tape pauses on hover and on keyboard focus, and can be stopped permanently below. Reveal animations and counters respect your operating system motion setting.',
+  },
+  {
+    t: 'Structure and labels',
+    b: 'One h1 per page, headings in order, landmarks on navigation, main and footer, labels on every form field, and live regions where content updates in place.',
+  },
+];
+
+const gaps = [
+  {
+    t: 'Not independently audited',
+    b: 'Everything here is our own testing: keyboard walkthroughs, contrast checks and browser tooling. No third-party audit has been carried out yet, so we claim substantial conformance with WCAG 2.2 AA rather than full conformance.',
+  },
+  {
+    t: 'Screen reader coverage is partial',
+    b: 'Tested with VoiceOver on macOS. Not yet tested with JAWS or NVDA on Windows, or with TalkBack.',
+  },
+  {
+    t: 'Dense data tables',
+    b: 'The screener is a wide table with ten columns. It is navigable and labelled, but it is still a lot to take in through a screen reader, and we want to offer a simplified list view.',
+  },
+  {
+    t: 'Charts are visual',
+    b: 'Price history, sector dials and comparison bars carry text labels and a caption with the same figures, but there is no tabular alternative for each chart yet.',
+  },
+];
+---
+
+<BaseLayout
+  title="Accessibility"
+  description="Bundle's accessibility statement: what has been built in, what is known to fall short, and on-page controls for text size, contrast, motion and links."
+  ribbon={false}
+>
+  <PageHero
+    eyebrow="Accessibility"
+    title="Built to be used by everyone"
+    lead="What we have done, what we know is not good enough yet, and controls you can change right here. Last reviewed 29 September 2026."
+  />
+
+  <section class="section tight">
+    <div class="container narrow">
+      <div class="card ac-panel reveal" data-a11y-mirror>
+        <div class="ac-panel-head">
+          <h2 class="h3">Your display options</h2>
+          <p class="small muted">
+            These apply immediately and are remembered in this browser. They are
+            also available on every page from the button in the bottom-left
+            corner. Nothing here is sent to us.
+          </p>
+        </div>
+        <A11yControls idp="acpage" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container narrow">
+      <h2 class="h2 reveal">What is in place</h2>
+      <ul class="ac-list reveal">
+        {
+          done.map((d) => (
+            <li class="ac-item ac-good">
+              <span class="ac-mark" aria-hidden="true">✓</span>
+              <span>
+                <strong>{d.t}</strong>
+                <span class="ac-b">{d.b}</span>
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container narrow">
+      <h2 class="h2 reveal">What still falls short</h2>
+      <p class="lead reveal">
+        Publishing the gaps is the point. If any of these is the thing standing
+        between you and using Bundle, tell us and it moves up the list.
+      </p>
+      <ul class="ac-list reveal">
+        {
+          gaps.map((g) => (
+            <li class="ac-item ac-gap">
+              <span class="ac-mark" aria-hidden="true">•</span>
+              <span>
+                <strong>{g.t}</strong>
+                <span class="ac-b">{g.b}</span>
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container narrow">
+      <div class="prose reveal">
+        <h2>Standard we are working to</h2>
+        <p>
+          The Web Content Accessibility Guidelines 2.2 at level AA. This site is
+          substantially conformant: the criteria above have been implemented and
+          self-tested, and the gaps listed above are the known exceptions.
+        </p>
+
+        <h2>Keyboard reference</h2>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr><th>Key</th><th>What it does</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd> + <kbd>Tab</kbd></td><td>Move forward and back through every control.</td></tr>
+              <tr><td><kbd>Enter</kbd></td><td>Follow a link, press a button, open a company from a screener row.</td></tr>
+              <tr><td><kbd>Space</kbd></td><td>Toggle a checkbox, or open a company from a focused row or card.</td></tr>
+              <tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>Move between tabs in a tab strip.</td></tr>
+              <tr><td><kbd>Esc</kbd></td><td>Close any dialog, menu, assistant or panel and return focus where it was.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          Dialogs hold focus while they are open and hand it back to whatever
+          opened them on close, so you never land at the top of the page after
+          dismissing something.
+        </p>
+
+        <h2>Telling us about a problem</h2>
+        <p>
+          Email <a href="mailto:accessibility@bundle.ai">accessibility@bundle.ai</a>
+          with the page and what went wrong. We aim to reply within five working
+          days with either a fix or a date. If you would rather have a document,
+          a figure or a page read out or sent in another format, ask and we will
+          send it.
+        </p>
+        <p>
+          If you are not happy with our response, the Equality Advisory and
+          Support Service (<a href="https://www.equalityadvisoryservice.com" rel="noopener">EASS</a>)
+          can advise on your rights under the Equality Act 2010.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .ac-panel { padding: 1.5rem; }
+  .ac-panel-head { margin-bottom: 1.2rem; }
+  .ac-panel-head h2 { margin: 0 0 0.35rem; }
+  .ac-panel-head p { margin: 0; }
+
+  .ac-list {
+    list-style: none;
+    margin: 1.4rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .ac-item {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    padding: 0.9rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-m);
+  }
+
+  .ac-mark {
+    flex: none;
+    width: 1.35rem;
+    height: 1.35rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-top: 0.08rem;
+  }
+
+  .ac-good .ac-mark { background: var(--up-tint); color: var(--up-ink); }
+  .ac-gap .ac-mark { background: var(--sand-tint); color: var(--sand-ink); }
+
+  .ac-item strong {
+    display: block;
+    color: var(--ink);
+    font-size: 0.95rem;
+    margin-bottom: 0.15rem;
+  }
+
+  .ac-b {
+    display: block;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: var(--text);
+  }
+
+  .prose kbd {
+    font-family: var(--font-mono);
+    font-size: 0.78em;
+    background: var(--tint);
+    border: 1px solid var(--line);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    padding: 0.08em 0.38em;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+</style>

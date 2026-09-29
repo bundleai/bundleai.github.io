@@ -4,6 +4,8 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import PortfolioModal from '../components/PortfolioModal.astro';
 import ChatData from '../components/ChatData.astro';
+import CookieBanner from '../components/CookieBanner.astro';
+import A11yPanel from '../components/A11yPanel.astro';
 
 interface Props {
   title: string;
@@ -38,6 +40,27 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..600&family=Inter:wght@400..700&family=IBM+Plex+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
+    <script is:inline>
+      /* Saved display preferences are applied before first paint, so a
+         returning visitor never sees the default styling flash and snap.
+         Mirrors the OPTS table in /a11y.js; both are guarded lists. */
+      (function () {
+        try {
+          var p = JSON.parse(localStorage.getItem('bundle.display') || '{}') || {};
+          var map = {
+            text: ['large', 'xlarge'],
+            motion: ['reduce'],
+            contrast: ['high'],
+            links: ['underline'],
+            tape: ['pause'],
+          };
+          var el = document.documentElement;
+          Object.keys(map).forEach(function (k) {
+            if (map[k].indexOf(p[k]) > -1) el.setAttribute('data-a11y-' + k, p[k]);
+          });
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -70,7 +93,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 
     <PortfolioModal />
     <ChatData />
+    <A11yPanel />
+    <CookieBanner />
 
+    <script is:inline src="/consent.js"></script>
+    <script is:inline src="/a11y.js"></script>
     <script is:inline src="/wizard.js"></script>
     <script is:inline src="/auth.js"></script>
     <script is:inline src="/handoff.js"></script>

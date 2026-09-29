@@ -1,0 +1,229 @@
+---
+/**
+ * The display-preference controls themselves, so the floating panel and the
+ * /accessibility page offer exactly the same switches rather than drifting
+ * apart. Every option is off by default: with nothing selected the site
+ * renders precisely as designed, and the CSS that reacts to these lives in one
+ * guarded block in global.css.
+ */
+interface Props {
+  /** Unique per instance: radio groups and label/input pairs need their own ids. */
+  idp: string;
+}
+const { idp } = Astro.props;
+
+const sizes = [
+  { val: 'default', label: 'Default', hint: '100%' },
+  { val: 'large', label: 'Large', hint: '112%' },
+  { val: 'xlarge', label: 'Larger', hint: '125%' },
+];
+
+const toggles = [
+  {
+    key: 'motion',
+    val: 'reduce',
+    label: 'Reduce motion',
+    hint: 'Stops the scrolling tape, counters and reveal animations.',
+  },
+  {
+    key: 'contrast',
+    val: 'high',
+    label: 'Increase contrast',
+    hint: 'Darkens secondary text and strengthens borders and dividers.',
+  },
+  {
+    key: 'links',
+    val: 'underline',
+    label: 'Underline links',
+    hint: 'Marks every link in body text without relying on colour.',
+  },
+  {
+    key: 'tape',
+    val: 'pause',
+    label: 'Pause the market tape',
+    hint: 'Freezes the scrolling ticker only, leaving the rest of the page as it is.',
+  },
+];
+---
+
+<div class="a11y-ctrls">
+  <fieldset class="a11y-set">
+    <legend>Text size</legend>
+    <div class="a11y-sizes">
+      {
+        sizes.map((s) => (
+          <label class="a11y-size" for={`${idp}-text-${s.val}`}>
+            <input
+              type="radio"
+              id={`${idp}-text-${s.val}`}
+              name={`${idp}-text`}
+              data-a11y-opt="text"
+              data-a11y-val={s.val}
+              checked={s.val === 'default'}
+            />
+            <span class="a11y-size-label">{s.label}</span>
+            <span class="a11y-size-hint">{s.hint}</span>
+          </label>
+        ))
+      }
+    </div>
+  </fieldset>
+
+  <fieldset class="a11y-set">
+    <legend>Display</legend>
+    <ul class="a11y-toggles">
+      {
+        toggles.map((t) => (
+          <li>
+            <label class="a11y-toggle" for={`${idp}-${t.key}`}>
+              <input
+                type="checkbox"
+                id={`${idp}-${t.key}`}
+                data-a11y-opt={t.key}
+                data-a11y-val={t.val}
+              />
+              <span>
+                <span class="a11y-t-label">{t.label}</span>
+                <span class="a11y-t-hint">{t.hint}</span>
+              </span>
+            </label>
+          </li>
+        ))
+      }
+    </ul>
+  </fieldset>
+
+  <div class="a11y-foot">
+    <button type="button" class="a11y-reset" data-a11y-reset>Reset to default</button>
+    <span class="a11y-note">Saved in this browser only.</span>
+  </div>
+</div>
+
+<style is:global>
+  .a11y-ctrls { display: grid; gap: 1rem; }
+
+  .a11y-set {
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  .a11y-set legend {
+    padding: 0;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-2);
+    margin-bottom: 0.5rem;
+  }
+
+  .a11y-sizes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.4rem;
+  }
+
+  .a11y-size {
+    display: grid;
+    justify-items: center;
+    gap: 0.05rem;
+    padding: 0.5rem 0.35rem;
+    border: 1px solid var(--line);
+    border-radius: var(--r-s);
+    background: var(--surface);
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .a11y-size input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+
+  .a11y-size:has(input:checked) {
+    border-color: var(--green);
+    background: var(--green-soft);
+  }
+
+  .a11y-size:has(input:focus-visible) {
+    outline: 2px solid var(--green);
+    outline-offset: 2px;
+  }
+
+  .a11y-size-label {
+    font-size: 0.82rem;
+    font-weight: 560;
+    color: var(--ink);
+  }
+
+  .a11y-size-hint {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    color: var(--text-2);
+  }
+
+  .a11y-toggles {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .a11y-toggle {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    cursor: pointer;
+  }
+
+  .a11y-toggle input {
+    margin-top: 0.2rem;
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--green);
+  }
+
+  .a11y-t-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 540;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+
+  .a11y-t-hint {
+    display: block;
+    font-size: 0.75rem;
+    line-height: 1.45;
+    color: var(--text-2);
+  }
+
+  .a11y-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--line);
+    padding-top: 0.7rem;
+  }
+
+  .a11y-reset {
+    border: 0;
+    background: none;
+    padding: 0;
+    font: inherit;
+    font-size: 0.8rem;
+    color: var(--green);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+  }
+
+  .a11y-note { font-size: 0.74rem; color: var(--text-2); }
+</style>

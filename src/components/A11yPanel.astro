@@ -1,0 +1,141 @@
+---
+/**
+ * Floating accessibility controls, available on every page.
+ *
+ * Deliberately a small icon button in the opposite corner from the assistant,
+ * so it adds one 40px control to the layout and changes nothing else. Every
+ * preference inside it is off by default: the site as designed is what you get
+ * until you ask for something different.
+ */
+import A11yControls from './A11yControls.astro';
+---
+
+<div class="a11y-root">
+  <button
+    type="button"
+    class="a11y-launch"
+    id="a11y-launch"
+    aria-expanded="false"
+    aria-controls="a11y-panel"
+    aria-label="Display and accessibility options"
+    title="Display and accessibility options"
+  >
+    <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none"
+      stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="4.4" r="1.7" fill="currentColor" stroke="none" />
+      <path d="M4.5 8.2h15" />
+      <path d="M12 8.2v5.1" />
+      <path d="m12 13.3-3 6.3" />
+      <path d="m12 13.3 3 6.3" />
+    </svg>
+  </button>
+
+  <section class="a11y-panel" id="a11y-panel" hidden role="dialog" aria-labelledby="a11y-title">
+    <header class="a11y-head">
+      <p class="a11y-title" id="a11y-title">Display options</p>
+      <button type="button" class="a11y-x" data-a11y-close aria-label="Close">×</button>
+    </header>
+    <div class="a11y-body">
+      <A11yControls idp="a11yp" />
+    </div>
+    <p class="a11y-more">
+      <a href="/accessibility">Accessibility statement</a>
+    </p>
+  </section>
+</div>
+
+<style>
+  .a11y-root {
+    position: fixed;
+    left: clamp(0.85rem, 2vw, 1.5rem);
+    bottom: clamp(0.85rem, 2vw, 1.5rem);
+    z-index: 250;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  /* The consent decision comes first; the panel button would otherwise sit
+     underneath the banner in the same corner. */
+  :global(body:has(#cookie-banner:not([hidden]))) .a11y-root {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .a11y-launch {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    background: var(--surface);
+    color: var(--green);
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(20, 40, 30, 0.14);
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .a11y-launch:hover {
+    background: var(--green);
+    color: #fff;
+    border-color: var(--green);
+  }
+
+  .a11y-panel {
+    order: -1;
+    width: min(21rem, calc(100vw - 1.7rem));
+    max-height: min(32rem, calc(100dvh - 6rem));
+    overflow-y: auto;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-l);
+    box-shadow: 0 18px 48px rgba(20, 40, 30, 0.25);
+  }
+
+  .a11y-panel[hidden] { display: none; }
+
+  .a11y-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 0.9rem;
+    border-bottom: 1px solid var(--line);
+    background: var(--tint-soft);
+    position: sticky;
+    top: 0;
+  }
+
+  .a11y-title {
+    margin: 0;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .a11y-x {
+    border: 0;
+    background: none;
+    font-size: 1.15rem;
+    line-height: 1;
+    color: var(--text-2);
+    cursor: pointer;
+    padding: 0.1rem 0.25rem;
+  }
+
+  .a11y-x:hover { color: var(--ink); }
+
+  .a11y-body { padding: 0.9rem; }
+
+  .a11y-more {
+    margin: 0;
+    padding: 0 0.9rem 0.8rem;
+    font-size: 0.76rem;
+  }
+
+  @media print {
+    .a11y-root { display: none; }
+  }
+</style>

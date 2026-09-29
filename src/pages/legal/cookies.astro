@@ -1,0 +1,193 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+
+/* Written from what the code actually does. Bundle sets no cookies: grep the
+   repository for document.cookie and you get nothing. Everything it remembers
+   is localStorage, listed item by item below, and the only third-party request
+   any page makes is the Google Fonts stylesheet. Say that plainly rather than
+   publishing the usual four-category boilerplate that describes no real site. */
+
+const stored = [
+  { key: 'bundle.consent', what: 'Your answer to the cookie banner, and when you gave it.', why: 'Essential', life: 'Until you clear it or change your mind.' },
+  { key: 'bundle.display', what: 'Text size, contrast, motion and link preferences.', why: 'Essential', life: 'Until reset.' },
+  { key: 'bundle.user', what: 'The email and display name on your local account.', why: 'Essential', life: 'Until you sign out or delete your data.' },
+  { key: 'bundle.profile', what: 'Your saved investor profile: ticket size, target spread, sectors.', why: 'Essential', life: 'Until you delete it.' },
+  { key: 'bundle.profileDraft', what: 'A part-finished questionnaire, so a refresh does not lose your answers.', why: 'Essential', life: 'Until you finish or delete it.' },
+  { key: 'bundle.holdings', what: 'Positions you told us you took after visiting a venue.', why: 'Essential', life: 'Until you delete them.' },
+  { key: 'bundle.lessons', what: 'Which Academy lessons you have completed.', why: 'Essential', life: 'Until reset.' },
+  { key: 'bundle.watchlist', what: 'Companies you starred on the screener.', why: 'Essential', life: 'Until you unstar them.' },
+  { key: 'bundle.pendingTrade', what: 'That you opened a venue, so we can ask whether you went through with it.', why: 'Essential', life: 'Cleared once you answer.' },
+  { key: 'bundle.navHintSeen', what: 'That you have already seen the one-off pointer to your dashboard.', why: 'Essential', life: 'Permanent, so we only show it once.' },
+];
+---
+
+<BaseLayout
+  title="Cookie policy"
+  description="Bundle sets no cookies. This page lists every item it stores in your browser, what each one is for, how long it lasts and how to remove it."
+>
+  <PageHero
+    eyebrow="Legal"
+    title="Cookie policy"
+    lead="Last updated: 29 September 2026 · Bundle sets no cookies at all. Here is every single thing it does store, and how to clear it."
+  />
+
+  <section class="section">
+    <div class="container narrow">
+      <div class="prose reveal">
+        <div class="callout">
+          <p><strong>The short version</strong></p>
+          <ul>
+            <li>Bundle sets <strong>no cookies</strong>, first-party or third-party.</li>
+            <li>What it remembers lives in your browser's local storage and is never transmitted to us.</li>
+            <li>There are no advertising tags, no analytics scripts, no pixels and no fingerprinting on this site today.</li>
+            <li>
+              One third party is contacted: Google Fonts, for the typefaces.
+              <a href="#third-parties">What that means</a>.
+            </li>
+            <li>
+              You can change your answer at any time:
+              <button type="button" class="text-link" data-cookie-prefs>
+                open cookie preferences <span class="arrow">→</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <h2>Why there is a banner at all</h2>
+        <p>
+          Under the Privacy and Electronic Communications Regulations, consent
+          is needed before non-essential information is stored on or read from
+          your device. Bundle stores nothing non-essential today, so strictly
+          it could show you no banner. It shows one anyway for a simple reason:
+          the decision is recorded <em>before</em> anything optional exists, and
+          the code checks that decision before any optional feature can run.
+          That is the opposite of the usual order, where the tags fire first and
+          the banner apologises afterwards.
+        </p>
+        <p>
+          "Essential only" and "Accept all" are the same size and the same
+          colour, both optional categories start switched off, and closing the
+          banner without choosing is not treated as agreement.
+        </p>
+
+        <h2>What Bundle stores on your device</h2>
+        <p>
+          All of the following are <strong>local storage</strong> entries, not
+          cookies. The practical difference matters: cookies are attached to
+          every request your browser makes to a server, whereas these are never
+          sent anywhere. This site is a static build with no application server
+          behind it, so there is nowhere for them to go.
+        </p>
+
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>What it holds</th>
+                <th>Category</th>
+                <th>How long</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                stored.map((s) => (
+                  <tr>
+                    <td><code class="mono">{s.key}</code></td>
+                    <td>{s.what}</td>
+                    <td>{s.why}</td>
+                    <td>{s.life}</td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Optional categories</h2>
+        <p>
+          Two categories appear in the banner and are switched off unless you
+          turn them on. Nothing currently uses either one; they exist so that
+          the day something does, your answer is already on record and is
+          honoured from the first page load rather than retro-fitted.
+        </p>
+        <ul>
+          <li>
+            <strong>Analytics.</strong> Aggregate counts of which pages get
+            read, measured without cross-site tracking, advertising identifiers
+            or fingerprinting.
+          </li>
+          <li>
+            <strong>Personalisation.</strong> Remembering your screener filters
+            and recently viewed companies between visits.
+          </li>
+        </ul>
+
+        <h2 id="third-parties">Third parties</h2>
+        <p>
+          Every page loads its typefaces from Google Fonts
+          (<code class="mono">fonts.googleapis.com</code> and
+          <code class="mono">fonts.gstatic.com</code>). Google does not set
+          cookies for font requests, but your IP address and browser details
+          reach Google in order to serve the files, and that is a transfer we
+          should name rather than leave out. No other third-party domain is
+          contacted by this site: no tag managers, no ad networks, no embedded
+          video, no chat vendors. The assistant in the corner runs entirely in
+          your browser from data this site already ships.
+        </p>
+
+        <h2>How to clear everything</h2>
+        <p>
+          Two routes, both immediate. Use
+          <a href="/legal/data-deletion">delete my data</a> on this site, which
+          removes every entry in the table above in one click. Or clear site
+          data for bundle.ai in your browser's settings, which does the same
+          thing from the browser's side. There is no server copy to chase,
+          because there is no server copy.
+        </p>
+        <p>
+          Blocking local storage entirely will leave the site readable. The
+          screener, the company pages and the Academy all work; what stops
+          working is anything that has to remember you, so your plan, your
+          holdings and your progress will not persist between pages.
+        </p>
+
+        <h2>Changes</h2>
+        <p>
+          If Bundle ever adds a cookie or a genuine analytics tool, this page
+          gets the entry, the banner gets the category, and the "last updated"
+          date changes. We will not quietly widen an existing category to cover
+          something new.
+        </p>
+
+        <h2>Contact</h2>
+        <p>
+          Questions: <a href="mailto:privacy@bundle.ai">privacy@bundle.ai</a>.
+          See also the <a href="/legal/privacy">privacy policy</a> and
+          <a href="/legal/data-deletion">data deletion policy</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .callout > p { margin: 0; }
+  .callout ul { margin: 0.5rem 0 0; }
+
+  .prose code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+  }
+
+  /* The preferences control is a button because it opens a dialog rather
+     than navigating; it should still read as the link it looks like. */
+  .prose button.text-link {
+    border: 0;
+    background: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+  }
+</style>
