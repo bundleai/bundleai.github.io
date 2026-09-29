@@ -3309,32 +3309,6 @@ html[data-a11y-links="underline"] .bc-act {
 html[data-a11y-tape="pause"] .tape { animation-play-state: paused !important; }
 html[data-a11y-tape="pause"] .ticker { overflow-x: auto; }
 
-/* Skip control on the hand-off overlay. The overlay is a short transition,
-   not a gate, so there has to be a visible way past it as well as Escape and
-   a click anywhere. */
-.handoff-skip {
-  margin-top: 1.4rem;
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  background: transparent;
-  color: #c9d6c9;
-  font: inherit;
-  font-size: 0.82rem;
-  padding: 0.38rem 1.05rem;
-  border-radius: var(--r-pill);
-  cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
-}
-
-.handoff-skip:hover {
-  background: rgba(255, 255, 255, 0.12);
-  color: #ffffff;
-}
-
-.handoff-skip:focus-visible {
-  outline: 2px solid var(--gold);
-  outline-offset: 2px;
-}
-
 /* The escape hatch on the pre-trade questionnaire. Visible and complete, but
    quieter than finishing the questionnaire, which is the honest weighting:
    we have a view, and it is still the user's decision. */
