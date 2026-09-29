@@ -17,6 +17,7 @@
   var DATA = null;
   var els = {};
   var open = false;
+  var lastFocus = null;
 
   function load() {
     if (DATA) return DATA;
@@ -480,6 +481,7 @@
   }
 
   function toggle() {
+    if (!open) lastFocus = document.activeElement;
     open = !open;
     els.panel.hidden = !open;
     els.launch.setAttribute('aria-expanded', String(open));
@@ -494,6 +496,14 @@
         chips();
       }
       els.input.focus();
+    } else {
+      // The launcher is display:none while the panel is open, so on close it
+      // is the thing that reappears where focus should land.
+      var back = (lastFocus && document.contains(lastFocus) && lastFocus !== document.body)
+        ? lastFocus
+        : els.launch;
+      if (back && back.focus) back.focus();
+      lastFocus = null;
     }
   }
 

@@ -100,9 +100,6 @@ const typeLabel = (t: string) =>
                 <tr
                   id={d.id}
                   class="scr-row"
-                  tabindex="0"
-                  role="link"
-                  aria-label={`View ${d.name} company dashboard`}
                   data-name={`${d.name} ${d.code}`.toLowerCase()}
                   data-sector={d.sector}
                   data-venue={d.platform}
@@ -119,7 +116,13 @@ const typeLabel = (t: string) =>
                     <span class="co">
                       <CoLogo id={d.id} name={d.name} hue={d.hue} size={32} />
                       <span class="co-id">
-                        <span class="co-name">{d.name}</span>
+                        <a
+                          class="co-name"
+                          href={`/company/${d.id}`}
+                          aria-label={`${d.name}, view company dashboard`}
+                        >
+                          {d.name}
+                        </a>
                         <span class="co-sector">{d.sector}</span>
                       </span>
                     </span>
@@ -358,7 +361,11 @@ const typeLabel = (t: string) =>
     color: var(--ink);
     font-size: 0.94rem;
     white-space: nowrap;
+    text-decoration: none;
   }
+
+  .scr-row:hover .co-name,
+  .co-name:hover { color: var(--green); }
 
   .co-sector {
     font-size: 0.74rem;

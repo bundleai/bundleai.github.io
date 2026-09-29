@@ -1,7 +1,8 @@
 ---
 /**
  * Scrolling market tape of aggregated deals. Duplicated list for a seamless
- * CSS loop; pauses on hover; static (scrollable) when reduced motion is set.
+ * CSS loop; pauses on hover and on keyboard focus; static (scrollable) when
+ * reduced motion is set, or when someone pins it in the display panel.
  *
  * The tape is the clearest signal that Bundle aggregates, so it must not read
  * as one venue's feed. Two rules keep it honest:
@@ -156,7 +157,11 @@ const scrollSeconds = Math.round(tape.length * SECONDS_PER_ROW);
       animation: tape-scroll var(--scroll-secs, 120s) linear infinite;
     }
 
-    .ticker:hover .tape {
+    /* Hover covered the mouse only. Keyboard focus has to stop it as well,
+       or the tape is unreadable for anyone tabbing through it. The persistent
+       switch lives in the display panel. */
+    .ticker:hover .tape,
+    .ticker:focus-within .tape {
       animation-play-state: paused;
     }
   }

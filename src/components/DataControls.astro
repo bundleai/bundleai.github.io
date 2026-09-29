@@ -103,6 +103,10 @@ const H = heading;
 
     const label = (k: string) => LABELS[k] || k;
 
+    // These two survive unless the checkbox says otherwise, so they belong to
+    // the checkbox, not to the main list.
+    const PREFS = ['bundle.consent', 'bundle.display'];
+
     const present = (): string[] => {
       // @ts-ignore, global from /auth.js
       return window.BundleAuth?.dataPresent?.() ?? [];
@@ -143,29 +147,40 @@ const H = heading;
       setTimeout(() => URL.revokeObjectURL(url), 1000);
     });
 
+    const paintList = () => {
+      if (!list) return;
+      const keys = present().filter((k) => wipePrefs?.checked || PREFS.indexOf(k) < 0);
+      list.innerHTML = keys.length
+        ? keys.map((k) => `<li>${label(k)}</li>`).join('')
+        : '<li class="muted">Nothing is stored on this device.</li>';
+    };
+
+    wipePrefs?.addEventListener('change', paintList);
+
     document.getElementById('dc-delete')?.addEventListener('click', () => {
       lastFocus = document.activeElement as HTMLElement;
-      const keys = present();
-      if (list) {
-        list.innerHTML = keys.length
-          ? keys.map((k) => `<li>${label(k)}</li>`).join('')
-          : '<li class="muted">Nothing is stored on this device.</li>';
-      }
       if (wipePrefs) wipePrefs.checked = false;
+      paintList();
       modal.hidden = false;
       document.body.style.overflow = 'hidden';
       (modal.querySelector('.modal-close') as HTMLElement)?.focus();
     });
 
     document.getElementById('dc-confirm')?.addEventListener('click', () => {
+      const keptPrefs = !wipePrefs?.checked;
       // @ts-ignore
-      window.BundleAuth?.eraseAll?.(!wipePrefs?.checked);
+      window.BundleAuth?.eraseAll?.(keptPrefs);
       close();
       paint();
       if (state) {
         const done = document.createElement('p');
         done.className = 'dc-done small';
-        done.textContent = 'Deleted. Nothing of yours is left in this browser.';
+        // Say what is actually left. Claiming a clean sweep while the consent
+        // record is still sitting there would be a small lie in the one place
+        // the user is least able to check.
+        done.textContent = keptPrefs && present().length
+          ? 'Deleted. Only your cookie answer and display preferences remain, so you are not shown the banner again.'
+          : 'Deleted. Nothing of yours is left in this browser.';
         state.appendChild(done);
       }
     });

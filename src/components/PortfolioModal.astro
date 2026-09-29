@@ -19,6 +19,15 @@
     <div class="wz-scroll">
       <div id="pm-wizard"></div>
     </div>
+    <footer class="modal-foot" id="pm-skip" hidden>
+      <a class="pm-skip-link" id="pm-skip-link" href="#" target="_blank" rel="noopener">
+        Skip this and go straight to <span id="pm-skip-venue">the venue</span>
+        <span class="arrow" aria-hidden="true">↗</span>
+      </a>
+      <span class="pm-skip-note">
+        We think a plan first is the better order. It is still your call.
+      </span>
+    </footer>
   </div>
 </div>
 
@@ -27,6 +36,9 @@
   const host = document.getElementById('pm-wizard');
   const subEl = document.getElementById('pm-sub');
   const titleEl = document.getElementById('pm-title');
+  const skipEl = document.getElementById('pm-skip');
+  const skipLink = document.getElementById('pm-skip-link') as HTMLAnchorElement | null;
+  const skipVenue = document.getElementById('pm-skip-venue');
   let mounted = false;
   let pendingDeal: Record<string, string> | null = null;
   let lastFocus: HTMLElement | null = null;
@@ -36,9 +48,12 @@
   const baseTitle = titleEl?.textContent ?? '';
   const baseSub = subEl?.textContent ?? '';
 
-  const openModal = (deal: Record<string, string> | null) => {
+  const openModal = (deal: Record<string, string> | null, opener?: HTMLElement | null) => {
     pendingDeal = deal;
-    lastFocus = document.activeElement as HTMLElement;
+    // The opener is passed explicitly where we know it; activeElement is only
+    // the fallback, because a programmatic open leaves focus on <body> and
+    // closing would then drop the user at the top of the page.
+    lastFocus = opener ?? (document.activeElement as HTMLElement);
 
     if (titleEl && subEl) {
       if (deal) {
@@ -49,6 +64,17 @@
       } else {
         titleEl.textContent = baseTitle;
         subEl.textContent = baseSub;
+      }
+    }
+
+    // The way out. Offered only when there is somewhere to go, i.e. when this
+    // was opened from a deal that carries a venue URL.
+    if (skipEl && skipLink && skipVenue) {
+      const canSkip = !!deal?.url;
+      skipEl.hidden = !canSkip;
+      if (canSkip) {
+        skipLink.href = deal!.url;
+        skipVenue.textContent = deal!.venue || 'the venue';
       }
     }
 
@@ -100,8 +126,17 @@
   const closeModal = () => {
     modal!.hidden = true;
     document.body.style.overflow = '';
-    lastFocus?.focus();
+    if (lastFocus && document.contains(lastFocus) && lastFocus !== document.body) {
+      lastFocus.focus();
+    }
   };
+
+  document.getElementById('pm-skip-link')?.addEventListener('click', () => {
+    if (!pendingDeal) return;
+    // @ts-ignore, global from /auth.js
+    window.BundleAuth?.addHolding?.({ ...pendingDeal, at: Date.now() });
+    closeModal();
+  });
 
   modal?.addEventListener('click', (e) => {
     if ((e.target as HTMLElement).closest('[data-close]')) closeModal();
@@ -134,7 +169,7 @@
       return;
     }
 
-    openModal(deal);
+    openModal(deal, trigger as HTMLElement);
   });
 
   document.addEventListener('bundle:open-portfolio', () => openModal(null));

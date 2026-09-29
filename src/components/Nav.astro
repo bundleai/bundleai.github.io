@@ -78,7 +78,7 @@ const menus = [
         id="nav-burger"
         aria-expanded="false"
         aria-controls="mobile-panel"
-        aria-label="Open menu"
+        aria-label="Menu"
       >
         <Icon name="menu" size={22} stroke={1.8} />
       </button>
@@ -384,7 +384,17 @@ const menus = [
 
   document.addEventListener('click', () => closeAll());
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeAll();
+    if (e.key !== 'Escape') return;
+    closeAll();
+    // The mobile panel is a menu too, and Escape should shut it the same way,
+    // handing focus back to the button that opened it.
+    const mp = document.getElementById('mobile-panel');
+    if (mp && !mp.hasAttribute('hidden')) {
+      mp.setAttribute('hidden', '');
+      const b = document.getElementById('nav-burger');
+      b?.setAttribute('aria-expanded', 'false');
+      b?.focus();
+    }
   });
 
   // Mobile panel
@@ -395,9 +405,11 @@ const menus = [
     if (isOpen) {
       panel?.setAttribute('hidden', '');
       burger.setAttribute('aria-expanded', 'false');
+      burger.focus();
     } else {
       panel?.removeAttribute('hidden');
       burger.setAttribute('aria-expanded', 'true');
+      panel?.querySelector<HTMLElement>('summary, a, button')?.focus();
     }
   });
 </script>
