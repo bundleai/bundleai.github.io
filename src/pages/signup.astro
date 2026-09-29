@@ -109,7 +109,7 @@ import Logo from '../components/Logo.astro';
     flex: 1;
     border: 0;
     background: none;
-    color: var(--text);
+    color: var(--text-2);
     font-size: 0.9rem;
     font-weight: 550;
     padding: 0.45rem 0.7rem;
@@ -118,11 +118,19 @@ import Logo from '../components/Logo.astro';
     transition: background-color 0.15s ease, color 0.15s ease;
   }
 
-  .su-tab[aria-selected='true'] {
+  .su-tab:hover { color: var(--ink); }
+
+  .su-tab[aria-pressed='true'] {
     background: var(--surface);
     color: var(--ink);
+    font-weight: 620;
     box-shadow: var(--shadow-s);
   }
+
+  /* The pressed state is a white pill against a tinted track, which reads at a
+     glance. It is not carried by colour alone: aria-pressed announces it, and
+     the weight shifts too, so it survives a greyscale or high-contrast view. */
+  .su-tab[aria-pressed='true']:hover { color: var(--ink); }
 
   .su-form { display: grid; gap: 1rem; }
   .su-submit { width: 100%; margin-top: 0.35rem; }
