@@ -83,8 +83,17 @@
     b.hidden = false;
     b.classList.toggle('is-manual', !!manual);
     if (manual) {
-      var first = b.querySelector('button, input, a');
-      if (first) first.focus();
+      // The detail block is display:none until expanded, and its checkboxes
+      // come first in the DOM: focusing one of those silently does nothing
+      // and leaves the keyboard stranded back on the footer link.
+      var stops = b.querySelectorAll('button, input, a');
+      for (var i = 0; i < stops.length; i++) {
+        var el = stops[i];
+        if (el.offsetWidth || el.offsetHeight || el.getClientRects().length) {
+          el.focus();
+          break;
+        }
+      }
     }
   }
 
