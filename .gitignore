@@ -7,5 +7,9 @@ npm-debug.log*
 # Private business documents — never publish
 *.docx
 
+# Domain shortlist with prices: commercially sensitive until the domains are
+# actually bought. Kept locally, never committed.
+docs/domains-godaddy*.xlsx
+
 # Local tooling state
 .claude/
