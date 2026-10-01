@@ -21,6 +21,7 @@ import CoLogo from '../../components/CoLogo.astro';
 import CoSources from '../../components/CoSources.astro';
 import { deals, platformName, fmtPrice, fmtChange, dataAsOf, type Deal } from '../../data/deals';
 import { getCompany, estimatedWorth, sectorStats, sectorFor } from '../../data/companies';
+import { listingsFor } from '../../data/venues';
 
 export function getStaticPaths() {
   return deals.map((deal) => ({ params: { id: deal.id }, props: { deal } }));
@@ -41,6 +42,17 @@ const peers = deals.filter((x) => x.sector === d.sector && x.id !== d.id).slice(
 const initials = d.name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2);
 const typeLabel =
   d.type === 'crowdfunding' ? 'Crowdfunding' : d.type === 'pre-ipo' ? 'Pre-IPO' : 'Secondary';
+
+/**
+ * The date THIS company's venue mark carries, not the date the dataset as a
+ * whole was captured. They used to be the same thing; they stopped being the
+ * same the moment a single company was re-scraped on its own, and a chart
+ * headed "16 August" above a point labelled "Oct 2026" is the kind of detail
+ * that costs you the room. Falls back to the dataset stamp for any listing
+ * that still has no date of its own.
+ */
+const markAsOf =
+  listingsFor(d.id).find((l) => l.venue === d.platform)?.asOf ?? dataAsOf;
 
 const lastRound = co?.rounds?.length ? co.rounds[co.rounds.length - 1] : null;
 
@@ -219,7 +231,7 @@ const desc = co?.about
                   currency={d.currency}
                   mark={d.price as number}
                   lastRoundPps={co?.lastRoundPps}
-                  asOf={dataAsOf}
+                  asOf={markAsOf}
                 />
               ) : (
                 <p class="small muted co-empty">
@@ -233,14 +245,14 @@ const desc = co?.about
           <section class="card co-card" aria-labelledby="co-chart-h">
             <div class="co-card-head">
               <h2 class="h3" id="co-chart-h">Price reference points</h2>
-              <span class="small muted">{venue} price · {dataAsOf}</span>
+              <span class="small muted">{venue} price · {markAsOf}</span>
             </div>
             <CoPriceChart
               points={co?.history}
               venue={venue}
               currency={d.currency}
               hue={d.hue}
-              asOf={dataAsOf}
+              asOf={markAsOf}
             />
           </section>
 

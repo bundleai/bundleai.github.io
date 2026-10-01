@@ -78,6 +78,56 @@ if (enough) {
   area = `${line} L${plotted[plotted.length - 1].x.toFixed(1)},${base} L${plotted[0].x.toFixed(1)},${base} Z`;
 }
 
+/**
+ * Axis labels are placed under their own point, so two points close together
+ * in time collide no matter how wide the chart is. OpenAI is the live case:
+ * a venue mark in Aug 2026 and another in Oct 2026 sit two months apart on a
+ * two-year axis, and their "FORGE PRICE" sub-labels are wider than the gap.
+ *
+ * Rather than shrink the type or stagger rows (there is no vertical room
+ * below the axis), drop the labels that cannot fit. The dot and its hover
+ * tooltip stay, so nothing is lost, and the points that anchor the series
+ * keep priority: the latest mark first, then the earliest, then the rest
+ * left to right.
+ *
+ * Widths are estimated from character count because this renders server side
+ * with no way to measure text. The constants are deliberately generous; a
+ * label dropped a little early is better than two printed on top of
+ * each other.
+ */
+const LAB_PX = 12;      // .pc-lab font-size
+const SUB_PX = 10.5;    // .pc-sub font-size
+const LAB_CH = 0.52;    // Inter, mixed case
+const SUB_CH = 0.66;    // Inter, uppercase plus 0.04em tracking
+const LABEL_GAP = 8;    // clear space required between adjacent boxes
+
+const labelSpan = (q: { x: number; p: PricePoint }, i: number, isLast: boolean) => {
+  const w = Math.max(
+    q.p.date.length * LAB_PX * LAB_CH,
+    q.p.label ? q.p.label.length * SUB_PX * SUB_CH : 0
+  );
+  const ax = q.x + (i === 0 ? -4 : isLast ? 4 : 0);
+  if (i === 0) return [ax, ax + w] as const;
+  if (isLast) return [ax - w, ax] as const;
+  return [ax - w / 2, ax + w / 2] as const;
+};
+
+const showLabel: boolean[] = plotted.map(() => false);
+if (plotted.length) {
+  const lastIdx = plotted.length - 1;
+  const kept: Array<readonly [number, number]> = [];
+  // Latest mark wins outright: it is the number quoted everywhere else.
+  const order = [lastIdx, ...plotted.map((_, i) => i).filter((i) => i !== lastIdx)];
+  for (const i of order) {
+    const span = labelSpan(plotted[i], i, i === lastIdx);
+    const clash = kept.some((k) => span[0] < k[1] + LABEL_GAP && span[1] + LABEL_GAP > k[0]);
+    if (!clash) {
+      showLabel[i] = true;
+      kept.push(span);
+    }
+  }
+}
+
 const gid = `co-chart-${Math.random().toString(36).slice(2, 8)}`;
 ---
 
@@ -117,10 +167,12 @@ const gid = `co-chart-${Math.random().toString(36).slice(2, 8)}`;
                 <text class="pc-val" x={q.x + dx} y={q.y - 14} text-anchor={anchor}>
                   {fmt(q.p.price)}
                 </text>
-                <text class="pc-lab" x={q.x + dx} y={H - padB + 18} text-anchor={anchor}>
-                  {q.p.date}
-                </text>
-                {q.p.label && (
+                {showLabel[i] && (
+                  <text class="pc-lab" x={q.x + dx} y={H - padB + 18} text-anchor={anchor}>
+                    {q.p.date}
+                  </text>
+                )}
+                {showLabel[i] && q.p.label && (
                   <text class="pc-sub" x={q.x + dx} y={H - padB + 32} text-anchor={anchor}>
                     {q.p.label}
                   </text>
