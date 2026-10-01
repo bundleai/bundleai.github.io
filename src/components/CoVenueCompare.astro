@@ -120,6 +120,13 @@ const vsForge = (price?: number | null): number | null =>
           const pct = r.price != null && maxPrice > 0 ? (r.price / maxPrice) * 100 : 0;
           // Delta against the Forge price, the mark quoted elsewhere on the page.
           const vs = r.venue === 'forge' ? null : vsForge(r.price);
+          // The last cell carries the minimum only when it says something the
+          // Access cell beside it has not already said. On the deal's own row
+          // both read "Accredited", which wasted the slot and hid the date
+          // the mark was published, the one number that makes a cross-venue
+          // comparison checkable.
+          const access = r.access || venueMeta[r.venue]?.access || null;
+          const showMin = !!r.minInvestment && r.minInvestment !== access;
           return (
             <li class:list={['vc-row', { best: isBest }]}>
               <div class="vc-row-top">
@@ -170,8 +177,8 @@ const vsForge = (price?: number | null): number | null =>
                   </dd>
                 </div>
                 <div>
-                  <dt>{r.minInvestment ? 'Min' : 'Priced'}</dt>
-                  <dd class="px">{r.minInvestment || r.asOf || '-'}</dd>
+                  <dt>{showMin ? 'Min' : 'Priced'}</dt>
+                  <dd class="px">{showMin ? r.minInvestment : r.asOf || '-'}</dd>
                 </div>
               </dl>
 

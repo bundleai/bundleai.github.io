@@ -11,7 +11,11 @@
  *    valuation caps, closing status).
  *
  * Prices are indicative venue marks, not live quotes or offers. Refresh
- * by re-scraping the `url` on each deal. Companies checked and excluded:
+ * by re-scraping the `url` on each deal.
+ *
+ * OpenAI re-checked 1 October 2026 across all three of its venues; every
+ * other row still carries its August capture, which is why each listing
+ * stamps its own date rather than relying on `dataAsOf`. Companies checked and excluded:
  * SpaceX (IPO'd June 2026, NASDAQ: SPCX), Anthropic (no direct share
  * transfers permitted on Forge), Canva/Monzo/Starling (no public mark).
  */
@@ -70,7 +74,7 @@ export const deals: Deal[] = [
     id: 'openai', name: 'OpenAI', code: 'OAI', sector: 'AI',
     type: 'pre-ipo', platform: 'forge',
     url: 'https://forgeglobal.com/openai_stock/',
-    currency: '$', price: 721.85, change: 0.02, valuation: '$894.33bn',
+    currency: '$', price: 954.70, change: 30.97, valuation: '$1.18T',
     minTicket: 'Accredited', trending: true, hue: 'c1',
   },
   {

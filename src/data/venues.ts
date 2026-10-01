@@ -65,7 +65,7 @@ export const venueLabel = (id: string): string => venueMeta[id]?.name ?? id;
  * scripts/refresh-venues.md for the refresh procedure.
  */
 export const extraListings: VenueListing[] = [
-  { company: 'openai', venue: 'hiive', price: 739.96, access: "Accredited", asOf: "08/17/2026", basis: "Hiive Price (model-derived indicative estimate)", liveOrders: 0, structure: 'direct', url: "https://www.hiive.com/securities/openai-stock" },
+  { company: 'openai', venue: 'hiive', price: 770.13, access: "Accredited", asOf: "Aug 28, 2026", basis: "Clarity Price, formerly Hiive Price (model-derived indicative estimate)", structure: 'direct', url: "https://www.clarity.com/browse-companies/openai-stock" },
   { company: 'databricks', venue: 'hiive', price: 254.6, access: "Accredited", asOf: "08/17/2026", basis: "Hiive Price (model-derived indicative estimate)", liveOrders: 61, structure: 'direct', url: "https://www.hiive.com/securities/databricks-stock" },
   { company: 'stripe', venue: 'hiive', price: 70.85, access: "Accredited", asOf: "08/17/2026", basis: "Hiive Price (model-derived indicative estimate)", liveOrders: 27, structure: 'direct', url: "https://www.hiive.com/securities/stripe-stock" },
   { company: 'anduril', venue: 'hiive', price: 60.0, access: "Accredited", asOf: "08/17/2026", basis: "Hiive Price (model-derived indicative estimate)", liveOrders: 0, structure: 'direct', url: "https://www.hiive.com/securities/anduril-stock" },
@@ -85,7 +85,7 @@ export const extraListings: VenueListing[] = [
   { company: 'lambda', venue: 'hiive', price: 40.4, access: "Accredited", asOf: "08/17/2026", basis: "Hiive Price (model-derived indicative estimate)", liveOrders: 46, structure: 'direct', url: "https://www.hiive.com/securities/lambda-stock" },
   { company: 'chainalysis', venue: 'hiive', price: 6.56, access: "Accredited", asOf: "08/17/2026", basis: "Hiive Price (model-derived indicative estimate)", liveOrders: 11, structure: 'direct', url: "https://www.hiive.com/securities/chainalysis-stock" },
   { company: 'flexport', venue: 'hiive', price: 2.98, access: "Accredited", asOf: "08/17/2026", basis: "Hiive Price (model-derived indicative estimate)", liveOrders: 7, structure: 'direct', url: "https://www.hiive.com/securities/flexport-stock" },
-  { company: 'openai', venue: 'forge', price: 721.85, valuation: "$894.33bn", access: "Accredited", asOf: "Aug 17, 2026", basis: "Forge Price (daily indicative mark) + Forge Price valuation", structure: 'direct', url: "https://forgeglobal.com/openai_stock/" },
+  { company: 'openai', venue: 'forge', price: 954.70, valuation: "$1.18T", access: "Accredited", asOf: "Oct 1, 2026", basis: "Forge Price (daily indicative mark) + Forge Price valuation", structure: 'direct', url: "https://forgeglobal.com/openai_stock/" },
   { company: 'databricks', venue: 'forge', price: 264.9, valuation: "$191.88bn", access: "Accredited", asOf: "Aug 17, 2026", basis: "Forge Price (daily indicative mark) + Forge Price valuation", structure: 'direct', url: "https://forgeglobal.com/databricks_stock/" },
   { company: 'stripe', venue: 'forge', price: 72.45, valuation: "$184.4bn", access: "Accredited", asOf: "Aug 17, 2026", basis: "Forge Price (daily indicative mark) + Forge Price valuation", structure: 'direct', url: "https://forgeglobal.com/stripe_stock/" },
   { company: 'revolut', venue: 'forge', price: 2200.0, valuation: "$125.43bn", access: "Accredited", asOf: "Aug 17, 2026", basis: "Forge Price (daily indicative mark) + Forge Price valuation", structure: 'direct', url: "https://forgeglobal.com/revolut_stock/" },
@@ -109,7 +109,7 @@ export const extraListings: VenueListing[] = [
   { company: 'chainalysis', venue: 'forge', price: 6.2, valuation: "$1.32bn", access: "Accredited", asOf: "Aug 17, 2026", basis: "Forge Price (daily indicative mark) + Forge Price valuation", structure: 'direct', url: "https://forgeglobal.com/chainalysis_stock/" },
   { company: 'flexport', venue: 'forge', price: 2.95, valuation: "$828.91m", access: "Accredited", asOf: "Aug 17, 2026", basis: "Forge Price (daily indicative mark) + Forge Price valuation", structure: 'direct', url: "https://forgeglobal.com/flexport_stock/" },
   { company: 'impossible-foods', venue: 'forge', price: 1.51, valuation: "$427.35m", access: "Accredited", asOf: "Aug 17, 2026", basis: "Forge Price (daily indicative mark) + Forge Price valuation", structure: 'direct', url: "https://forgeglobal.com/impossible-foods_stock/" },
-  { company: 'openai', venue: 'nasdaq-pm', price: 703.42, access: "Accredited", asOf: "Jul 31, 2026", basis: "NPM Price Per Share estimate", structure: 'direct', url: "https://www.nasdaqprivatemarket.com/company/open-ai/" },
+  { company: 'openai', venue: 'nasdaq-pm', price: 746.01, access: "Accredited", asOf: "Sep 16, 2026", basis: "NPM Price Per Share estimate", structure: 'direct', url: "https://www.nasdaqprivatemarket.com/company/open-ai/" },
   { company: 'databricks', venue: 'nasdaq-pm', price: 241.98, access: "Accredited", asOf: "Jul 31, 2026", basis: "NPM Price Per Share estimate", structure: 'direct', url: "https://www.nasdaqprivatemarket.com/company/databricks/" },
   { company: 'kraken', venue: 'nasdaq-pm', price: 28.87, access: "Accredited", asOf: "Jul 31, 2026", basis: "NPM Price Per Share estimate", structure: 'direct', url: "https://www.nasdaqprivatemarket.com/company/kraken/" },
   { company: 'anduril', venue: 'nasdaq-pm', price: 109.48, access: "Accredited", asOf: "Jul 31, 2026", basis: "NPM Price Per Share estimate", structure: 'direct', url: "https://www.nasdaqprivatemarket.com/company/anduril/" },
@@ -157,7 +157,19 @@ export const listingsFor = (dealId: string): VenueListing[] => {
   extraListings
     .filter((l) => l.company === dealId)
     .forEach((l) => {
-      if (!rows.some((r) => r.venue === l.venue)) rows.push(l);
+      const existing = rows.find((r) => r.venue === l.venue);
+      if (!existing) {
+        rows.push(l);
+        return;
+      }
+      // The deal's own row is built from deals.ts, which carries no date or
+      // basis, so the venue it came from was the one listing on the page with
+      // nothing to say when it was marked. Backfill that detail from the
+      // extras rather than dropping the row: the deal's price stays
+      // authoritative because it is the figure quoted everywhere else.
+      if (existing.asOf == null) existing.asOf = l.asOf;
+      if (existing.basis == null) existing.basis = l.basis;
+      if (existing.liveOrders == null) existing.liveOrders = l.liveOrders;
     });
 
   return rows.sort((a, b) => {

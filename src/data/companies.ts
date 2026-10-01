@@ -91,6 +91,7 @@ export const companies: Record<string, Company> = {
       { date: 'Oct 2024', price: 127.0, label: 'Round mark' },
       { date: 'Mar 2025', price: 242.0, label: 'Round mark' },
       { date: 'Aug 2026', price: 721.85, label: 'Forge price' },
+      { date: 'Oct 2026', price: 954.70, label: 'Forge price' },
     ],
   },
 
@@ -572,11 +573,14 @@ export interface SectorStat {
 /** Parses "$894.3bn", "£4.5bn", "$72m cap", "$21m" into a number in billions. */
 export const parseValuationBn = (v: string | undefined): number => {
   if (!v) return 0;
-  const m = v.replace(/,/g, '').match(/([\d.]+)\s*(bn|b|m|k)?/i);
+  const m = v.replace(/,/g, '').match(/([\d.]+)\s*(tn|t|bn|b|m|k)?/i);
   if (!m) return 0;
   const n = parseFloat(m[1]);
   if (!isFinite(n)) return 0;
   const unit = (m[2] || '').toLowerCase();
+  // Trillion matters now that a tracked company has crossed it; without this
+  // case "$1.18T" falls through to 0 and quietly drops out of sector totals.
+  if (unit === 'tn' || unit === 't') return n * 1000;
   if (unit === 'bn' || unit === 'b') return n;
   if (unit === 'm') return n / 1000;
   if (unit === 'k') return n / 1_000_000;
@@ -584,7 +588,11 @@ export const parseValuationBn = (v: string | undefined): number => {
 };
 
 export const fmtValuationBn = (bn: number): string =>
-  bn >= 1 ? `$${bn.toFixed(1)}bn` : `$${Math.round(bn * 1000)}m`;
+  bn >= 1000
+    ? `$${(bn / 1000).toFixed(2)}T`
+    : bn >= 1
+      ? `$${bn.toFixed(1)}bn`
+      : `$${Math.round(bn * 1000)}m`;
 
 export const sectorStats = (): SectorStat[] => {
   const map = new Map<string, Deal[]>();
